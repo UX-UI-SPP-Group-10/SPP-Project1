@@ -16,6 +16,5 @@ local.properties
 .idea/vcs.xml
 .idea/misc.xml
 .idea/gradle.xml
-.idea/misc.xml
 .idea/deploymentTargetSelector.xml
-.idea/gradle.xml
+.idea/codeStyles
