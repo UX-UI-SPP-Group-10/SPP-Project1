@@ -4,6 +4,13 @@ import com.sppProject.app.api_integration.api_service.BuyerApiService
 import com.sppProject.app.api_integration.data_class.Buyer
 import com.sppProject.app.api_integration.ApiFetcher
 
+
+/**
+ * This class handles API calls related to buyers.
+ * It provides methods to get and create buyers.
+ *
+ * @param buyerApiService The API service for buyer-related requests.
+ */
 class BuyerFetcher(
     private val buyerApiService: BuyerApiService
 ) {

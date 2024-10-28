@@ -4,6 +4,15 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
+
+/**
+ * A helper function to handle API calls.
+ * This function makes the API call and processes the response.
+ *
+ * @param call The Retrofit call to execute.
+ * @param onSuccess Callback for successful responses.
+ * @param onError Callback for error responses.
+ */
 fun <T> handleApiCall(
     call: Call<T>,
     onSuccess: (T) -> Unit,
