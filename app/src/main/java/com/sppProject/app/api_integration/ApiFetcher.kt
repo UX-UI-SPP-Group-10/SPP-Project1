@@ -1,39 +1,19 @@
-package com.api_integration
+package com.sppProject.app.api_integration
 
-import com.api_integration.api_service.BuyerApiService
-import com.api_integration.data_class.Buyer
-import retrofit2.Call
-import retrofit2.Callback
 import retrofit2.Response
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
-class ApiFetcher(
-    private val buyerApiService: BuyerApiService,
+class ApiFetcher<T>(
+    private val service: Any // Use a more specific type if possible
 ) {
-
-    // Fetch buyers using the generic method
-    fun fetchBuyers(onFetched: (List<Buyer>, String?) -> Unit) {
-        val call = buyerApiService.getAllBuyers()
-        handleApiCall(call,
-            onSuccess = { buyers ->
-                onFetched(buyers, null) // Success
-            },
-            onError = { errorMsg ->
-                onFetched(emptyList(), errorMsg) // Handle error
-            }
-        )
+    suspend fun handleApiCallList(call: suspend () -> List<T>): List<T> {
+        return call() // Directly call the suspend function
     }
 
-    // Create buyer using the generic method
-    fun createBuyer(item: Buyer, onCreated: (Buyer?, String?) -> Unit) {
-        val call = buyerApiService.createBuyer(item)
-        handleApiCall(call,
-            onSuccess = { buyer ->
-                onCreated(buyer, null) // Success
-            },
-            onError = { errorMsg ->
-                onCreated(null, errorMsg) // Handle error
-            }
-        )
+    suspend fun handleApiCallSingle(call: suspend () -> T): T {
+        return call() // Directly call the suspend function
     }
 }
 

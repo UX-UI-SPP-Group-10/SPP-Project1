@@ -1,15 +1,14 @@
-package com.api_integration.api_service
+package com.sppProject.app.api_integration.api_service
 
-import com.api_integration.data_class.Buyer
-import retrofit2.Call
+import com.sppProject.app.api_integration.data_class.Buyer
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface BuyerApiService {
-    @GET("buyers") // Fetch all buyers
-    fun getAllBuyers(): Call<List<Buyer>>
+    @GET("buyers")
+    suspend fun getAllBuyers(): List<Buyer> // Use suspend function
 
-    @POST("buyers") // Create a new buyer
-    fun createBuyer(@Body item: Buyer): Call<Buyer>
+    @POST("buyers")
+    suspend fun createBuyer(@Body item: Buyer): Buyer // Use suspend function
 }

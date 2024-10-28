@@ -1,6 +1,5 @@
-package com.api_integration
+package com.sppProject.app.api_integration
 
-import com.api_integration.api_service.BuyerApiService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -12,6 +11,8 @@ object RetrofitClient {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
-    // Create API service instances
-    val buyerApiService: BuyerApiService = retrofit.create(BuyerApiService::class.java)
+    // Create API service instances for different entities
+    fun <T> createApiService(serviceClass: Class<T>): T {
+        return retrofit.create(serviceClass)
+    }
 }

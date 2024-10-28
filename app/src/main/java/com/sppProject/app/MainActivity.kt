@@ -8,19 +8,23 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.api_integration.RetrofitClient
-import com.api_integration.ApiFetcher
-import com.api_integration.data_class.Buyer
+import com.sppProject.app.api_integration.RetrofitClient
+import com.sppProject.app.api_integration.fetchers.BuyerFetcher
+import com.sppProject.app.api_integration.data_class.Buyer
+import com.sppProject.app.api_integration.api_service.BuyerApiService
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-    private lateinit var buyerFetcher: ApiFetcher
+    private lateinit var buyerFetcher: BuyerFetcher // Use BuyerFetcher
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        buyerFetcher = ApiFetcher(RetrofitClient.buyerApiService)
+
+        // Initialize BuyerFetcher with the created ApiService
+        buyerFetcher = BuyerFetcher(RetrofitClient.createApiService(BuyerApiService::class.java))
+
+        // Set the content of the activity
         setContent {
             SimpleBuyerApp(buyerFetcher)
         }
@@ -29,7 +33,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SimpleBuyerApp(buyerFetcher: ApiFetcher) {
+fun SimpleBuyerApp(buyerFetcher: BuyerFetcher) {
     var buyers by remember { mutableStateOf(listOf<Buyer>()) }
     var name by remember { mutableStateOf("") }
     var feedbackMessage by remember { mutableStateOf("") }
@@ -55,14 +59,13 @@ fun SimpleBuyerApp(buyerFetcher: ApiFetcher) {
         Button(onClick = {
             if (name.isNotBlank()) {
                 coroutineScope.launch {
-                    buyerFetcher.createBuyer(Buyer(id = 0, name = name)) { newBuyer, error ->
-                        feedbackMessage = if (newBuyer != null) {
-                            buyers = buyers + newBuyer
-                            name = "" // Clear name input after successful submission
-                            "Buyer added successfully!"
-                        } else {
-                            error ?: "An error occurred while adding buyer."
-                        }
+                    try {
+                        val newBuyer = buyerFetcher.createBuyer(Buyer(id = 0, name = name)) // Create buyer
+                        buyers = buyers + newBuyer
+                        name = "" // Clear name input after successful submission
+                        feedbackMessage = "Buyer added successfully!"
+                    } catch (e: Exception) {
+                        feedbackMessage = e.message ?: "An error occurred while adding buyer."
                     }
                 }
             } else {
@@ -77,13 +80,11 @@ fun SimpleBuyerApp(buyerFetcher: ApiFetcher) {
         // Fetch Buyers Button
         Button(onClick = {
             coroutineScope.launch {
-                buyerFetcher.fetchBuyers { fetchedBuyers, error ->
-                    feedbackMessage = if (error == null) {
-                        buyers = fetchedBuyers
-                        if (buyers.isNotEmpty()) "Buyers fetched successfully!" else "No buyers found."
-                    } else {
-                        error
-                    }
+                try {
+                    buyers = buyerFetcher.fetchBuyers() // Fetch buyers
+                    feedbackMessage = if (buyers.isNotEmpty()) "Buyers fetched successfully!" else "No buyers found."
+                } catch (e: Exception) {
+                    feedbackMessage = e.message ?: "An error occurred while fetching buyers."
                 }
             }
         }) {

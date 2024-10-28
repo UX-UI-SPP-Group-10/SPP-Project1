@@ -1,4 +1,4 @@
-package com.api_integration
+package com.sppProject.app.api_integration
 
 import retrofit2.Call
 import retrofit2.Callback
