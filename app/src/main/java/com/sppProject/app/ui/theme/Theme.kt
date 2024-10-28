@@ -1,6 +1,5 @@
-package com.example.spp_project.ui.theme
+package com.sppProject.app.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

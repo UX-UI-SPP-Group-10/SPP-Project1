@@ -1,4 +1,4 @@
-package com.example.spp_project
+package com.sppProject.app
 
 import org.junit.Test
 

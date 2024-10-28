@@ -1,4 +1,4 @@
-package com.example.spp_project.ui.theme
+package com.sppProject.app.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
