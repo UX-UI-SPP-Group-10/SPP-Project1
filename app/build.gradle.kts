@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.spp_project"
+    namespace = "com.sppProject.app"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.spp_project"
+        applicationId = "com.sppProject.app"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
