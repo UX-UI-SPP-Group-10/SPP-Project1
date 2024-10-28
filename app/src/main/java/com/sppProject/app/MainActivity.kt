@@ -20,10 +20,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Initialize the ApiFetcher with the BuyerApiService
         buyerFetcher = ApiFetcher(RetrofitClient.buyerApiService)
-
         setContent {
             SimpleBuyerApp(buyerFetcher)
         }
@@ -35,8 +32,7 @@ class MainActivity : ComponentActivity() {
 fun SimpleBuyerApp(buyerFetcher: ApiFetcher) {
     var buyers by remember { mutableStateOf(listOf<Buyer>()) }
     var name by remember { mutableStateOf("") }
-    var message by remember { mutableStateOf("") }
-    var errorMessage by remember { mutableStateOf<String?>(null) } // For handling errors
+    var feedbackMessage by remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
 
     Column(
@@ -45,31 +41,32 @@ fun SimpleBuyerApp(buyerFetcher: ApiFetcher) {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Simple Name Input
+        // Name Input Field
         TextField(
             value = name,
             onValueChange = { name = it },
-            label = { Text("Enter Name") }
+            label = { Text("Enter Name") },
+            modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Button to post a new name
+        // Submit Button
         Button(onClick = {
             if (name.isNotBlank()) {
                 coroutineScope.launch {
                     buyerFetcher.createBuyer(Buyer(id = 0, name = name)) { newBuyer, error ->
-                        if (newBuyer != null) {
+                        feedbackMessage = if (newBuyer != null) {
                             buyers = buyers + newBuyer
-                            name = "" // Clear name after submission
-                            message = "Buyer added successfully!"
-                        } else if (error != null) {
-                            errorMessage = error
+                            name = "" // Clear name input after successful submission
+                            "Buyer added successfully!"
+                        } else {
+                            error ?: "An error occurred while adding buyer."
                         }
                     }
                 }
             } else {
-                message = "Name cannot be empty."
+                feedbackMessage = "Name cannot be empty."
             }
         }) {
             Text("Submit Name")
@@ -77,19 +74,15 @@ fun SimpleBuyerApp(buyerFetcher: ApiFetcher) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Button to fetch buyers
+        // Fetch Buyers Button
         Button(onClick = {
             coroutineScope.launch {
                 buyerFetcher.fetchBuyers { fetchedBuyers, error ->
-                    if (error == null) {
+                    feedbackMessage = if (error == null) {
                         buyers = fetchedBuyers
-                        message = if (buyers.isNotEmpty()) {
-                            "Buyers fetched successfully!"
-                        } else {
-                            "No buyers found."
-                        }
+                        if (buyers.isNotEmpty()) "Buyers fetched successfully!" else "No buyers found."
                     } else {
-                        errorMessage = error
+                        error
                     }
                 }
             }
@@ -99,30 +92,16 @@ fun SimpleBuyerApp(buyerFetcher: ApiFetcher) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Display the feedback message or error message
-        if (message.isNotBlank()) {
-            Text(message)
+        // Display feedback message
+        if (feedbackMessage.isNotBlank()) {
+            Text(feedbackMessage, color = if (feedbackMessage.contains("error", true)) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary)
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        if (errorMessage != null) {
-            Text("Error: $errorMessage", color = MaterialTheme.colorScheme.error)
-            Spacer(modifier = Modifier.height(8.dp))
-        }
-
-        // Display the list of buyers
+        // Display buyers list
         Text("Buyers List:")
-        for (buyer in buyers) {
+        buyers.forEach { buyer ->
             Text("ID: ${buyer.id}, Name: ${buyer.name}")
         }
     }
-}
-
-
-// Preview for BuyerApp
-@Preview(showBackground = true)
-@Composable
-fun BuyerAppPreview() {
-    // Use a mock implementation for the preview
-    SimpleBuyerApp(buyerFetcher = ApiFetcher(RetrofitClient.buyerApiService))
 }
