@@ -83,52 +83,64 @@ fun Logindpage(buyerFetcher: BuyerFetcher) {
 }
 
 @Composable
-fun App(backToLogin: () -> Unit, buyerFetcher: BuyerFetcher){
+fun App(backToLogin: () -> Unit, buyerFetcher: BuyerFetcher) {
     var retylerInfomation by remember { mutableStateOf(false) }
     var youserInfomation by remember { mutableStateOf(false) }
     var sendInfo by remember { mutableStateOf(false) }
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = 32.dp))
-    {
-        RetylerInfo(
-            retylerInfomation = retylerInfomation,
-            onClick = {
-                retylerInfomation = !retylerInfomation
-                if(retylerInfomation) youserInfomation = false},
-            sendInfo = sendInfo,
-            buyerFetcher = buyerFetcher
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        UserInfo(
-            youserInfomation = youserInfomation,
-            onClick = {
-                youserInfomation = !youserInfomation
-                if (youserInfomation) retylerInfomation = false
-            },
-            sendInfo = sendInfo,
-            buyerFetcher = buyerFetcher,
-            backToLogin = backToLogin
-        )
-        Spacer(modifier = Modifier.height(32.dp))
-    }
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp) // Optional padding from the edges
-    ) {
-        Button(
-            onClick = {
-                sendInfo = true
-            },
-            modifier = Modifier.align(Alignment.BottomEnd) // Aligns the button to the bottom-right
-        ) {
-            Text("Make Profile")
-        }
+    var navigateToRetailerHomePage by remember { mutableStateOf(false) }
 
-        Button(onClick = backToLogin,
-            modifier = Modifier.align(Alignment.BottomStart)){
-            Text("Back")
+    if (navigateToRetailerHomePage) {
+        RetailerHomePage(backToLogin = backToLogin)
+    } else {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 32.dp)
+        )
+        {
+            RetylerInfo(
+                retylerInfomation = retylerInfomation,
+                onClick = {
+                    retylerInfomation = !retylerInfomation
+                    if (retylerInfomation) youserInfomation = false
+                },
+                sendInfo = sendInfo,
+                buyerFetcher = buyerFetcher,
+                onNavigateToHome = {navigateToRetailerHomePage = true}
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            UserInfo(
+                youserInfomation = youserInfomation,
+                onClick = {
+                    youserInfomation = !youserInfomation
+                    if (youserInfomation) retylerInfomation = false
+                },
+                sendInfo = sendInfo,
+                buyerFetcher = buyerFetcher,
+                backToLogin = backToLogin
+            )
+            Spacer(modifier = Modifier.height(32.dp))
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp) // Optional padding from the edges
+        ) {
+            Button(
+                onClick = {
+                    sendInfo = true
+                },
+                modifier = Modifier.align(Alignment.BottomEnd) // Aligns the button to the bottom-right
+            ) {
+                Text("Make Profile")
+            }
+
+            Button(
+                onClick = backToLogin,
+                modifier = Modifier.align(Alignment.BottomStart)
+            ) {
+                Text("Back")
+            }
         }
     }
 }
@@ -139,14 +151,18 @@ fun RetylerInfo(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     sendInfo: Boolean,
-    buyerFetcher: BuyerFetcher){
+    buyerFetcher: BuyerFetcher,
+    onNavigateToHome: () -> Unit
+){
     var company by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
+
     Button(onClick = onClick) {
-        Text("Retailer")
+            Text("Retailer")
     }
+
 
     if(retylerInfomation){
         Column(modifier = Modifier.padding(top = 16.dp)){
@@ -173,8 +189,16 @@ fun RetylerInfo(
             )
 
             Spacer(modifier = Modifier.height(16.dp))
+
+            Button(onClick = {
+                onNavigateToHome()
+            }) {
+                Text("Create Profile")
+            }
+
         }
     }
+
     if(retylerInfomation && sendInfo){
         //send infomation and gow to logind page
     }
@@ -230,6 +254,39 @@ fun UserInfo(
         }
     } else if (youserInfomation && sendInfo && name.isBlank()) {
         feedbackMessage = "Name cannot be empty."
+    }
+}
+
+@Composable
+fun RetailerHomePage(
+    modifier: Modifier = Modifier,
+    backToLogin: () -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxSize().padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Welcome to the Retailer Home Page")
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp) // Optional padding from the edges
+    ) {
+        Button(
+            onClick = {},
+            modifier = Modifier.align(Alignment.BottomEnd)
+        ) {
+            Text("Create Listing")
+        }
+
+        Button(
+            onClick = backToLogin,
+            modifier = Modifier.align(Alignment.BottomStart)
+        ) {
+            Text("Back")
+        }
     }
 }
 
