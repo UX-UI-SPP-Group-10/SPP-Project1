@@ -24,126 +24,92 @@ import com.sppProject.app.api_integration.data_class.Buyer
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 
 @Composable
-fun CreatePage(backToLogin: () -> Unit, buyerFetcher: BuyerFetcher){
+fun CreatePage(backToLogin: () -> Unit, buyerFetcher: BuyerFetcher) {
     var retailerInfomation by remember { mutableStateOf(false) }
-    var youserInfomation by remember { mutableStateOf(false) }
+    var userInformation by remember { mutableStateOf(false) }
     var sendInfo by remember { mutableStateOf(false) }
-    Column(modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = 32.dp))
-    {
-        RetailerInfo(
-            retailerInfomation = retailerInfomation,
-            onClick = {
-                retailerInfomation = !retailerInfomation
-                if(retailerInfomation) youserInfomation = false},
-            sendInfo = sendInfo,
-            buyerFetcher = buyerFetcher
+    var navigateToRetailerHomePage by remember { mutableStateOf(false) }
+    var navigateToUserHomePage by remember { mutableStateOf(false) }
+
+    if (navigateToRetailerHomePage) {
+        RetailerHomePage(backToLogin = backToLogin)
+    } else if (navigateToUserHomePage){
+        UserHomePage  (backToLogin = backToLogin)
+    }  else {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 32.dp)
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        UserInfo(
-            youserInfomation = youserInfomation,
-            onClick = {
-                youserInfomation = !youserInfomation
-                if (youserInfomation) retailerInfomation = false
-            },
-            sendInfo = sendInfo,
-            buyerFetcher = buyerFetcher,
-            backToLogin = backToLogin
-        )
-        Spacer(modifier = Modifier.height(32.dp))
-    }
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp) // Optional padding from the edges
-    ) {
-        Button(
-            onClick = {
-                sendInfo = true
-            },
-            modifier = Modifier.align(Alignment.BottomEnd) // Aligns the button to the bottom-right
+        {
+            RetailerInfo(
+                retailerInformation = retailerInfomation,
+                onClick = {
+                    retailerInfomation = !retailerInfomation
+                    if (retailerInfomation) userInformation = false
+                },
+                sendInfo = sendInfo,
+                buyerFetcher = buyerFetcher,
+                onNavigateToRetailerHome = {navigateToRetailerHomePage = true}
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            UserInfo(
+                userInformation = userInformation,
+                onClick = {
+                    userInformation = !userInformation
+                    if (userInformation) retailerInfomation = false
+                },
+                sendInfo = sendInfo,
+                buyerFetcher = buyerFetcher,
+                backToLogin = backToLogin,
+                onNavigateToUserHome = {navigateToUserHomePage = true}
+            )
+            Spacer(modifier = Modifier.height(32.dp))
+        }
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp) // Optional padding from the edges
         ) {
-            Text("Make Profile")
-        }
+            Button(
+                onClick = {
+                    sendInfo = true
+                },
+                modifier = Modifier.align(Alignment.BottomEnd) // Aligns the button to the bottom-right
+            ) {
+                Text("Make Profile")
+            }
 
-        Button(onClick = backToLogin,
-            modifier = Modifier.align(Alignment.BottomStart)){
-            Text("Back")
-        }
-    }
-}
-
-
-@Composable
-fun UserInfo(
-    youserInfomation: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    sendInfo: Boolean,
-    buyerFetcher: BuyerFetcher,
-    backToLogin: () -> Unit)
-{
-    var feedbackMessage by remember { mutableStateOf("") }
-    var name by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    val coroutineScope = rememberCoroutineScope()
-
-    Button(onClick = onClick) {
-        Text("User")
-    }
-    if(youserInfomation){
-        Column(modifier = Modifier.padding(top = 16.dp)){
-            TextField(
-                value = name,
-                onValueChange = { name = it },
-                label = { Text("Enter Uesrname") }
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            TextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("Enter Password") },
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-        }
-    }
-
-    if (youserInfomation && sendInfo && name.isNotBlank()) {
-        LaunchedEffect(sendInfo) {
-            try {
-                buyerFetcher.createBuyer(Buyer(name = name)) // Create buyer
-                name = "" // Clear name input after successful submission
-                feedbackMessage = "Buyer added successfully!"
-                backToLogin()
-            } catch (e: Exception) {
-                feedbackMessage = e.message ?: "An error occurred while adding buyer."
+            Button(
+                onClick = backToLogin,
+                modifier = Modifier.align(Alignment.BottomStart)
+            ) {
+                Text("Back")
             }
         }
-    } else if (youserInfomation && sendInfo && name.isBlank()) {
-        feedbackMessage = "Name cannot be empty."
     }
 }
 
 @Composable
 fun RetailerInfo(
-    retailerInfomation: Boolean,
+    retailerInformation: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     sendInfo: Boolean,
-    buyerFetcher: BuyerFetcher){
+    buyerFetcher: BuyerFetcher,
+    onNavigateToRetailerHome: () -> Unit
+){
     var company by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
 
     Button(onClick = onClick) {
         Text("Retailer")
     }
 
-    if(retailerInfomation){
+
+    if(retailerInformation){
         Column(modifier = Modifier.padding(top = 16.dp)){
             TextField(
                 value = company,
@@ -168,9 +134,77 @@ fun RetailerInfo(
             )
 
             Spacer(modifier = Modifier.height(16.dp))
+
+            Button(onClick = {
+                onNavigateToRetailerHome()
+            }) {
+                Text("Create Profile")
+            }
+
         }
     }
-    if(retailerInfomation && sendInfo){
+
+    if(retailerInformation && sendInfo){
         //send infomation and gow to logind page
+    }
+}
+
+@Composable
+fun UserInfo(
+    userInformation: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    sendInfo: Boolean,
+    buyerFetcher: BuyerFetcher,
+    backToLogin: () -> Unit,
+    onNavigateToUserHome: () -> Unit)
+{
+    var feedbackMessage by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
+
+    Button(onClick = onClick) {
+        Text("User")
+    }
+    if(userInformation){
+        Column(modifier = Modifier.padding(top = 16.dp)){
+            TextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("Enter Uesrname") }
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Enter Password") },
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(onClick = {
+                onNavigateToUserHome()
+            }) {
+                Text("Create Profile")
+            }
+        }
+    }
+
+    if (userInformation && sendInfo && name.isNotBlank()) {
+        LaunchedEffect(sendInfo) {
+            try {
+                buyerFetcher.createBuyer(Buyer(id = 0, name = name)) // Create buyer
+                name = "" // Clear name input after successful submission
+                feedbackMessage = "Buyer added successfully!"
+                backToLogin()
+            } catch (e: Exception) {
+                feedbackMessage = e.message ?: "An error occurred while adding buyer."
+            }
+        }
+    } else if (userInformation && sendInfo && name.isBlank()) {
+        feedbackMessage = "Name cannot be empty."
     }
 }

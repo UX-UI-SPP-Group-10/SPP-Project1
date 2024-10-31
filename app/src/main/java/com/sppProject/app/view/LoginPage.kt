@@ -45,7 +45,7 @@ fun LoginPage(buyerFetcher: BuyerFetcher) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = { newUser = true }) {
-                Text("Creat profile")
+                Text("Create profile")
             }
 
             Box(
