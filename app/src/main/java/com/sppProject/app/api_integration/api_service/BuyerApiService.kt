@@ -11,8 +11,11 @@ import retrofit2.http.POST
  */
 interface BuyerApiService {
     @GET("buyers")
-    suspend fun getAllBuyers(): List<Buyer> // Use suspend function
+    suspend fun getAllBuyers(): List<Buyer>
+
+    @GET("buyers")
+    suspend fun getBuyerById(id: Long): Buyer
 
     @POST("buyers")
-    suspend fun createBuyer(@Body item: Buyer): Buyer // Use suspend function
+    suspend fun createBuyer(@Body newBuyer: Buyer): Buyer
 }

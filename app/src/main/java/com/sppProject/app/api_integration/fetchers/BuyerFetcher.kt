@@ -22,8 +22,8 @@ class BuyerFetcher(
     }
 
     // Create buyer using the generic method
-    suspend fun createBuyer(item: Buyer): Buyer {
-        return apiFetcher.handleApiCallSingle { buyerApiService.createBuyer(item) }
+    suspend fun createBuyer(newBuyer: Buyer): Buyer {
+        return apiFetcher.handleApiCallSingle { buyerApiService.createBuyer(newBuyer) }
     }
 }
 

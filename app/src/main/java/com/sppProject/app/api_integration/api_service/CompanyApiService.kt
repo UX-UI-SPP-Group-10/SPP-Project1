@@ -6,8 +6,12 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface CompanyApiService {
-    @GET("company")
-    suspend fun getCompany(): Company
-    @POST("company")
-    suspend fun addCompany(@Body company: Company)
+    @GET("companies")
+    suspend fun getCompanyById(id: Long): Company
+
+    @GET("companies")
+    suspend fun getAllCompanies(): List<Company>
+
+    @POST("companies")
+    suspend fun addCompany(@Body newCompany: Company): Company
 }
