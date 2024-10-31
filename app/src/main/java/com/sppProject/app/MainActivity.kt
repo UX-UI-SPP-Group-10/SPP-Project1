@@ -88,10 +88,13 @@ fun App(backToLogin: () -> Unit, buyerFetcher: BuyerFetcher) {
     var youserInfomation by remember { mutableStateOf(false) }
     var sendInfo by remember { mutableStateOf(false) }
     var navigateToRetailerHomePage by remember { mutableStateOf(false) }
+    var navigateToUserHomePage by remember { mutableStateOf(false) }
 
     if (navigateToRetailerHomePage) {
         RetailerHomePage(backToLogin = backToLogin)
-    } else {
+    } else if (navigateToUserHomePage){
+        UserHomePage  (backToLogin = backToLogin)
+    }  else {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -106,7 +109,7 @@ fun App(backToLogin: () -> Unit, buyerFetcher: BuyerFetcher) {
                 },
                 sendInfo = sendInfo,
                 buyerFetcher = buyerFetcher,
-                onNavigateToHome = {navigateToRetailerHomePage = true}
+                onNavigateToRetailerHome = {navigateToRetailerHomePage = true}
             )
             Spacer(modifier = Modifier.height(16.dp))
             UserInfo(
@@ -117,7 +120,8 @@ fun App(backToLogin: () -> Unit, buyerFetcher: BuyerFetcher) {
                 },
                 sendInfo = sendInfo,
                 buyerFetcher = buyerFetcher,
-                backToLogin = backToLogin
+                backToLogin = backToLogin,
+                onNavigateToUserHome = {navigateToUserHomePage = true}
             )
             Spacer(modifier = Modifier.height(32.dp))
         }
@@ -152,7 +156,7 @@ fun RetylerInfo(
     modifier: Modifier = Modifier,
     sendInfo: Boolean,
     buyerFetcher: BuyerFetcher,
-    onNavigateToHome: () -> Unit
+    onNavigateToRetailerHome: () -> Unit
 ){
     var company by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
@@ -191,7 +195,7 @@ fun RetylerInfo(
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = {
-                onNavigateToHome()
+                onNavigateToRetailerHome()
             }) {
                 Text("Create Profile")
             }
@@ -211,7 +215,8 @@ fun UserInfo(
     modifier: Modifier = Modifier,
     sendInfo: Boolean,
     buyerFetcher: BuyerFetcher,
-    backToLogin: () -> Unit)
+    backToLogin: () -> Unit,
+    onNavigateToUserHome: () -> Unit)
 {
     var feedbackMessage by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
@@ -238,6 +243,12 @@ fun UserInfo(
             )
 
             Spacer(modifier = Modifier.height(16.dp))
+
+            Button(onClick = {
+                onNavigateToUserHome()
+            }) {
+                Text("Create Profile")
+            }
         }
     }
 
@@ -279,6 +290,39 @@ fun RetailerHomePage(
             modifier = Modifier.align(Alignment.BottomEnd)
         ) {
             Text("Create Listing")
+        }
+
+        Button(
+            onClick = backToLogin,
+            modifier = Modifier.align(Alignment.BottomStart)
+        ) {
+            Text("Back")
+        }
+    }
+}
+
+@Composable
+fun UserHomePage(
+    modifier: Modifier = Modifier,
+    backToLogin: () -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxSize().padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text("Welcome to the User Home Page")
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp) // Optional padding from the edges
+    ) {
+        Button(
+            onClick = {},
+            modifier = Modifier.align(Alignment.BottomEnd)
+        ) {
+            Text("View Listings")
         }
 
         Button(
