@@ -113,7 +113,7 @@ fun UserInfo(
     if (youserInfomation && sendInfo && name.isNotBlank()) {
         LaunchedEffect(sendInfo) {
             try {
-                buyerFetcher.createBuyer(Buyer(id = 0, name = name)) // Create buyer
+                buyerFetcher.createBuyer(Buyer(name = name)) // Create buyer
                 name = "" // Clear name input after successful submission
                 feedbackMessage = "Buyer added successfully!"
                 backToLogin()
