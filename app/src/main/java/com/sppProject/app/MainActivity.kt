@@ -78,12 +78,12 @@ fun Logindpage(buyerFetcher: BuyerFetcher) {
         }
     }
     else{
-        App(backToLogin = { newUser = false })
+        App(backToLogin = { newUser = false }, buyerFetcher)
     }
 }
 
 @Composable
-fun App(backToLogin: () -> Unit){
+fun App(backToLogin: () -> Unit, buyerFetcher: BuyerFetcher){
     var retylerInfomation by remember { mutableStateOf(false) }
     var youserInfomation by remember { mutableStateOf(false) }
     var sendInfo by remember { mutableStateOf(false) }
@@ -96,7 +96,8 @@ fun App(backToLogin: () -> Unit){
             onClick = {
                 retylerInfomation = !retylerInfomation
                 if(retylerInfomation) youserInfomation = false},
-            sendInfo = sendInfo
+            sendInfo = sendInfo,
+            buyerFetcher = buyerFetcher
         )
         Spacer(modifier = Modifier.height(16.dp))
         UserInfo(
@@ -105,7 +106,9 @@ fun App(backToLogin: () -> Unit){
                 youserInfomation = !youserInfomation
                 if (youserInfomation) retylerInfomation = false
             },
-            sendInfo = sendInfo
+            sendInfo = sendInfo,
+            buyerFetcher = buyerFetcher,
+            backToLogin = backToLogin
         )
         Spacer(modifier = Modifier.height(32.dp))
     }
@@ -135,7 +138,8 @@ fun RetylerInfo(
     retylerInfomation: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    sendInfo: Boolean){
+    sendInfo: Boolean,
+    buyerFetcher: BuyerFetcher){
     var company by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -181,10 +185,14 @@ fun UserInfo(
     youserInfomation: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    sendInfo: Boolean)
+    sendInfo: Boolean,
+    buyerFetcher: BuyerFetcher,
+    backToLogin: () -> Unit)
 {
+    var feedbackMessage by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
 
     Button(onClick = onClick) {
         Text("User")
@@ -209,10 +217,20 @@ fun UserInfo(
         }
     }
 
-    if(youserInfomation && sendInfo){
-        //send infomation and gow to logind page
+    if (youserInfomation && sendInfo && name.isNotBlank()) {
+        LaunchedEffect(sendInfo) {
+            try {
+                buyerFetcher.createBuyer(Buyer(id = 0, name = name)) // Create buyer
+                name = "" // Clear name input after successful submission
+                feedbackMessage = "Buyer added successfully!"
+                backToLogin()
+            } catch (e: Exception) {
+                feedbackMessage = e.message ?: "An error occurred while adding buyer."
+            }
+        }
+    } else if (youserInfomation && sendInfo && name.isBlank()) {
+        feedbackMessage = "Name cannot be empty."
     }
-
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
