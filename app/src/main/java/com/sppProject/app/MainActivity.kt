@@ -26,8 +26,210 @@ class MainActivity : ComponentActivity() {
 
         // Set the content of the activity
         setContent {
-            SimpleBuyerApp(buyerFetcher)
+            Logindpage(buyerFetcher)
         }
+    }
+}
+
+@Composable
+fun Logindpage(buyerFetcher: BuyerFetcher) {
+    var logOn by remember { mutableStateOf(false) }
+    var newUser by remember { mutableStateOf(false) }
+    var name by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+
+    if (!newUser) {
+        Column(modifier = Modifier.padding(top = 16.dp)) {
+            TextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("Enter Uesrname") }
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Enter Password") },
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(onClick = { newUser = true }) {
+                Text("Creat profile")
+            }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
+                Button(
+                    onClick = {
+                        logOn = true
+                    },
+                    modifier = Modifier.align(Alignment.Center)
+                ) {
+                    Text("Log in")
+                }
+            }
+
+        }
+    }
+    else{
+        App(backToLogin = { newUser = false }, buyerFetcher)
+    }
+}
+
+@Composable
+fun App(backToLogin: () -> Unit, buyerFetcher: BuyerFetcher){
+    var retylerInfomation by remember { mutableStateOf(false) }
+    var youserInfomation by remember { mutableStateOf(false) }
+    var sendInfo by remember { mutableStateOf(false) }
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 32.dp))
+    {
+        RetylerInfo(
+            retylerInfomation = retylerInfomation,
+            onClick = {
+                retylerInfomation = !retylerInfomation
+                if(retylerInfomation) youserInfomation = false},
+            sendInfo = sendInfo,
+            buyerFetcher = buyerFetcher
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        UserInfo(
+            youserInfomation = youserInfomation,
+            onClick = {
+                youserInfomation = !youserInfomation
+                if (youserInfomation) retylerInfomation = false
+            },
+            sendInfo = sendInfo,
+            buyerFetcher = buyerFetcher,
+            backToLogin = backToLogin
+        )
+        Spacer(modifier = Modifier.height(32.dp))
+    }
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp) // Optional padding from the edges
+    ) {
+        Button(
+            onClick = {
+                sendInfo = true
+            },
+            modifier = Modifier.align(Alignment.BottomEnd) // Aligns the button to the bottom-right
+        ) {
+            Text("Make Profile")
+        }
+
+        Button(onClick = backToLogin,
+            modifier = Modifier.align(Alignment.BottomStart)){
+            Text("Back")
+        }
+    }
+}
+
+@Composable
+fun RetylerInfo(
+    retylerInfomation: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    sendInfo: Boolean,
+    buyerFetcher: BuyerFetcher){
+    var company by remember { mutableStateOf("") }
+    var location by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+
+    Button(onClick = onClick) {
+        Text("Retailer")
+    }
+
+    if(retylerInfomation){
+        Column(modifier = Modifier.padding(top = 16.dp)){
+            TextField(
+                value = company,
+                onValueChange = { company = it },
+                label = { Text("Enter Company") }
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextField(
+                value = location,
+                onValueChange = { location = it },
+                label = { Text("Enter Location") }
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Enter Password") },
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+    if(retylerInfomation && sendInfo){
+        //send infomation and gow to logind page
+    }
+}
+
+@Composable
+fun UserInfo(
+    youserInfomation: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    sendInfo: Boolean,
+    buyerFetcher: BuyerFetcher,
+    backToLogin: () -> Unit)
+{
+    var feedbackMessage by remember { mutableStateOf("") }
+    var name by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
+
+    Button(onClick = onClick) {
+        Text("User")
+    }
+    if(youserInfomation){
+        Column(modifier = Modifier.padding(top = 16.dp)){
+            TextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text("Enter Uesrname") }
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            TextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Enter Password") },
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+
+    if (youserInfomation && sendInfo && name.isNotBlank()) {
+        LaunchedEffect(sendInfo) {
+            try {
+                buyerFetcher.createBuyer(Buyer(id = 0, name = name)) // Create buyer
+                name = "" // Clear name input after successful submission
+                feedbackMessage = "Buyer added successfully!"
+                backToLogin()
+            } catch (e: Exception) {
+                feedbackMessage = e.message ?: "An error occurred while adding buyer."
+            }
+        }
+    } else if (youserInfomation && sendInfo && name.isBlank()) {
+        feedbackMessage = "Name cannot be empty."
     }
 }
 
