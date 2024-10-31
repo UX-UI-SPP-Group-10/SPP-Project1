@@ -57,7 +57,7 @@ fun Logindpage(buyerFetcher: BuyerFetcher) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = { newUser = true }) {
-                Text("Creat profile")
+                Text("Create profile")
             }
 
             Box(
@@ -84,8 +84,8 @@ fun Logindpage(buyerFetcher: BuyerFetcher) {
 
 @Composable
 fun App(backToLogin: () -> Unit, buyerFetcher: BuyerFetcher) {
-    var retylerInfomation by remember { mutableStateOf(false) }
-    var youserInfomation by remember { mutableStateOf(false) }
+    var retailerInfomation by remember { mutableStateOf(false) }
+    var userInformation by remember { mutableStateOf(false) }
     var sendInfo by remember { mutableStateOf(false) }
     var navigateToRetailerHomePage by remember { mutableStateOf(false) }
     var navigateToUserHomePage by remember { mutableStateOf(false) }
@@ -101,11 +101,11 @@ fun App(backToLogin: () -> Unit, buyerFetcher: BuyerFetcher) {
                 .padding(top = 32.dp)
         )
         {
-            RetylerInfo(
-                retylerInfomation = retylerInfomation,
+            RetailerInfo(
+                retailerInformation = retailerInfomation,
                 onClick = {
-                    retylerInfomation = !retylerInfomation
-                    if (retylerInfomation) youserInfomation = false
+                    retailerInfomation = !retailerInfomation
+                    if (retailerInfomation) userInformation = false
                 },
                 sendInfo = sendInfo,
                 buyerFetcher = buyerFetcher,
@@ -113,10 +113,10 @@ fun App(backToLogin: () -> Unit, buyerFetcher: BuyerFetcher) {
             )
             Spacer(modifier = Modifier.height(16.dp))
             UserInfo(
-                youserInfomation = youserInfomation,
+                userInformation = userInformation,
                 onClick = {
-                    youserInfomation = !youserInfomation
-                    if (youserInfomation) retylerInfomation = false
+                    userInformation = !userInformation
+                    if (userInformation) retailerInfomation = false
                 },
                 sendInfo = sendInfo,
                 buyerFetcher = buyerFetcher,
@@ -150,8 +150,8 @@ fun App(backToLogin: () -> Unit, buyerFetcher: BuyerFetcher) {
 }
 
 @Composable
-fun RetylerInfo(
-    retylerInfomation: Boolean,
+fun RetailerInfo(
+    retailerInformation: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     sendInfo: Boolean,
@@ -168,7 +168,7 @@ fun RetylerInfo(
     }
 
 
-    if(retylerInfomation){
+    if(retailerInformation){
         Column(modifier = Modifier.padding(top = 16.dp)){
             TextField(
                 value = company,
@@ -203,14 +203,14 @@ fun RetylerInfo(
         }
     }
 
-    if(retylerInfomation && sendInfo){
+    if(retailerInformation && sendInfo){
         //send infomation and gow to logind page
     }
 }
 
 @Composable
 fun UserInfo(
-    youserInfomation: Boolean,
+    userInformation: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     sendInfo: Boolean,
@@ -226,7 +226,7 @@ fun UserInfo(
     Button(onClick = onClick) {
         Text("User")
     }
-    if(youserInfomation){
+    if(userInformation){
         Column(modifier = Modifier.padding(top = 16.dp)){
             TextField(
                 value = name,
@@ -252,7 +252,7 @@ fun UserInfo(
         }
     }
 
-    if (youserInfomation && sendInfo && name.isNotBlank()) {
+    if (userInformation && sendInfo && name.isNotBlank()) {
         LaunchedEffect(sendInfo) {
             try {
                 buyerFetcher.createBuyer(Buyer(id = 0, name = name)) // Create buyer
@@ -263,7 +263,7 @@ fun UserInfo(
                 feedbackMessage = e.message ?: "An error occurred while adding buyer."
             }
         }
-    } else if (youserInfomation && sendInfo && name.isBlank()) {
+    } else if (userInformation && sendInfo && name.isBlank()) {
         feedbackMessage = "Name cannot be empty."
     }
 }
