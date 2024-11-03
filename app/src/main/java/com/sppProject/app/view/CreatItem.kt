@@ -111,7 +111,7 @@ fun ItemPage() {
                 .align(Alignment.BottomCenter)
                 .width(200.dp)
         ) {
-            Text("Oplode Item")
+            Text("Upload Item")
         }
 
         Button(
