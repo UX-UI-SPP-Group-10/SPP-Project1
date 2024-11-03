@@ -29,24 +29,21 @@ class ItemFetcherIntegrationTest {
     fun creatingItemTest() = runBlocking {
         println("Starting testCreateItem")
         // Arrange
-        val company = Company(id = 1, name = "Test Company") // Assume this company already exists in backend
         val newItem = Item(
             name = "Test Item",
             price = 100,
             description = "A test item description",
             stock = 10,
-            company = company
         )
 
         // Act
-        val createdItem = itemFetcher.createItem(newItem)
+        val createdItem = itemFetcher.createItem(compId = 1, newItem = newItem)
 
         // Assert
         assertEquals(newItem.name, createdItem.name)
         assertEquals(newItem.price, createdItem.price)
         assertEquals(newItem.description, createdItem.description)
         assertEquals(newItem.stock, createdItem.stock)
-        assertEquals(newItem.company.id, createdItem.company.id)
         assertTrue("The created item ID should be greater than 0.", (createdItem.id ?: 0) > 0)
         println("Created item: $createdItem")
     }

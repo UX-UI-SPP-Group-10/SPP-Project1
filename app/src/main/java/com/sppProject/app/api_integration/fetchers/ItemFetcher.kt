@@ -13,8 +13,8 @@ class ItemFetcher (
         return apiFetcher.handleApiCallList { itemApiFetcher.getAllItems() }
     }
 
-    suspend fun createItem(newItem: Item): Item {
-        return apiFetcher.handleApiCallSingle { itemApiFetcher.addItem(newItem) }
+    suspend fun createItem(compId: Long, newItem: Item): Item {
+        return apiFetcher.handleApiCallSingle { itemApiFetcher.addItem(compId, newItem) }
     }
 
     suspend fun getItemById(id: Long): Item {

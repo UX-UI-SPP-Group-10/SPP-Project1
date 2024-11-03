@@ -3,6 +3,7 @@ import com.sppProject.app.api_integration.data_class.Item
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface ItemApiService {
     @GET("items")
@@ -11,6 +12,9 @@ interface ItemApiService {
     @GET("items")
     suspend fun getItemById(id: Long): Item
 
-    @POST("items")
-    suspend fun addItem(@Body newItem: Item): Item
+    @POST("items/company/{compId}")
+    suspend fun addItem(
+        @Path("compId") compId: Long,
+        @Body item: Item
+    ): Item
 }

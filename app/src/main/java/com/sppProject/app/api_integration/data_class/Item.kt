@@ -8,13 +8,12 @@ data class Item(
     @SerializedName("price") val price: Int,           // Matches price from backend
     @SerializedName("description") val description: String?, // Matches description from backend
     @SerializedName("stock") val stock: Int,           // Matches stock from backend
-    @SerializedName("company") val company: Company   // Relationship to Company
+    @SerializedName("company") val company: Company?   // Relationship to Company
 ) {
     constructor(
         name: String,
         price: Int,
         description: String?,
         stock: Int,
-        company: Company
-    ) : this(id = null, name = name, price = price, description = description, stock = stock, company = company)
+    ) : this(id = null, name = name, price = price, description = description, stock = stock, company = null)
 }
