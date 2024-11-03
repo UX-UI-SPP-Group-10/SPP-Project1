@@ -1,10 +1,5 @@
 package com.sppProject.app.api_integration
 
-import retrofit2.Response
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
-
 /**
  * A generic class to manage API calls for different types of data.
  *
