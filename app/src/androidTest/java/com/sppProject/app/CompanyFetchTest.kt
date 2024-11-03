@@ -36,7 +36,7 @@ class CompanyFetcherIntegrationTest {
 
         // Assert
         assertEquals(newCompany.name, createdCompany.name)
-        assertTrue("The created company ID should be greater than 0.", createdCompany.id > 0)
+        assertTrue("The created company ID should be greater than 0.", (createdCompany.id ?: 0) > 0)
         println("Created company: $createdCompany")
     }
 

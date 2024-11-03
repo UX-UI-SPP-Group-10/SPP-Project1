@@ -35,7 +35,7 @@ class BuyerFetcherIntegrationTest {
 
         // Assert
         assertEquals(newBuyer.name, createdBuyer.name)
-        assertTrue("The created buyer ID should be greater than 0.", createdBuyer.id > 0)
+        assertTrue("The created buyer ID should be greater than 0.", (createdBuyer.id ?: 0) > 0)
     }
 
     @Test
