@@ -26,7 +26,7 @@ fun StartPage(navController: NavHostController) {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) { Button(
             onClick = {
-                navController.navigate(NavigationRoutes.LOGIN)
+                navController.navigate(NavigationRoutes.LOGIN_PAGE)
             },
             modifier = Modifier.width(150.dp)
         ) {
