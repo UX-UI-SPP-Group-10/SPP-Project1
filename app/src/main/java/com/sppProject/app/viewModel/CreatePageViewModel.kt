@@ -34,12 +34,12 @@ class CreatePageViewModel(private val buyerFetcher: BuyerFetcher, private val co
                     is CreatePageState.ShowUser -> {
                         buyerFetcher.createBuyer(Buyer(userName.toString())) // Example name
                         _feedbackMessage.value = "User added successfully!"
-                        navActions.navigateToLogin()
+                        navActions.navigateToUserHome()
                     }
                     is CreatePageState.ShowRetailer -> {
                         companyFetcher.createCompany(Company(userName.toString())) // Example name
                         _feedbackMessage.value = "Retailer added successfully!"
-                        navActions.navigateToLogin()
+                        navActions.navigateToRetailerHome()
                     }
                     CreatePageState.None -> TODO()
                 }
