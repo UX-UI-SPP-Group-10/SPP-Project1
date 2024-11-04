@@ -22,9 +22,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sppProject.app.data.data_class.Buyer
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
+import com.sppProject.app.api_integration.fetchers.CompanyFetcher
+import com.sppProject.app.data.data_class.Company
 
 @Composable
-fun CreatePage(backToLogin: () -> Unit, buyerFetcher: BuyerFetcher) {
+fun CreatePage(backToLogin: () -> Unit, buyerFetcher: BuyerFetcher, companyFetcher: CompanyFetcher) {
     var retailerInfomation by remember { mutableStateOf(false) }
     var userInformation by remember { mutableStateOf(false) }
     var sendInfo by remember { mutableStateOf(false) }
@@ -49,7 +51,8 @@ fun CreatePage(backToLogin: () -> Unit, buyerFetcher: BuyerFetcher) {
                     if (retailerInfomation) userInformation = false
                 },
                 sendInfo = sendInfo,
-                buyerFetcher = buyerFetcher,
+                companyFetcher = companyFetcher,
+                backToLogin = backToLogin,
                 onNavigateToRetailerHome = {navigateToRetailerHomePage = true}
             )
             Spacer(modifier = Modifier.height(16.dp))
@@ -96,12 +99,14 @@ fun RetailerInfo(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     sendInfo: Boolean,
-    buyerFetcher: BuyerFetcher,
+    companyFetcher: CompanyFetcher,
+    backToLogin: () -> Unit,
     onNavigateToRetailerHome: () -> Unit
 ){
     var company by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var feedbackMessage by remember { mutableStateOf("") }
 
 
     Button(onClick = onClick) {
@@ -144,8 +149,20 @@ fun RetailerInfo(
         }
     }
 
-    if(retailerInformation && sendInfo){
+    if(retailerInformation && sendInfo && company.isNotBlank()){
         //send infomation and gow to logind page
+        LaunchedEffect(sendInfo) {
+            try {
+                companyFetcher.createCompany(Company(id = 0, name = company))
+                company = ""
+                feedbackMessage = "Company added successfully"
+                backToLogin()
+            } catch (e: Exception) {
+                feedbackMessage = e.message?: "An error occured while adding company"
+            }
+        }
+    } else if (retailerInformation && sendInfo && company.isBlank()){
+        feedbackMessage = "Company name cannot be empty"
     }
 }
 
@@ -172,7 +189,7 @@ fun UserInfo(
             TextField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text("Enter Uesrname") }
+                label = { Text("Enter Username") }
             )
 
             Spacer(modifier = Modifier.height(16.dp))

@@ -20,9 +20,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
+import com.sppProject.app.api_integration.fetchers.CompanyFetcher
 
 @Composable
-fun LoginPage(buyerFetcher: BuyerFetcher) {
+fun LoginPage(buyerFetcher: BuyerFetcher, companyFetcher: CompanyFetcher) {
     var logOn by remember { mutableStateOf(false) }
     var newUser by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf("") }
@@ -80,7 +81,7 @@ fun LoginPage(buyerFetcher: BuyerFetcher) {
             }
         }
     } else {
-        CreatePage(backToLogin = { newUser = false }, buyerFetcher)
+        CreatePage(backToLogin = { newUser = false }, buyerFetcher, companyFetcher)
     }
 }
 
