@@ -33,11 +33,12 @@ import com.sppProject.app.R
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.data.data_class.Buyer
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
+import com.sppProject.app.viewModel.CreatePageViewModel
 
 
-sealed class CreatePageState(val content: @Composable () -> Unit) {
-    class ShowRetailer : CreatePageState({ RetailerInfo() })
-    class ShowUser : CreatePageState({ UserInfo() })
+sealed class CreatePageState(val content: @Composable (CreatePageViewModel) -> Unit) {
+    class ShowRetailer : CreatePageState({ viewModel -> RetailerInfo(viewModel) })
+    class ShowUser : CreatePageState({ viewModel -> UserInfo(viewModel) })
     object None : CreatePageState({
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text("Select an option above to get started.")
@@ -48,18 +49,13 @@ sealed class CreatePageState(val content: @Composable () -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher) {
-    var createPageState by remember { mutableStateOf<CreatePageState>(CreatePageState.ShowUser()) }
-    var sendInfo by remember { mutableStateOf(false) }
-    var feedbackMessage by remember { mutableStateOf("") }
+    val viewModel: CreatePageViewModel = remember { CreatePageViewModel(buyerFetcher) }
 
     Scaffold(
         topBar = {
             TopAppBar(title = { Text("Create Profile") })
         },
         content = { innerPadding ->
-            // Central container to display the selected composable based on the state
-
-            // Buttons to switch between Retailer and User views
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -72,7 +68,7 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher) {
                 ) {
                     Button(
                         onClick = {
-                            createPageState = CreatePageState.ShowUser()
+                            viewModel.setCreatePageState(CreatePageState.ShowUser())
                         }
                     ) {
                         Text("User")
@@ -80,67 +76,51 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher) {
                     Spacer(modifier = Modifier.width(2.dp))
                     Button(
                         onClick = {
-                            createPageState = CreatePageState.ShowRetailer()
+                            viewModel.setCreatePageState(CreatePageState.ShowRetailer())
                         }
                     ) {
                         Text("Retailer")
                     }
+
                 }
             }
 
-            // Box containing user or retailer content
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(innerPadding) // Use innerPadding to avoid overlap with the top bar
+                    .padding(innerPadding)
                     .padding(16.dp),
                 contentAlignment = Alignment.Center
             ) {
-                createPageState.content()
+                viewModel.createPageState.content(viewModel)
+                Button(onClick = {
+                    viewModel.sendInfo(navActions)
+                },
+                    modifier = Modifier.align(Alignment.BottomEnd)) {
+                    Text("Create Profile")
+                }
 
-                // Back button at the bottom left
                 Button(
                     onClick = {
                         navActions.navigateBack()
-                    }, // Use NavController to go back
+                    },
                     modifier = Modifier.align(Alignment.BottomStart)
                 ) {
                     Text("Back")
                 }
             }
-
         }
     )
 
-    if (sendInfo) {
-        LaunchedEffect(sendInfo) {
-            try {
-                // Submit info based on the selected state
-                if (createPageState is CreatePageState.ShowUser) {
-                    buyerFetcher.createBuyer(Buyer(id = 0, name = "UserName")) // Example name
-                    feedbackMessage = "User added successfully!"
-                    navActions.navigateToLogin()
-                } else if (createPageState is CreatePageState.ShowRetailer) {
-                    buyerFetcher.createBuyer(Buyer(id = 0, name = "Retailer")) // Example name
-                    feedbackMessage = "Retailer added successfully!"
-                    navActions.navigateToLogin()
-                }
-            } catch (e: Exception) {
-                feedbackMessage = e.message ?: "An error occurred while adding user."
-            } finally {
-                sendInfo = false // Reset sendInfo after submission
-            }
-        }
-    }
-
-    if (feedbackMessage.isNotEmpty()) {
-        Text(feedbackMessage, modifier = Modifier.padding(16.dp))
+    if (viewModel.feedbackMessage.isNotEmpty()) {
+        Text(viewModel.feedbackMessage, modifier = Modifier.padding(16.dp))
     }
 }
 
 
+
 @Composable
-fun RetailerInfo() {
+fun RetailerInfo(viewModel: CreatePageViewModel) {
     var company by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -149,24 +129,20 @@ fun RetailerInfo() {
         InputField("Enter Company", company) { company = it }
         InputField("Enter Location", location) { location = it }
         InputField("Enter Password", password) { password = it }
-        Button(onClick = { /* Handle create retailer */ }) {
-            Text("Create Profile")
-        }
     }
+    viewModel.userName = company
 }
 
 @Composable
-fun UserInfo() {
+fun UserInfo(viewModel: CreatePageViewModel) {
     var name by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     Column(modifier = Modifier.padding(top = 16.dp)) {
         InputField("Enter Username", name) { name = it }
         InputField("Enter Password", password) { password = it }
-        Button(onClick = { /* Handle create user */ }) {
-            Text("Create Profile")
-        }
     }
+    viewModel.userName = name
 }
 
 @Composable
