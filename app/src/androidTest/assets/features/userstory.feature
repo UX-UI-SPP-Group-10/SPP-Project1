@@ -1,4 +1,4 @@
-Feature: Create, Log in, View
+Feature: Create listing, Log in, Create user, Launch main activity
 
   Scenario: Cucumber Test 1: Create new item listing
     Given the retailer is on the create item page
@@ -6,7 +6,7 @@ Feature: Create, Log in, View
     Then the item should be created as a new listing
 
   Scenario: Cucumber Test 2: Log in as retailer
-    Given the app is open and user is created
+    Given the app is open and retailer is created
     When name and password is given and log in is pressed
     Then the retailer will be logged in to the main page
 
@@ -14,6 +14,10 @@ Feature: Create, Log in, View
     Given the app is open on create profile
     When information is entered and create profile is pressed
     Then user is saved in database
+
+  Scenario: Verify LoginPage is displayed
+    Given I launch the MainActivity
+    Then I should see the login page
 
 
 
