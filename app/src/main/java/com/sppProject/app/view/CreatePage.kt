@@ -20,7 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.sppProject.app.api_integration.data_class.Buyer
+import com.sppProject.app.data.data_class.Buyer
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 
 @Composable

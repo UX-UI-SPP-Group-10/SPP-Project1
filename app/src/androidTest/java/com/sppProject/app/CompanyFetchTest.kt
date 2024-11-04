@@ -3,7 +3,7 @@ package integration
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.sppProject.app.api_integration.RetrofitClient
 import com.sppProject.app.api_integration.api_service.CompanyApiService
-import com.sppProject.app.api_integration.data_class.Company
+import com.sppProject.app.data.data_class.Company
 import com.sppProject.app.api_integration.fetchers.CompanyFetcher
 import kotlinx.coroutines.runBlocking
 import org.junit.After

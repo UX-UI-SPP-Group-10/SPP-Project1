@@ -1,6 +1,6 @@
 package com.sppProject.app.api_integration.api_service
 
-import com.sppProject.app.api_integration.data_class.Company
+import com.sppProject.app.data.data_class.Company
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
