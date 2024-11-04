@@ -5,11 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
+import com.sppProject.app.api_integration.fetchers.CompanyFetcher
 import com.sppProject.app.data.data_class.Buyer
+import com.sppProject.app.data.data_class.Company
 import com.sppProject.app.view.CreatePageState
 import kotlinx.coroutines.launch
 
-class CreatePageViewModel(private val buyerFetcher: BuyerFetcher) : ViewModel() {
+class CreatePageViewModel(private val buyerFetcher: BuyerFetcher, private val companyFetcher: CompanyFetcher) : ViewModel() {
 
     private val _createPageState = mutableStateOf<CreatePageState>(CreatePageState.ShowUser())
     val createPageState: CreatePageState get() = _createPageState.value // read only
@@ -35,7 +37,7 @@ class CreatePageViewModel(private val buyerFetcher: BuyerFetcher) : ViewModel() 
                         navActions.navigateToLogin()
                     }
                     is CreatePageState.ShowRetailer -> {
-                        buyerFetcher.createBuyer(Buyer(userName.toString())) // Example name
+                        companyFetcher.createCompany(Company(userName.toString())) // Example name
                         _feedbackMessage.value = "Retailer added successfully!"
                         navActions.navigateToLogin()
                     }

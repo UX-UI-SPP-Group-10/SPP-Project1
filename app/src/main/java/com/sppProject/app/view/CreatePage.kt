@@ -33,6 +33,7 @@ import com.sppProject.app.R
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.data.data_class.Buyer
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
+import com.sppProject.app.api_integration.fetchers.CompanyFetcher
 import com.sppProject.app.viewModel.CreatePageViewModel
 
 
@@ -48,8 +49,8 @@ sealed class CreatePageState(val content: @Composable (CreatePageViewModel) -> U
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher) {
-    val viewModel: CreatePageViewModel = remember { CreatePageViewModel(buyerFetcher) }
+fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, companyFetcher: CompanyFetcher) {
+    val viewModel: CreatePageViewModel = remember { CreatePageViewModel(buyerFetcher, companyFetcher) }
 
     Scaffold(
         topBar = {

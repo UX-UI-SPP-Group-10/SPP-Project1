@@ -5,6 +5,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
+import com.sppProject.app.api_integration.fetchers.CompanyFetcher
+import com.sppProject.app.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.view.CreatePage
 import com.sppProject.app.view.StartPage
 import com.sppProject.app.view.LoginPage
@@ -50,7 +52,7 @@ class UserNavActions(private val navController: NavHostController) {
 
 
 @Composable
-fun AppNavGraph(navController: NavHostController, buyerFetcher: BuyerFetcher) {
+fun AppNavGraph(navController: NavHostController, buyerFetcher: BuyerFetcher, companyFetcher: CompanyFetcher, itemFetcher: ItemFetcher) {
     // Create an instance of UserNavActions
     val userNavActions = UserNavActions(navController)
 
@@ -59,7 +61,7 @@ fun AppNavGraph(navController: NavHostController, buyerFetcher: BuyerFetcher) {
         composable(NavigationRoutes.LOGIN_PAGE) { LoginPage(buyerFetcher, userNavActions) }
         composable(NavigationRoutes.USER_HOME) { UserHomePage(userNavActions) }
         composable(NavigationRoutes.RETAILER_HOME) { RetailerHomePage(userNavActions) }
-        composable(NavigationRoutes.CREATE_PAGE) { CreatePage(userNavActions, buyerFetcher) }
+        composable(NavigationRoutes.CREATE_PAGE) { CreatePage(userNavActions, buyerFetcher, companyFetcher) }
     }
 }
 
