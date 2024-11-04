@@ -24,19 +24,18 @@ import com.sppProject.app.UserNavActions
 import com.sppProject.app.data.data_class.Buyer
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 
+// Sealed class to represent the current state of the page
+sealed class CreatePageState {
+    object ShowRetailer : CreatePageState()
+    object ShowUser : CreatePageState()
+    object None : CreatePageState()
+}
+
 @Composable
 fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher) {
     var retailerInformation by remember { mutableStateOf(false) }
     var userInformation by remember { mutableStateOf(false) }
     var sendInfo by remember { mutableStateOf(false) }
-    var navigateToRetailerHomePage by remember { mutableStateOf(false) }
-    var navigateToUserHomePage by remember { mutableStateOf(false) }
-
-    if (navigateToRetailerHomePage) {
-        navActions.navigateToRetailerHome()
-    } else if (navigateToUserHomePage) {
-        navActions.navigateToUserHome()
-    } else {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -50,7 +49,7 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher) {
                 },
                 sendInfo = sendInfo,
                 buyerFetcher = buyerFetcher,
-                onNavigateToRetailerHome = { navigateToRetailerHomePage = true }
+                navActions = navActions
             )
             Spacer(modifier = Modifier.height(16.dp))
             UserInfo(
@@ -61,9 +60,7 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher) {
                 },
                 sendInfo = sendInfo,
                 buyerFetcher = buyerFetcher,
-                // Update the backToLogin parameter to use the navigation action
-                backToLogin = { navActions.navigateBack() }, // Navigate back using UserNavActions
-                onNavigateToUserHome = { navigateToUserHomePage = true }
+                navActions = navActions
             )
             Spacer(modifier = Modifier.height(32.dp))
         }
@@ -90,7 +87,6 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher) {
                 Text("Back")
             }
         }
-    }
 }
 
 
@@ -101,7 +97,7 @@ fun RetailerInfo(
     modifier: Modifier = Modifier,
     sendInfo: Boolean,
     buyerFetcher: BuyerFetcher,
-    onNavigateToRetailerHome: () -> Unit
+    navActions: UserNavActions,
 ){
     var company by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
@@ -140,7 +136,7 @@ fun RetailerInfo(
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = {
-                onNavigateToRetailerHome()
+                navActions.navigateToRetailerHome()
             }) {
                 Text("Create Profile")
             }
@@ -160,8 +156,7 @@ fun UserInfo(
     modifier: Modifier = Modifier,
     sendInfo: Boolean,
     buyerFetcher: BuyerFetcher,
-    backToLogin: () -> Unit,
-    onNavigateToUserHome: () -> Unit)
+    navActions: UserNavActions,)
 {
     var feedbackMessage by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
@@ -190,7 +185,7 @@ fun UserInfo(
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = {
-                onNavigateToUserHome()
+                navActions.navigateToUserHome()
             }) {
                 Text("Create Profile")
             }
@@ -203,7 +198,7 @@ fun UserInfo(
                 buyerFetcher.createBuyer(Buyer(id = 0, name = name)) // Create buyer
                 name = "" // Clear name input after successful submission
                 feedbackMessage = "Buyer added successfully!"
-                backToLogin()
+                navActions.navigateToLogin()
             } catch (e: Exception) {
                 feedbackMessage = e.message ?: "An error occurred while adding buyer."
             }
