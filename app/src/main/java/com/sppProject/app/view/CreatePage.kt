@@ -62,7 +62,7 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher) {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 32.dp),
+                    .padding(top = 250.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Row(
@@ -182,66 +182,4 @@ fun InputField(
         modifier = Modifier.fillMaxWidth()
     )
     Spacer(modifier = Modifier.height(16.dp))
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Preview (showBackground = true)
-@Composable
-fun CreatePagePreview() {
-    Scaffold(
-        topBar = {
-            TopAppBar(title = { Text("Create Profile") })
-        },
-        content = { innerPadding ->
-            // Central container to display the selected composable based on the state
-
-            // Buttons to switch between Retailer and User views
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Row(
-                    modifier = Modifier.padding(top = 16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Button(
-                        onClick = {
-                            //createPageState = CreatePageState.ShowRetailer()
-                        }
-                    ) {
-                        Text("Retailer")
-                    }
-                    Spacer(modifier = Modifier.width(2.dp))
-                    Button(
-                        onClick = {
-                            //createPageState = CreatePageState.ShowUser()
-                        }
-                    ) {
-                        Text("User")
-                    }
-                }
-            }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding) // Use innerPadding to avoid overlap with the top bar
-                    .padding(16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                //createPageState.content()
-
-                // Back button at the bottom left
-                Button(
-                    onClick = {
-                        //navActions.navigateBack()
-                    }, // Use NavController to go back
-                    modifier = Modifier.align(Alignment.BottomStart)
-                ) {
-                    Text("Back")
-                }
-            }
-        })
 }
