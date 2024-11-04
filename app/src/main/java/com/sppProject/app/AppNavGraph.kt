@@ -1,24 +1,27 @@
 package com.sppProject.app
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 import com.sppProject.app.api_integration.fetchers.CompanyFetcher
 import com.sppProject.app.api_integration.fetchers.ItemFetcher
+import com.sppProject.app.data.UserSessionManager
 import com.sppProject.app.view.CreatePage
 import com.sppProject.app.view.StartPage
 import com.sppProject.app.view.LoginPage
 import com.sppProject.app.view.RetailerHomePage
 import com.sppProject.app.view.UserHomePage
+import com.sppProject.app.viewModel.UserViewModel
 
 
 // Call functions from this class to navigate to different screens!
 class UserNavActions(private val navController: NavHostController) {
     fun navigateToStartPage() {
         navController.navigate(NavigationRoutes.START_PAGE) {
-            // Clear the back stack to prevent returning to the start page
             popUpTo(NavigationRoutes.START_PAGE) { inclusive = true }
         }
     }
@@ -28,15 +31,25 @@ class UserNavActions(private val navController: NavHostController) {
     }
 
     fun navigateToUserHome() {
-        navController.navigate(NavigationRoutes.USER_HOME)
+        // Only navigate if not already on the User Home page
+        if (navController.currentDestination?.route != NavigationRoutes.USER_HOME) {
+            navController.navigate(NavigationRoutes.USER_HOME) {
+                // You can clear the back stack if necessary
+                popUpTo(NavigationRoutes.START_PAGE) { inclusive = true }
+            }
+        }
     }
 
     fun navigateToRetailerHome() {
-        navController.navigate(NavigationRoutes.RETAILER_HOME)
+        if (navController.currentDestination?.route != NavigationRoutes.RETAILER_HOME) {
+            navController.navigate(NavigationRoutes.RETAILER_HOME)
+        }
     }
 
     fun navigateToCreatePage() {
-        navController.navigate(NavigationRoutes.CREATE_PAGE)
+        if (navController.currentDestination?.route != NavigationRoutes.CREATE_PAGE) {
+            navController.navigate(NavigationRoutes.CREATE_PAGE)
+        }
     }
 
     fun navigateBack() {
@@ -56,10 +69,13 @@ fun AppNavGraph(navController: NavHostController, buyerFetcher: BuyerFetcher, co
     // Create an instance of UserNavActions
     val userNavActions = UserNavActions(navController)
 
+    val context = LocalContext.current
+    val userViewModel = remember { UserViewModel(userNavActions, buyerFetcher, UserSessionManager(context)) }
+
     NavHost(navController, startDestination = NavigationRoutes.START_PAGE) {
         composable(NavigationRoutes.START_PAGE) { StartPage(userNavActions) }
-        composable(NavigationRoutes.LOGIN_PAGE) { LoginPage(buyerFetcher, userNavActions) }
-        composable(NavigationRoutes.USER_HOME) { UserHomePage(userNavActions) }
+        composable(NavigationRoutes.LOGIN_PAGE) { LoginPage(userViewModel, userNavActions) }
+        composable(NavigationRoutes.USER_HOME) { UserHomePage(userNavActions, userViewModel) }
         composable(NavigationRoutes.RETAILER_HOME) { RetailerHomePage(userNavActions) }
         composable(NavigationRoutes.CREATE_PAGE) { CreatePage(userNavActions, buyerFetcher, companyFetcher) }
     }

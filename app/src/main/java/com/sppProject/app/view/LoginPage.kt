@@ -10,6 +10,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,15 +23,23 @@ import androidx.compose.ui.unit.dp
 import com.sppProject.app.NavigationRoutes
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
+import com.sppProject.app.viewModel.UserViewModel
 
 @Composable
-fun LoginPage(buyerFetcher: BuyerFetcher, navActions: UserNavActions) {
-    var logOn by remember { mutableStateOf(false) }
+fun LoginPage(
+    userViewModel: UserViewModel,
+    navActions: UserNavActions
+) {
     var newUser by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
 
-    if (!newUser) {
+    // Observe the buyer state
+    val buyerState by userViewModel.buyerState.collectAsState()
+
+    // If a buyer is logged in, navigate to the user home
+    if (buyerState != null) {
+        navActions.navigateToUserHome()
+    }
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -45,19 +54,11 @@ fun LoginPage(buyerFetcher: BuyerFetcher, navActions: UserNavActions) {
                     label = { Text("Enter Username") }
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                TextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    label = { Text("Enter Password") },
-                )
-
                 Spacer(modifier = Modifier.height(32.dp))
 
                 Button(
                     onClick = {
-                        navActions.navigateToUserHome()
+                        userViewModel.login(name) // Call login method
                     },
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 ) {
@@ -83,9 +84,5 @@ fun LoginPage(buyerFetcher: BuyerFetcher, navActions: UserNavActions) {
                 }
             }
         }
-    } else {
-        navActions.navigateToCreatePage()
-    }
 }
-
 
