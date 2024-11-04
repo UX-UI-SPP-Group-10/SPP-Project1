@@ -16,6 +16,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
     }
 
     buildTypes {
@@ -56,6 +59,10 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    androidTestImplementation("io.cucumber:cucumber-android:7.14.0")
+    androidTestImplementation("io.cucumber:cucumber-picocontainer:7.14.1")
+    testImplementation("org.robolectric:robolectric:4.9.2")
 
     // Gson for parsing JSON
     implementation("com.google.code.gson:gson:2.10.1")
