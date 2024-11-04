@@ -2,15 +2,20 @@ package com.sppProject.app.view
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -21,193 +26,222 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sppProject.app.R
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.data.data_class.Buyer
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 
-// Sealed class to represent the current state of the page
-sealed class CreatePageState {
-    object ShowRetailer : CreatePageState()
-    object ShowUser : CreatePageState()
-    object None : CreatePageState()
+
+sealed class CreatePageState(val content: @Composable () -> Unit) {
+    class ShowRetailer : CreatePageState({ RetailerInfo() })
+    class ShowUser : CreatePageState({ UserInfo() })
+    object None : CreatePageState({
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text("Select an option above to get started.")
+        }
+    })
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher) {
-    var retailerInformation by remember { mutableStateOf(false) }
-    var userInformation by remember { mutableStateOf(false) }
+    var createPageState by remember { mutableStateOf<CreatePageState>(CreatePageState.None) }
     var sendInfo by remember { mutableStateOf(false) }
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 32.dp)
-        ) {
-            RetailerInfo(
-                retailerInformation = retailerInformation,
-                onClick = {
-                    retailerInformation = !retailerInformation
-                    if (retailerInformation) userInformation = false
-                },
-                sendInfo = sendInfo,
-                buyerFetcher = buyerFetcher,
-                navActions = navActions
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            UserInfo(
-                userInformation = userInformation,
-                onClick = {
-                    userInformation = !userInformation
-                    if (userInformation) retailerInformation = false
-                },
-                sendInfo = sendInfo,
-                buyerFetcher = buyerFetcher,
-                navActions = navActions
-            )
-            Spacer(modifier = Modifier.height(32.dp))
-        }
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp) // Optional padding from the edges
-        ) {
-            Button(
-                onClick = {
-                    sendInfo = true
-                },
-                modifier = Modifier.align(Alignment.BottomEnd) // Aligns the button to the bottom-right
+    var feedbackMessage by remember { mutableStateOf("") }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text("Create Profile") })
+        },
+        content = { innerPadding ->
+            // Central container to display the selected composable based on the state
+
+            // Buttons to switch between Retailer and User views
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 32.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Make Profile")
+                Row(
+                    modifier = Modifier.padding(top = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Button(
+                        onClick = {
+                            createPageState = CreatePageState.ShowRetailer()
+                        }
+                    ) {
+                        Text("Retailer")
+                    }
+                    Spacer(modifier = Modifier.width(2.dp))
+                    Button(
+                        onClick = {
+                            createPageState = CreatePageState.ShowUser()
+                        }
+                    ) {
+                        Text("User")
+                    }
+                }
             }
 
-            Button(
-                onClick = {
-                    navActions.navigateBack() // Navigate back to the login screen using UserNavActions
-                },
-                modifier = Modifier.align(Alignment.BottomStart)
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding) // Use innerPadding to avoid overlap with the top bar
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
             ) {
-                Icon(painter = painterResource(R.drawable.arrow_left),
-                    contentDescription = "Back")
+                createPageState.content()
+
+                // Back button at the bottom left
+                Button(
+                    onClick = {
+                        navActions.navigateBack()
+                    }, // Use NavController to go back
+                    modifier = Modifier.align(Alignment.BottomStart)
+                ) {
+                    Text("Back")
+                }
             }
         }
+    )
+
+
+
+
+    if (sendInfo) {
+        LaunchedEffect(sendInfo) {
+            try {
+                // Submit info based on the selected state
+                if (createPageState is CreatePageState.ShowUser) {
+                    buyerFetcher.createBuyer(Buyer(id = 0, name = "UserName")) // Example name
+                    feedbackMessage = "User added successfully!"
+                    navActions.navigateToLogin()
+                } else if (createPageState is CreatePageState.ShowRetailer) {
+                    buyerFetcher.createBuyer(Buyer(id = 0, name = "Retailer")) // Example name
+                    feedbackMessage = "Retailer added successfully!"
+                    navActions.navigateToLogin()
+                }
+            } catch (e: Exception) {
+                feedbackMessage = e.message ?: "An error occurred while adding user."
+            } finally {
+                sendInfo = false // Reset sendInfo after submission
+            }
+        }
+    }
+
+    if (feedbackMessage.isNotEmpty()) {
+        Text(feedbackMessage, modifier = Modifier.padding(16.dp))
+    }
 }
 
 
 @Composable
-fun RetailerInfo(
-    retailerInformation: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    sendInfo: Boolean,
-    buyerFetcher: BuyerFetcher,
-    navActions: UserNavActions,
-){
+fun RetailerInfo() {
     var company by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-
-    Button(onClick = onClick) {
-        Text("Retailer")
-    }
-
-
-    if(retailerInformation){
-        Column(modifier = Modifier.padding(top = 16.dp)){
-            TextField(
-                value = company,
-                onValueChange = { company = it },
-                label = { Text("Enter Company") }
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            TextField(
-                value = location,
-                onValueChange = { location = it },
-                label = { Text("Enter Location") }
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            TextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("Enter Password") },
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(onClick = {
-                navActions.navigateToRetailerHome()
-            }) {
-                Text("Create Profile")
-            }
-
+    Column(modifier = Modifier.padding(top = 16.dp)) {
+        InputField("Enter Company", company) { company = it }
+        InputField("Enter Location", location) { location = it }
+        InputField("Enter Password", password) { password = it }
+        Button(onClick = { /* Handle create retailer */ }) {
+            Text("Create Profile")
         }
-    }
-
-    if(retailerInformation && sendInfo){
-        //send infomation and gow to logind page
     }
 }
 
 @Composable
-fun UserInfo(
-    userInformation: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    sendInfo: Boolean,
-    buyerFetcher: BuyerFetcher,
-    navActions: UserNavActions,)
-{
-    var feedbackMessage by remember { mutableStateOf("") }
+fun UserInfo() {
     var name by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-    val coroutineScope = rememberCoroutineScope()
 
-    Button(onClick = onClick) {
-        Text("User")
-    }
-    if(userInformation){
-        Column(modifier = Modifier.padding(top = 16.dp)){
-            TextField(
-                value = name,
-                onValueChange = { name = it },
-                label = { Text("Enter Uesrname") }
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            TextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("Enter Password") },
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(onClick = {
-                navActions.navigateToUserHome()
-            }) {
-                Text("Create Profile")
-            }
+    Column(modifier = Modifier.padding(top = 16.dp)) {
+        InputField("Enter Username", name) { name = it }
+        InputField("Enter Password", password) { password = it }
+        Button(onClick = { /* Handle create user */ }) {
+            Text("Create Profile")
         }
     }
+}
 
-    if (userInformation && sendInfo && name.isNotBlank()) {
-        LaunchedEffect(sendInfo) {
-            try {
-                buyerFetcher.createBuyer(Buyer(id = 0, name = name)) // Create buyer
-                name = "" // Clear name input after successful submission
-                feedbackMessage = "Buyer added successfully!"
-                navActions.navigateToLogin()
-            } catch (e: Exception) {
-                feedbackMessage = e.message ?: "An error occurred while adding buyer."
+@Composable
+fun InputField(
+    label: String,
+    value: String,
+    onValueChange: (String) -> Unit
+) {
+    TextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(label) },
+        modifier = Modifier.fillMaxWidth()
+    )
+    Spacer(modifier = Modifier.height(16.dp))
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview (showBackground = true)
+@Composable
+fun CreatePagePreview() {
+    Scaffold(
+        topBar = {
+            TopAppBar(title = { Text("Create Profile") })
+        },
+        content = { innerPadding ->
+            // Central container to display the selected composable based on the state
+
+            // Buttons to switch between Retailer and User views
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Row(
+                    modifier = Modifier.padding(top = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Button(
+                        onClick = {
+                            //createPageState = CreatePageState.ShowRetailer()
+                        }
+                    ) {
+                        Text("Retailer")
+                    }
+                    Spacer(modifier = Modifier.width(2.dp))
+                    Button(
+                        onClick = {
+                            //createPageState = CreatePageState.ShowUser()
+                        }
+                    ) {
+                        Text("User")
+                    }
+                }
             }
-        }
-    } else if (userInformation && sendInfo && name.isBlank()) {
-        feedbackMessage = "Name cannot be empty."
-    }
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(innerPadding) // Use innerPadding to avoid overlap with the top bar
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                //createPageState.content()
+
+                // Back button at the bottom left
+                Button(
+                    onClick = {
+                        //navActions.navigateBack()
+                    }, // Use NavController to go back
+                    modifier = Modifier.align(Alignment.BottomStart)
+                ) {
+                    Text("Back")
+                }
+            }
+        })
 }
