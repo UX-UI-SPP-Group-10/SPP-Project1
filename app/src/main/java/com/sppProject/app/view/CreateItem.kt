@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 fun ItemPage() {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
+    var numberOfItem by remember { mutableStateOf(0) }
     var price by remember { mutableStateOf(0.0) }
 
     Column(
@@ -59,6 +60,16 @@ fun ItemPage() {
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        OutlinedTextField(
+            value = numberOfItem.toString(),
+            onValueChange = { input -> numberOfItem = input.toIntOrNull() ?: 0},
+            label = { Text("number of item") },
+            modifier = Modifier
+                .height(64.dp)
+                .width(120.dp)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
             value = description.toString(),
