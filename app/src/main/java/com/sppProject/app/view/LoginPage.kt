@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.sppProject.app.NavigationRoutes
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher

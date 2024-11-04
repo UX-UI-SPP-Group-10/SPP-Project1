@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -19,7 +20,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.sppProject.app.R
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.data.data_class.Buyer
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
@@ -87,7 +90,8 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher) {
                 },
                 modifier = Modifier.align(Alignment.BottomStart)
             ) {
-                Text("Back")
+                Icon(painter = painterResource(R.drawable.arrow_left),
+                    contentDescription = "Back")
             }
         }
     }

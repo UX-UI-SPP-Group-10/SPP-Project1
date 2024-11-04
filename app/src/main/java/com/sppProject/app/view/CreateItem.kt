@@ -15,7 +15,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -28,7 +31,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.sppProject.app.R
 
 @Composable
 fun ItemPage() {
@@ -112,7 +117,8 @@ fun ItemPage() {
             onClick = { },
             modifier = Modifier.align(Alignment.TopStart)
         ) {
-            Text("Back")
+            Icon(painter = painterResource(id = R.drawable.arrow_left),
+                contentDescription = "Back")
         }
     }
 }
