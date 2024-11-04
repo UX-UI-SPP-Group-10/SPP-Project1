@@ -11,9 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.sppProject.app.NavigationRoutes
 
 @Composable
-fun StartPage() {
+fun StartPage(navController: NavHostController) {
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -24,6 +26,7 @@ fun StartPage() {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) { Button(
             onClick = {
+                navController.navigate(NavigationRoutes.LOGIN)
             },
             modifier = Modifier.width(150.dp)
         ) {
