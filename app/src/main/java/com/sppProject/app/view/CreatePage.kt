@@ -1,5 +1,6 @@
 package com.sppProject.app.view
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -47,7 +48,7 @@ sealed class CreatePageState(val content: @Composable () -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher) {
-    var createPageState by remember { mutableStateOf<CreatePageState>(CreatePageState.None) }
+    var createPageState by remember { mutableStateOf<CreatePageState>(CreatePageState.ShowUser()) }
     var sendInfo by remember { mutableStateOf(false) }
     var feedbackMessage by remember { mutableStateOf("") }
 
@@ -71,22 +72,23 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher) {
                 ) {
                     Button(
                         onClick = {
-                            createPageState = CreatePageState.ShowRetailer()
-                        }
-                    ) {
-                        Text("Retailer")
-                    }
-                    Spacer(modifier = Modifier.width(2.dp))
-                    Button(
-                        onClick = {
                             createPageState = CreatePageState.ShowUser()
                         }
                     ) {
                         Text("User")
                     }
+                    Spacer(modifier = Modifier.width(2.dp))
+                    Button(
+                        onClick = {
+                            createPageState = CreatePageState.ShowRetailer()
+                        }
+                    ) {
+                        Text("Retailer")
+                    }
                 }
             }
 
+            // Box containing user or retailer content
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -106,11 +108,9 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher) {
                     Text("Back")
                 }
             }
+
         }
     )
-
-
-
 
     if (sendInfo) {
         LaunchedEffect(sendInfo) {
