@@ -20,49 +20,50 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.sppProject.app.UserNavActions
 import com.sppProject.app.data.data_class.Buyer
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 
 @Composable
-fun CreatePage(backToLogin: () -> Unit, buyerFetcher: BuyerFetcher) {
-    var retailerInfomation by remember { mutableStateOf(false) }
+fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher) {
+    var retailerInformation by remember { mutableStateOf(false) }
     var userInformation by remember { mutableStateOf(false) }
     var sendInfo by remember { mutableStateOf(false) }
     var navigateToRetailerHomePage by remember { mutableStateOf(false) }
     var navigateToUserHomePage by remember { mutableStateOf(false) }
 
     if (navigateToRetailerHomePage) {
-        RetailerHomePage(backToLogin = backToLogin)
-    } else if (navigateToUserHomePage){
-        UserHomePage  (backToLogin = backToLogin)
-    }  else {
+        navActions.navigateToRetailerHome()
+    } else if (navigateToUserHomePage) {
+        navActions.navigateToUserHome()
+    } else {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 32.dp)
-        )
-        {
+        ) {
             RetailerInfo(
-                retailerInformation = retailerInfomation,
+                retailerInformation = retailerInformation,
                 onClick = {
-                    retailerInfomation = !retailerInfomation
-                    if (retailerInfomation) userInformation = false
+                    retailerInformation = !retailerInformation
+                    if (retailerInformation) userInformation = false
                 },
                 sendInfo = sendInfo,
                 buyerFetcher = buyerFetcher,
-                onNavigateToRetailerHome = {navigateToRetailerHomePage = true}
+                onNavigateToRetailerHome = { navigateToRetailerHomePage = true }
             )
             Spacer(modifier = Modifier.height(16.dp))
             UserInfo(
                 userInformation = userInformation,
                 onClick = {
                     userInformation = !userInformation
-                    if (userInformation) retailerInfomation = false
+                    if (userInformation) retailerInformation = false
                 },
                 sendInfo = sendInfo,
                 buyerFetcher = buyerFetcher,
-                backToLogin = backToLogin,
-                onNavigateToUserHome = {navigateToUserHomePage = true}
+                // Update the backToLogin parameter to use the navigation action
+                backToLogin = { navActions.navigateBack() }, // Navigate back using UserNavActions
+                onNavigateToUserHome = { navigateToUserHomePage = true }
             )
             Spacer(modifier = Modifier.height(32.dp))
         }
@@ -81,7 +82,9 @@ fun CreatePage(backToLogin: () -> Unit, buyerFetcher: BuyerFetcher) {
             }
 
             Button(
-                onClick = backToLogin,
+                onClick = {
+                    navActions.navigateBack() // Navigate back to the login screen using UserNavActions
+                },
                 modifier = Modifier.align(Alignment.BottomStart)
             ) {
                 Text("Back")
@@ -89,6 +92,7 @@ fun CreatePage(backToLogin: () -> Unit, buyerFetcher: BuyerFetcher) {
         }
     }
 }
+
 
 @Composable
 fun RetailerInfo(

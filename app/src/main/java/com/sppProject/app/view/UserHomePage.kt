@@ -10,14 +10,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-
+import androidx.navigation.NavHostController
+import com.sppProject.app.UserNavActions
 
 
 @Composable
-fun UserHomePage(
-    modifier: Modifier = Modifier,
-    backToLogin: () -> Unit
-) {
+fun UserHomePage(navActions: UserNavActions) {
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -31,14 +29,18 @@ fun UserHomePage(
             .padding(16.dp) // Optional padding from the edges
     ) {
         Button(
-            onClick = {},
+            onClick = {
+                // add list
+            },
             modifier = Modifier.align(Alignment.BottomEnd)
         ) {
             Text("View Listings")
         }
 
         Button(
-            onClick = backToLogin,
+            onClick = {
+                navActions.navigateBack()
+            }, // Use NavController to go back
             modifier = Modifier.align(Alignment.BottomStart)
         ) {
             Text("Back")

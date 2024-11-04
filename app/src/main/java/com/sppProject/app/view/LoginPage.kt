@@ -19,10 +19,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import com.sppProject.app.NavigationRoutes
+import com.sppProject.app.UserNavActions
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 
 @Composable
-fun LoginPage(buyerFetcher: BuyerFetcher) {
+fun LoginPage(buyerFetcher: BuyerFetcher, navActions: UserNavActions) {
     var logOn by remember { mutableStateOf(false) }
     var newUser by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf("") }
@@ -55,7 +58,7 @@ fun LoginPage(buyerFetcher: BuyerFetcher) {
 
                 Button(
                     onClick = {
-                        logOn = true
+                        navActions.navigateToUserHome()
                     },
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 ) {
@@ -72,7 +75,9 @@ fun LoginPage(buyerFetcher: BuyerFetcher) {
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
-                    onClick = { newUser = true },
+                    onClick = {
+                        navActions.navigateToCreatePage()
+                    },
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 ) {
                     Text("Create profile")
@@ -80,7 +85,8 @@ fun LoginPage(buyerFetcher: BuyerFetcher) {
             }
         }
     } else {
-        CreatePage(backToLogin = { newUser = false }, buyerFetcher)
+        navActions.navigateToCreatePage()
     }
 }
+
 

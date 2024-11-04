@@ -10,13 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-
+import androidx.navigation.NavHostController
+import com.sppProject.app.UserNavActions
 
 @Composable
-fun RetailerHomePage(
-    modifier: Modifier = Modifier,
-    backToLogin: () -> Unit
-) {
+fun RetailerHomePage(userNavActions: UserNavActions) {
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -30,14 +28,18 @@ fun RetailerHomePage(
             .padding(16.dp) // Optional padding from the edges
     ) {
         Button(
-            onClick = {},
+            onClick = {
+                // Logic to create a listing goes here
+            },
             modifier = Modifier.align(Alignment.BottomEnd)
         ) {
             Text("Create Listing")
         }
 
         Button(
-            onClick = backToLogin,
+            onClick = {
+                userNavActions.navigateBack() // Use NavController to go back
+            },
             modifier = Modifier.align(Alignment.BottomStart)
         ) {
             Text("Back")

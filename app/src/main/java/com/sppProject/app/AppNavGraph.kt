@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
+import com.sppProject.app.view.CreatePage
 import com.sppProject.app.view.StartPage
 import com.sppProject.app.view.LoginPage
 import com.sppProject.app.view.RetailerHomePage
@@ -32,22 +33,37 @@ class UserNavActions(private val navController: NavHostController) {
         navController.navigate(NavigationRoutes.RETAILER_HOME)
     }
 
-    fun navigateBack() {
-        navController.popBackStack()
+    fun navigateToCreatePage() {
+        navController.navigate(NavigationRoutes.CREATE_PAGE)
     }
+
+    fun navigateBack() {
+        val currentDestination = navController.currentDestination?.route
+        println("Navigating back from ${navController.currentDestination?.route}")
+        if (currentDestination != null) {
+            navController.popBackStack()
+        }
+    }
+
 }
 
 
 
 @Composable
 fun AppNavGraph(navController: NavHostController, buyerFetcher: BuyerFetcher) {
+    // Create an instance of UserNavActions
+    val userNavActions = UserNavActions(navController)
+
     NavHost(navController, startDestination = NavigationRoutes.START_PAGE) {
-        composable(NavigationRoutes.START_PAGE) { StartPage(navController) }
-        composable(NavigationRoutes.LOGIN_PAGE) { LoginPage(buyerFetcher) { navController.navigate(NavigationRoutes.USER_HOME) } }
-        composable(NavigationRoutes.USER_HOME) { UserHomePage(backToLogin = { navController.navigate(NavigationRoutes.LOGIN_PAGE) }) }
-        composable(NavigationRoutes.RETAILER_HOME) { RetailerHomePage(backToLogin = { navController.navigate(NavigationRoutes.LOGIN_PAGE) }) }
+        composable(NavigationRoutes.START_PAGE) { StartPage(userNavActions) }
+        composable(NavigationRoutes.LOGIN_PAGE) { LoginPage(buyerFetcher, userNavActions) }
+        composable(NavigationRoutes.USER_HOME) { UserHomePage(userNavActions) }
+        composable(NavigationRoutes.RETAILER_HOME) { RetailerHomePage(userNavActions) }
+        composable(NavigationRoutes.CREATE_PAGE) { CreatePage(userNavActions, buyerFetcher) }
     }
 }
+
+
 
 // Navigation routes
 object NavigationRoutes {
@@ -55,15 +71,5 @@ object NavigationRoutes {
     const val LOGIN_PAGE = "login"
     const val USER_HOME = "user_home"
     const val RETAILER_HOME = "retailer_home"
+    const val CREATE_PAGE = "create"
 }
-
-
-//object UserNavActions {
-//    fun navigateToHome(navController: NavHostController) {
-//        navController.navigate(NavigationRoutes.HOME)
-//    }
-//
-//    fun navigateToLogin(navController: NavHostController) {
-//        navController.navigate(NavigationRoutes.LOGIN)
-//    }
-//}
