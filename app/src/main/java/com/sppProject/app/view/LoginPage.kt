@@ -83,6 +83,14 @@ fun LoginPage(
                     Text("Create profile")
                 }
             }
+            Button(
+                onClick = {
+                    navActions.navigateBack()
+                },
+                modifier = Modifier.align(Alignment.BottomStart)
+            ) {
+                Text("Back")
+            }
         }
 }
 
