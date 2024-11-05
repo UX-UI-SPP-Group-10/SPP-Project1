@@ -25,8 +25,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.view.components.CustomButton
+import com.sppProject.app.view.components.CustomToggleButton
 import com.sppProject.app.viewModel.UserViewModel
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,22 +35,17 @@ fun LoginPage(
     navActions: UserNavActions
 ) {
     var name by remember { mutableStateOf("") }
-    var isBuyerSelected by remember { mutableStateOf(false) }
-    var isRetailerSelected by remember { mutableStateOf(false) }
-
-    // Observe the buyer and company states
     val buyerState by userViewModel.buyerState.collectAsState()
     val companyState by userViewModel.companyState.collectAsState()
     val userType by userViewModel.userType.collectAsState()
 
-    // If a buyer is logged in, navigate to the user home
+    // Navigate based on the logged-in state
     if (buyerState != null) {
         navActions.navigateToUserHome()
     }
 
-    // If a company is logged in, navigate to the retailer home
     if (companyState != null) {
-        navActions.navigateToRetailerHome() // Ensure you have this navigation route
+        navActions.navigateToRetailerHome()
     }
 
     Scaffold(
@@ -65,73 +60,91 @@ fun LoginPage(
                     .padding(16.dp),
                 contentAlignment = Alignment.Center
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    // Buttons to choose user type
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        // Use collected userType for comparisons
-                        val isBuyerSelected = userType == UserViewModel.UserType.BUYER
-                        CustomButton(
-                            onClick = {
-                                userViewModel.setUserType(UserViewModel.UserType.BUYER)
-                            },
-                            text = "Buyer",
-                            isActive = isBuyerSelected
-                        )
-                        Spacer(modifier = Modifier.width(16.dp))
-                        val isRetailerSelected = userType == UserViewModel.UserType.COMPANY
-                        CustomButton(
-                            onClick = {
-                                userViewModel.setUserType(UserViewModel.UserType.COMPANY)
-                            },
-                            text = "Retailer",
-                            isActive = isRetailerSelected
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(32.dp))
-
-                    TextField(
-                        value = name,
-                        onValueChange = { name = it },
-                        label = { Text("Enter Username") }
-                    )
-
-                    Spacer(modifier = Modifier.height(32.dp))
-
-                    Button(
-                        onClick = {
-                            userViewModel.login(name) // Call login method
-                        },
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    ) {
-                        Text("Log in")
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Text(
-                        text = "Or",
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Button(
-                        onClick = {
-                            navActions.navigateToCreatePage()
-                        },
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    ) {
-                        Text("Create profile")
-                    }
-                }
+                LoginContent(
+                    userType = userType ?: UserViewModel.UserType.BUYER, // Default to BUYER
+                    name = name,
+                    onNameChange = { name = it }, // Update name state here
+                    onLoginClick = { userViewModel.login(name) },
+                    onCreateProfileClick = { navActions.navigateToCreatePage() },
+                    onUserTypeSelect = { userViewModel.setUserType(it) }
+                )
             }
         }
     )
 }
 
+@Composable
+private fun LoginContent(
+    userType: UserViewModel.UserType,
+    name: String,
+    onNameChange: (String) -> Unit,
+    onLoginClick: () -> Unit,
+    onCreateProfileClick: () -> Unit,
+    onUserTypeSelect: (UserViewModel.UserType) -> Unit
+) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        UserTypeSelector(userType = userType, onUserTypeSelect = onUserTypeSelect)
 
+        Spacer(modifier = Modifier.height(32.dp))
+
+        UsernameInputField(name = name, onNameChange = onNameChange)
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        CustomButton(text = "Log in", onClick = onLoginClick)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = "Or",
+            modifier = Modifier.align(Alignment.CenterHorizontally)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        CreateProfileButton(onClick = onCreateProfileClick)
+    }
+}
+
+@Composable
+private fun UserTypeSelector(
+    userType: UserViewModel.UserType,
+    onUserTypeSelect: (UserViewModel.UserType) -> Unit
+) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        CustomToggleButton(
+            onClick = { onUserTypeSelect(UserViewModel.UserType.BUYER) },
+            text = "Buyer",
+            isActive = userType == UserViewModel.UserType.BUYER
+        )
+        Spacer(modifier = Modifier.width(16.dp))
+        CustomToggleButton(
+            onClick = { onUserTypeSelect(UserViewModel.UserType.COMPANY) },
+            text = "Retailer",
+            isActive = userType == UserViewModel.UserType.COMPANY
+        )
+    }
+}
+
+@Composable
+private fun UsernameInputField(name: String, onNameChange: (String) -> Unit) {
+    TextField(
+        value = name,
+        onValueChange = onNameChange, // This should update the name state in LoginPage
+        label = { Text("Enter Username") }
+    )
+}
+
+@Composable
+private fun LoginButton(onLoginClick: () -> Unit) {
+    Button(onClick = onLoginClick) {
+        Text("Log in")
+    }
+}
+
+@Composable
+private fun CreateProfileButton(onClick: () -> Unit) {
+    Button(onClick = onClick) {
+        Text("Create profile")
+    }
+}

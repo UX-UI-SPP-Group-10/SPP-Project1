@@ -1,25 +1,19 @@
 package com.sppProject.app.view.components
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
 
 
 // can do it with a boolean instead
 @Override
 @Composable
-fun CustomButton(onClick: () -> Unit, text: String, isActive: Boolean) {
+fun CustomToggleButton(onClick: () -> Unit, text: String, isActive: Boolean) {
     Button(
         onClick = onClick, // Call the passed in onClick function
         colors = ButtonDefaults.buttonColors(
@@ -37,7 +31,7 @@ fun CustomButton(onClick: () -> Unit, text: String, isActive: Boolean) {
 
 @Preview(showBackground = true)
 @Composable
-fun CustomButtonPreview() {
-    CustomButton(onClick = { /* Handle button click */ }, text = "Click Me", isActive = true)
+fun CustomButtonTogglePreview() {
+    CustomToggleButton(onClick = { /* Handle button click */ }, text = "Click Me", isActive = true)
 }
 

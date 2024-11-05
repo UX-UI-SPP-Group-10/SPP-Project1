@@ -1,6 +1,5 @@
 package com.sppProject.app.view
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,29 +11,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.sppProject.app.R
 import com.sppProject.app.UserNavActions
-import com.sppProject.app.data.data_class.Buyer
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 import com.sppProject.app.api_integration.fetchers.CompanyFetcher
-import com.sppProject.app.view.components.CustomButton
+import com.sppProject.app.view.components.CustomToggleButton
 import com.sppProject.app.viewModel.CreatePageViewModel
 
 
@@ -69,7 +61,7 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, companyFe
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     val isUserActive = viewModel.createPageState is CreatePageState.ShowUser
-                    CustomButton(
+                    CustomToggleButton(
                         onClick = {
                             viewModel.setCreatePageState(CreatePageState.ShowUser())
                         },
@@ -79,7 +71,7 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, companyFe
                     Spacer(modifier = Modifier.width(2.dp))
 
                     val isRetailerActive = viewModel.createPageState is CreatePageState.ShowRetailer
-                    CustomButton(
+                    CustomToggleButton(
                         onClick = {
                             viewModel.setCreatePageState(CreatePageState.ShowRetailer())
                         },
