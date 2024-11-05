@@ -34,6 +34,7 @@ import com.sppProject.app.UserNavActions
 import com.sppProject.app.data.data_class.Buyer
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 import com.sppProject.app.api_integration.fetchers.CompanyFetcher
+import com.sppProject.app.view.components.CustomButton
 import com.sppProject.app.viewModel.CreatePageViewModel
 
 
@@ -67,20 +68,24 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, companyFe
                     modifier = Modifier.padding(top = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Button(onClick = {
+                    val isUserActive = viewModel.createPageState is CreatePageState.ShowUser
+                    CustomButton(
+                        onClick = {
                             viewModel.setCreatePageState(CreatePageState.ShowUser())
-                        }
-                    ) {
-                        Text("User")
-                    }
+                        },
+                        text = "User",
+                        isActive = isUserActive
+                    )
                     Spacer(modifier = Modifier.width(2.dp))
-                    Button(onClick = {
-                            viewModel.setCreatePageState(CreatePageState.ShowRetailer())
-                        }
-                    ) {
-                        Text("Retailer")
-                    }
 
+                    val isRetailerActive = viewModel.createPageState is CreatePageState.ShowRetailer
+                    CustomButton(
+                        onClick = {
+                            viewModel.setCreatePageState(CreatePageState.ShowRetailer())
+                        },
+                        text = "Retailer",
+                        isActive = isRetailerActive
+                    )
                 }
             }
 

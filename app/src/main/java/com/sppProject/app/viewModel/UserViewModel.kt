@@ -106,7 +106,6 @@ class UserViewModel(
         userSessionManager.clearSessionInfo()
         _buyerState.value = null
         _companyState.value = null
-        _userType.value = null
         navActions.navigateToLogin()
     }
 }
