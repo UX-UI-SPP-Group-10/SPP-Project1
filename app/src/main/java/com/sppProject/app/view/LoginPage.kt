@@ -33,12 +33,18 @@ fun LoginPage(
     var newUser by remember { mutableStateOf(false) }
     var name by remember { mutableStateOf("") }
 
-    // Observe the buyer state
+    // Observe the buyer and company states
     val buyerState by userViewModel.buyerState.collectAsState()
+    val companyState by userViewModel.companyState.collectAsState()
 
     // If a buyer is logged in, navigate to the user home
     if (buyerState != null) {
         navActions.navigateToUserHome()
+    }
+
+    // If a company is logged in, navigate to the retailer home
+    if (companyState != null) {
+        navActions.navigateToRetailerHome() // Ensure you have this navigation route
     }
         Box(
             modifier = Modifier

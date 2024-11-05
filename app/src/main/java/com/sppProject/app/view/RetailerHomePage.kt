@@ -10,13 +10,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.data.data_class.Item
+import com.sppProject.app.viewModel.UserViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun RetailerHomePage(userNavActions: UserNavActions, itemFetcher: ItemFetcher
+fun RetailerHomePage(navActions: UserNavActions, userViewModel: UserViewModel, itemFetcher: ItemFetcher
 ) {
     // State to hold items and loading status
     var items by remember { mutableStateOf<List<Item>>(emptyList()) }
@@ -75,11 +77,11 @@ fun RetailerHomePage(userNavActions: UserNavActions, itemFetcher: ItemFetcher
 
         Button(
             onClick = {
-                userNavActions.navigateBack()
-            },
+                userViewModel.logout()
+            }, // Use NavController to go back
             modifier = Modifier.align(Alignment.BottomStart)
         ) {
-            Text("Back")
+            Text("Log Out")
         }
     }
 }
