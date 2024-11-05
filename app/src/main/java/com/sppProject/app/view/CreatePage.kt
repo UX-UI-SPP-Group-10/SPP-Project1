@@ -67,18 +67,15 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, companyFe
                     modifier = Modifier.padding(top = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Button(
-                        onClick = {
+                    Button(onClick = {
                             viewModel.setCreatePageState(CreatePageState.ShowUser())
                         }
                     ) {
                         Text("User")
                     }
                     Spacer(modifier = Modifier.width(2.dp))
-                    Button(
-                        onClick = {
-                            navActions.navigateToRetailerHome() // Temp to actually navigate to the page.
-                            //viewModel.setCreatePageState(CreatePageState.ShowRetailer())
+                    Button(onClick = {
+                            viewModel.setCreatePageState(CreatePageState.ShowRetailer())
                         }
                     ) {
                         Text("Retailer")
@@ -102,10 +99,9 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, companyFe
                     Text("Create Profile")
                 }
 
-                Button(
-                    onClick = {
+                Button(onClick = {
                         navActions.navigateBack()
-                    },
+                },
                     modifier = Modifier.align(Alignment.BottomStart)
                 ) {
                     Text("Back")
