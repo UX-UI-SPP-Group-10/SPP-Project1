@@ -22,12 +22,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
-import com.sppProject.app.NavigationRoutes
 import com.sppProject.app.UserNavActions
-import com.sppProject.app.api_integration.fetchers.BuyerFetcher
+import com.sppProject.app.view.components.CustomButton
 import com.sppProject.app.viewModel.UserViewModel
 
 
@@ -38,10 +35,13 @@ fun LoginPage(
     navActions: UserNavActions
 ) {
     var name by remember { mutableStateOf("") }
+    var isBuyerSelected by remember { mutableStateOf(false) }
+    var isRetailerSelected by remember { mutableStateOf(false) }
 
     // Observe the buyer and company states
     val buyerState by userViewModel.buyerState.collectAsState()
     val companyState by userViewModel.companyState.collectAsState()
+    val userType by userViewModel.userType.collectAsState()
 
     // If a buyer is logged in, navigate to the user home
     if (buyerState != null) {
@@ -72,17 +72,24 @@ fun LoginPage(
                     Row(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Button(onClick = {
-                            userViewModel.setUserType(UserViewModel.UserType.BUYER)
-                        }) {
-                            Text("Buyer")
-                        }
+                        // Use collected userType for comparisons
+                        val isBuyerSelected = userType == UserViewModel.UserType.BUYER
+                        CustomButton(
+                            onClick = {
+                                userViewModel.setUserType(UserViewModel.UserType.BUYER)
+                            },
+                            text = "Buyer",
+                            isActive = isBuyerSelected
+                        )
                         Spacer(modifier = Modifier.width(16.dp))
-                        Button(onClick = {
-                            userViewModel.setUserType(UserViewModel.UserType.COMPANY)
-                        }) {
-                            Text("Retailer")
-                        }
+                        val isRetailerSelected = userType == UserViewModel.UserType.COMPANY
+                        CustomButton(
+                            onClick = {
+                                userViewModel.setUserType(UserViewModel.UserType.COMPANY)
+                            },
+                            text = "Retailer",
+                            isActive = isRetailerSelected
+                        )
                     }
 
                     Spacer(modifier = Modifier.height(32.dp))
@@ -121,15 +128,6 @@ fun LoginPage(
                     ) {
                         Text("Create profile")
                     }
-                }
-
-                Button(
-                    onClick = {
-                        navActions.navigateToStartPage()
-                    },
-                    modifier = Modifier.align(Alignment.BottomStart)
-                ) {
-                    Text("Back")
                 }
             }
         }

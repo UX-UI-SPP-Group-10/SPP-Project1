@@ -25,7 +25,7 @@ class UserViewModel(
     private val _companyState = MutableStateFlow<Company?>(null)
     val companyState: StateFlow<Company?> get() = _companyState
 
-    private val _userType = MutableStateFlow<UserType?>(null)
+    private val _userType = MutableStateFlow<UserType?>(UserType.BUYER)
     val userType: StateFlow<UserType?> get() = _userType
 
     enum class UserType {
