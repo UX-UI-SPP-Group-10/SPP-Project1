@@ -63,6 +63,8 @@ dependencies {
     androidTestImplementation("io.cucumber:cucumber-android:7.14.0")
     androidTestImplementation("io.cucumber:cucumber-picocontainer:7.14.1")
     testImplementation("org.robolectric:robolectric:4.9.2")
+    testImplementation("io.cucumber:cucumber-junit:7.11.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
 
     // Gson for parsing JSON
     implementation("com.google.code.gson:gson:2.10.1")
