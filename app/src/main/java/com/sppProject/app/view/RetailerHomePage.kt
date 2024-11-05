@@ -1,31 +1,67 @@
-package com.sppProject.app.view
-
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.sppProject.app.UserNavActions
+import com.sppProject.app.api_integration.fetchers.CompanyFetcher
+import com.sppProject.app.api_integration.fetchers.ItemFetcher
+import com.sppProject.app.data.data_class.Item
+import kotlinx.coroutines.launch
 
 @Composable
-fun RetailerHomePage(userNavActions: UserNavActions) {
+fun RetailerHomePage(userNavActions: UserNavActions, itemFetcher: ItemFetcher
+) {
+    // State to hold items and loading status
+    var items by remember { mutableStateOf<List<Item>>(emptyList()) }
+    var loading by remember { mutableStateOf(true) }
+    val coroutineScope = rememberCoroutineScope()
+
+    // Company ID to filter items by (hardcoded to 1 for this example)
+    val companyId = 1L
+
+    // Fetch items when the Composable is first displayed
+    LaunchedEffect(companyId) {
+        loading = true
+        coroutineScope.launch {
+            try {
+                items = itemFetcher.fetchItemsByCompanyId(companyId)
+            } catch (e: Exception) {
+                // Handle error, e.g., show a message
+                e.printStackTrace()
+            } finally {
+                loading = false
+            }
+        }
+    }
+
     Column(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text("Welcome to the Retailer Home Page")
+
+        if (loading) {
+            Text("Loading items...")
+        } else {
+            // Display the list of items
+            items.forEach { item ->
+                Text("Item: ${item.name}, Price: ${item.price}, Stock: ${item.stock}")
+            }
+        }
     }
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp) // Optional padding from the edges
+            .padding(16.dp)
     ) {
         Button(
             onClick = {
@@ -38,7 +74,7 @@ fun RetailerHomePage(userNavActions: UserNavActions) {
 
         Button(
             onClick = {
-                userNavActions.navigateBack() // Use NavController to go back
+                userNavActions.navigateBack()
             },
             modifier = Modifier.align(Alignment.BottomStart)
         ) {

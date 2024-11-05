@@ -1,5 +1,6 @@
 package com.sppProject.app
 
+import RetailerHomePage
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -10,8 +11,8 @@ import com.sppProject.app.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.view.CreatePage
 import com.sppProject.app.view.StartPage
 import com.sppProject.app.view.LoginPage
-import com.sppProject.app.view.RetailerHomePage
 import com.sppProject.app.view.UserHomePage
+import RetailerHomePage
 
 
 // Call functions from this class to navigate to different screens!
@@ -60,7 +61,7 @@ fun AppNavGraph(navController: NavHostController, buyerFetcher: BuyerFetcher, co
         composable(NavigationRoutes.START_PAGE) { StartPage(userNavActions) }
         composable(NavigationRoutes.LOGIN_PAGE) { LoginPage(buyerFetcher, userNavActions) }
         composable(NavigationRoutes.USER_HOME) { UserHomePage(userNavActions) }
-        composable(NavigationRoutes.RETAILER_HOME) { RetailerHomePage(userNavActions) }
+        composable(NavigationRoutes.RETAILER_HOME) { RetailerHomePage(userNavActions, itemFetcher) }
         composable(NavigationRoutes.CREATE_PAGE) { CreatePage(userNavActions, buyerFetcher, companyFetcher) }
     }
 }

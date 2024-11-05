@@ -12,9 +12,13 @@ interface ItemApiService {
     @GET("items")
     suspend fun getItemById(id: Long): Item
 
+    @GET("items/company/{compId}")
+    suspend fun getItemsByCompany(@Path("compId") compId: Long): List<Item>
+
     @POST("items/company/{compId}")
     suspend fun addItem(
         @Path("compId") compId: Long,
         @Body item: Item
     ): Item
+
 }

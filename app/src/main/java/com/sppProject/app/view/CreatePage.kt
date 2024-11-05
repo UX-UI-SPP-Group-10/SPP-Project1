@@ -77,7 +77,8 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, companyFe
                     Spacer(modifier = Modifier.width(2.dp))
                     Button(
                         onClick = {
-                            viewModel.setCreatePageState(CreatePageState.ShowRetailer())
+                            navActions.navigateToRetailerHome() // Temp to actually navigate to the page.
+                            //viewModel.setCreatePageState(CreatePageState.ShowRetailer())
                         }
                     ) {
                         Text("Retailer")

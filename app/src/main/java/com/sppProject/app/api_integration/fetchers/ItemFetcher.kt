@@ -21,4 +21,11 @@ class ItemFetcher (
         return apiFetcher.handleApiCallSingle { itemApiFetcher.getItemById(id) }
     }
 
+    suspend fun fetchItemsByCompanyId(compId: Long): List<Item> {
+        return apiFetcher.handleApiCallList { itemApiFetcher.getItemsByCompany(compId) }
+
+    }
+
+
+
 }
