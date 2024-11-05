@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 import com.sppProject.app.api_integration.fetchers.CompanyFetcher
+import com.sppProject.app.view.components.CustomButton
 import com.sppProject.app.view.components.CustomToggleButton
 import com.sppProject.app.viewModel.CreatePageViewModel
 
@@ -89,20 +90,17 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, companyFe
                 contentAlignment = Alignment.Center
             ) {
                 viewModel.createPageState.content(viewModel)
-                Button(onClick = {
-                    viewModel.sendInfo(navActions)
-                },
-                    modifier = Modifier.align(Alignment.BottomEnd)) {
-                    Text("Create Profile")
-                }
+                CustomButton(
+                    onClick = { viewModel.sendInfo(navActions) },
+                    modifier = Modifier.align(Alignment.BottomEnd),
+                    text = "Create Profile"
+                )
 
-                Button(onClick = {
-                        navActions.navigateBack()
-                },
-                    modifier = Modifier.align(Alignment.BottomStart)
-                ) {
-                    Text("Back")
-                }
+                CustomButton(
+                    onClick = { navActions.navigateBack() },
+                    modifier = Modifier.align(Alignment.BottomStart),
+                    text = "Back"
+                )
             }
         }
     )

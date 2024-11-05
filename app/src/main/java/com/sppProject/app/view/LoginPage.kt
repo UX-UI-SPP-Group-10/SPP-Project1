@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -49,6 +50,7 @@ fun LoginPage(
     }
 
     Scaffold(
+        containerColor = MaterialTheme.colorScheme.background,
         topBar = {
             TopAppBar(title = { Text("Login") })
         },
@@ -102,7 +104,7 @@ private fun LoginContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        CreateProfileButton(onClick = onCreateProfileClick)
+        CustomButton(text = "Create Profile", onClick = onCreateProfileClick)
     }
 }
 
@@ -133,18 +135,4 @@ private fun UsernameInputField(name: String, onNameChange: (String) -> Unit) {
         onValueChange = onNameChange, // This should update the name state in LoginPage
         label = { Text("Enter Username") }
     )
-}
-
-@Composable
-private fun LoginButton(onLoginClick: () -> Unit) {
-    Button(onClick = onLoginClick) {
-        Text("Log in")
-    }
-}
-
-@Composable
-private fun CreateProfileButton(onClick: () -> Unit) {
-    Button(onClick = onClick) {
-        Text("Create profile")
-    }
 }
