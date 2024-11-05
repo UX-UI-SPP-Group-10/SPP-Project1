@@ -12,10 +12,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.sppProject.app.UserNavActions
+import com.sppProject.app.viewModel.UserViewModel
 
 
 @Composable
-fun UserHomePage(navActions: UserNavActions) {
+fun UserHomePage(navActions: UserNavActions, userViewModel: UserViewModel,) {
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -39,11 +40,11 @@ fun UserHomePage(navActions: UserNavActions) {
 
         Button(
             onClick = {
-                navActions.navigateBack()
+                userViewModel.logout()
             }, // Use NavController to go back
             modifier = Modifier.align(Alignment.BottomStart)
         ) {
-            Text("Back")
+            Text("Log Out")
         }
     }
 }
