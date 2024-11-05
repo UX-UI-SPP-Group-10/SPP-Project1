@@ -14,9 +14,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.sppProject.app.NavigationRoutes
 import com.sppProject.app.UserNavActions
+import com.sppProject.app.viewModel.UserViewModel
 
 @Composable
-fun StartPage(navActions: UserNavActions) {
+fun StartPage(navActions: UserNavActions, userViewModel: UserViewModel) {
     Box(
         modifier = Modifier
             .fillMaxSize(),
@@ -27,6 +28,7 @@ fun StartPage(navActions: UserNavActions) {
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) { Button(
             onClick = {
+                userViewModel.setUserType(UserViewModel.UserType.BUYER)
                 navActions.navigateToLogin()
             },
             modifier = Modifier.width(150.dp)
@@ -36,6 +38,7 @@ fun StartPage(navActions: UserNavActions) {
 
             Button(
                 onClick = {
+                    userViewModel.setUserType(UserViewModel.UserType.COMPANY)
                     navActions.navigateToLogin()
                 },
                 modifier = Modifier.width(150.dp)

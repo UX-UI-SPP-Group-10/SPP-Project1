@@ -85,7 +85,7 @@ fun LoginPage(
             }
             Button(
                 onClick = {
-                    navActions.navigateBack()
+                    navActions.navigateToStartPage()
                 },
                 modifier = Modifier.align(Alignment.BottomStart)
             ) {

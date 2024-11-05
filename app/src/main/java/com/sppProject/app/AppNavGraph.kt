@@ -70,10 +70,10 @@ fun AppNavGraph(navController: NavHostController, buyerFetcher: BuyerFetcher, co
     val userNavActions = UserNavActions(navController)
 
     val context = LocalContext.current
-    val userViewModel = remember { UserViewModel(userNavActions, buyerFetcher, UserSessionManager(context)) }
+    val userViewModel = remember { UserViewModel(userNavActions, buyerFetcher, companyFetcher, UserSessionManager(context)) }
 
     NavHost(navController, startDestination = NavigationRoutes.START_PAGE) {
-        composable(NavigationRoutes.START_PAGE) { StartPage(userNavActions) }
+        composable(NavigationRoutes.START_PAGE) { StartPage(userNavActions, userViewModel) }
         composable(NavigationRoutes.LOGIN_PAGE) { LoginPage(userViewModel, userNavActions) }
         composable(NavigationRoutes.USER_HOME) { UserHomePage(userNavActions, userViewModel) }
         composable(NavigationRoutes.RETAILER_HOME) { RetailerHomePage(userNavActions, itemFetcher) }
