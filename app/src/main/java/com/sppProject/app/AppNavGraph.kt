@@ -1,6 +1,5 @@
 package com.sppProject.app
 
-import RetailerHomePage
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
@@ -16,7 +15,6 @@ import com.sppProject.app.view.StartPage
 import com.sppProject.app.view.LoginPage
 import com.sppProject.app.view.RetailerHomePage
 import com.sppProject.app.view.UserHomePage
-import RetailerHomePage
 import com.sppProject.app.viewModel.UserViewModel
 
 
