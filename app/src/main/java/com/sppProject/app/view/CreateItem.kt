@@ -42,8 +42,8 @@ import com.sppProject.app.view.components.BackButton
 fun ItemPage(userNavActions: UserNavActions, itemFetcher: ItemFetcher) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
-    var numberOfItem by remember { mutableStateOf(0) }
-    var price by remember { mutableStateOf(0.0) }
+    var numberOfItem by remember { mutableStateOf("0") }
+    var price by remember { mutableStateOf("0.0") }
 
     Column(
         modifier = Modifier
@@ -69,9 +69,14 @@ fun ItemPage(userNavActions: UserNavActions, itemFetcher: ItemFetcher) {
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
-            value = numberOfItem.toString(),
-            onValueChange = { input -> numberOfItem = input.toIntOrNull() ?: 0},
-            label = { Text("number of item") },
+            value = numberOfItem,
+            onValueChange = { input ->
+                // Allow only digits
+                if (input.all { it.isDigit() }) {
+                    numberOfItem = input
+                }
+            },
+            label = { Text("Number of items") },
             modifier = Modifier
                 .height(64.dp)
                 .width(120.dp)
@@ -80,9 +85,12 @@ fun ItemPage(userNavActions: UserNavActions, itemFetcher: ItemFetcher) {
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
-            value = description.toString(),
+            value = price.toString(),
             onValueChange = { input ->
-                price = input.toDoubleOrNull() ?: 0.0
+                // Allow only digits and one decimal point
+                if (input.matches(Regex("^[0-9]*\\.?[0-9]*"))) {
+                    price = input
+                }
             },
             label = { Text("Item price") },
             modifier = Modifier
