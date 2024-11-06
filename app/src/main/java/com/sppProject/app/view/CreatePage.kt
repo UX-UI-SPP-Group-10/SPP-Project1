@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -22,10 +23,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 import com.sppProject.app.api_integration.fetchers.CompanyFetcher
+import com.sppProject.app.view.components.BackButton
 import com.sppProject.app.view.components.CustomButton
 import com.sppProject.app.view.components.CustomToggleButton
 import com.sppProject.app.viewModel.CreatePageViewModel
@@ -48,7 +53,11 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, companyFe
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Create Profile") })
+            TopAppBar(
+                title = {
+                    TopAppBarSetup(navActions)
+                }
+            )
         },
         content = { innerPadding ->
             Column(
@@ -96,11 +105,6 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, companyFe
                     text = "Create Profile"
                 )
 
-                CustomButton(
-                    onClick = { navActions.navigateBack() },
-                    modifier = Modifier.align(Alignment.BottomStart),
-                    text = "Back"
-                )
             }
         }
     )
@@ -109,6 +113,36 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, companyFe
         Text(viewModel.feedbackMessage, modifier = Modifier.padding(16.dp))
     }
 }
+
+@Composable
+private fun TopAppBarSetup(navActions: UserNavActions) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // Back button on the left
+        BackButton(onClick = { navActions.navigateBack() })
+
+        // Spacer with weight to push title to the center
+        Spacer(modifier = Modifier.weight(1f))
+
+        // Centered title
+        Text(
+            text = "Create Profile",
+            style = TextStyle(
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold
+            )
+        )
+
+        // Add a fixed-width spacer to balance the BackButton's space
+        Spacer(modifier = Modifier.weight(1f))
+
+        // Placeholder spacer equivalent to BackButton width
+        Spacer(modifier = Modifier.width(50.dp)) // Adjust width to match BackButton's size
+    }
+}
+
 
 
 

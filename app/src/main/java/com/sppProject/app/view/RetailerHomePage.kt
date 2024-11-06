@@ -68,7 +68,7 @@ fun RetailerHomePage(navActions: UserNavActions, userViewModel: UserViewModel, i
     ) {
         Button(
             onClick = {
-                // Logic to create a listing goes here
+                navActions.navigateToCreateItem()
             },
             modifier = Modifier.align(Alignment.BottomEnd)
         ) {

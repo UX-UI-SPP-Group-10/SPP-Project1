@@ -34,9 +34,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.sppProject.app.R
+import com.sppProject.app.UserNavActions
+import com.sppProject.app.api_integration.fetchers.ItemFetcher
+import com.sppProject.app.view.components.BackButton
 
 @Composable
-fun ItemPage() {
+fun ItemPage(userNavActions: UserNavActions, itemFetcher: ItemFetcher) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var numberOfItem by remember { mutableStateOf(0) }
@@ -113,13 +116,10 @@ fun ItemPage() {
             Text("Upload Item")
         }
 
-        Button(
-            onClick = { },
+        BackButton(
+            onClick = {userNavActions.navigateBack()},
             modifier = Modifier.align(Alignment.TopStart)
-        ) {
-            Icon(painter = painterResource(id = R.drawable.arrow_left),
-                contentDescription = "Back")
-        }
+        )
     }
 }
 

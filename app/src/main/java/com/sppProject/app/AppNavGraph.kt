@@ -10,11 +10,7 @@ import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 import com.sppProject.app.api_integration.fetchers.CompanyFetcher
 import com.sppProject.app.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.data.UserSessionManager
-import com.sppProject.app.view.CreatePage
-import com.sppProject.app.view.StartPage
-import com.sppProject.app.view.LoginPage
-import com.sppProject.app.view.RetailerHomePage
-import com.sppProject.app.view.UserHomePage
+import com.sppProject.app.view.*
 import com.sppProject.app.viewModel.UserViewModel
 
 
@@ -27,7 +23,9 @@ class UserNavActions(private val navController: NavHostController) {
     }
 
     fun navigateToLogin() {
-        navController.navigate(NavigationRoutes.LOGIN_PAGE)
+        navController.navigate(NavigationRoutes.LOGIN_PAGE) {
+            popUpTo(NavigationRoutes.START_PAGE) { inclusive = true }
+        }
     }
 
     fun navigateToUserHome() {
@@ -49,6 +47,12 @@ class UserNavActions(private val navController: NavHostController) {
     fun navigateToCreatePage() {
         if (navController.currentDestination?.route != NavigationRoutes.CREATE_PAGE) {
             navController.navigate(NavigationRoutes.CREATE_PAGE)
+        }
+    }
+
+    fun navigateToCreateItem() {
+        if (navController.currentDestination?.route != NavigationRoutes.CREATE_ITEM) {
+            navController.navigate(NavigationRoutes.CREATE_ITEM)
         }
     }
 
@@ -78,6 +82,7 @@ fun AppNavGraph(navController: NavHostController, buyerFetcher: BuyerFetcher, co
         composable(NavigationRoutes.USER_HOME) { UserHomePage(userNavActions, userViewModel) }
         composable(NavigationRoutes.RETAILER_HOME) { RetailerHomePage(userNavActions, userViewModel, itemFetcher) }
         composable(NavigationRoutes.CREATE_PAGE) { CreatePage(userNavActions, buyerFetcher, companyFetcher) }
+        composable(NavigationRoutes.CREATE_ITEM) { ItemPage(userNavActions, itemFetcher)}
     }
 }
 
@@ -90,4 +95,5 @@ object NavigationRoutes {
     const val USER_HOME = "user_home"
     const val RETAILER_HOME = "retailer_home"
     const val CREATE_PAGE = "create"
+    const val CREATE_ITEM = "create_item"
 }
