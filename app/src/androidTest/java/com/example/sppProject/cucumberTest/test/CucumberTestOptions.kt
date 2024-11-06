@@ -6,7 +6,7 @@ import org.junit.runner.RunWith
 
 @RunWith(Cucumber::class)
 @CucumberOptions(
-    features = ["features"],
+    features = ["classpath:features"],
     glue = ["com.example.sppProject.cucumberTest"]
 )
 class CucumberTestOptions
