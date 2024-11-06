@@ -150,12 +150,7 @@ fun ItemPage(userNavActions: UserNavActions, itemFetcher: ItemFetcher, userSessi
 
         // When the button is clicked, post the item
         if (isItemPosted) {
-            PostItem(
-                userSessionManager = userSessionManager,
-                itemFetcher = itemFetcher,
-                tempItem = tempItem,
-                coroutineScope = coroutineScope
-            )
+            PostItem(userSessionManager, itemFetcher, tempItem, coroutineScope)
             userNavActions.navigateToRetailerHome()
         }
 
