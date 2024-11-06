@@ -74,6 +74,7 @@ fun AppNavGraph(navController: NavHostController, buyerFetcher: BuyerFetcher, co
     val userNavActions = UserNavActions(navController)
 
     val context = LocalContext.current
+    val userSessionManager = UserSessionManager(context)
     val userViewModel = remember { UserViewModel(userNavActions, buyerFetcher, companyFetcher, UserSessionManager(context)) }
 
     NavHost(navController, startDestination = NavigationRoutes.LOGIN_PAGE) {
@@ -82,7 +83,7 @@ fun AppNavGraph(navController: NavHostController, buyerFetcher: BuyerFetcher, co
         composable(NavigationRoutes.USER_HOME) { UserHomePage(userNavActions, userViewModel, itemFetcher) }
         composable(NavigationRoutes.RETAILER_HOME) { RetailerHomePage(userNavActions, userViewModel, itemFetcher) }
         composable(NavigationRoutes.CREATE_PAGE) { CreatePage(userNavActions, buyerFetcher, companyFetcher) }
-        composable(NavigationRoutes.CREATE_ITEM) { ItemPage(userNavActions, itemFetcher)}
+        composable(NavigationRoutes.CREATE_ITEM) { ItemPage(userNavActions, itemFetcher, userSessionManager) }
     }
 }
 

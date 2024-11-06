@@ -22,9 +22,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -36,14 +38,33 @@ import androidx.compose.ui.unit.dp
 import com.sppProject.app.R
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.api_integration.fetchers.ItemFetcher
+import com.sppProject.app.data.UserSessionManager
+import com.sppProject.app.data.data_class.Company
+import com.sppProject.app.data.data_class.Item
 import com.sppProject.app.view.components.BackButton
+import com.sppProject.app.view.components.CustomButton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
-fun ItemPage(userNavActions: UserNavActions, itemFetcher: ItemFetcher) {
+fun ItemPage(userNavActions: UserNavActions, itemFetcher: ItemFetcher, userSessionManager: UserSessionManager) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var numberOfItem by remember { mutableStateOf("0") }
     var price by remember { mutableStateOf("0.0") }
+    val coroutineScope = rememberCoroutineScope()
+    var isItemPosted by remember { mutableStateOf(false) }
+
+    val tempItem = remember(title, description, numberOfItem, price) {
+        // Parse stock and price values, default to zero if invalid or empty
+        Item(
+            name = title,
+            description = description,
+            stock = numberOfItem.toIntOrNull() ?: 0,
+            price = price.toDoubleOrNull()?.toInt() ?: 0
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -115,14 +136,29 @@ fun ItemPage(userNavActions: UserNavActions, itemFetcher: ItemFetcher) {
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Button(
-            onClick = { },
+
+
+        CustomButton(
+            onClick = {
+                isItemPosted = true
+            },
+            text = "Post Item",
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .width(200.dp)
-        ) {
-            Text("Upload Item")
+        )
+
+        // When the button is clicked, post the item
+        if (isItemPosted) {
+            PostItem(
+                userSessionManager = userSessionManager,
+                itemFetcher = itemFetcher,
+                tempItem = tempItem,
+                coroutineScope = coroutineScope
+            )
+            userNavActions.navigateToRetailerHome()
         }
+
 
         BackButton(
             onClick = {userNavActions.navigateBack()},
@@ -130,6 +166,23 @@ fun ItemPage(userNavActions: UserNavActions, itemFetcher: ItemFetcher) {
         )
     }
 }
+
+@Composable
+fun PostItem(
+    userSessionManager: UserSessionManager,
+    itemFetcher: ItemFetcher,
+    tempItem: Item,
+    coroutineScope: CoroutineScope
+) {
+    val currentCompany: Company? = userSessionManager.getLoggedInCompany()
+    LaunchedEffect(tempItem) {
+        // Launch the coroutine only when `tempItem` changes (or you can check some other condition)
+        coroutineScope.launch {
+            itemFetcher.createItem(currentCompany?.id ?: 0, tempItem)
+        }
+    }
+}
+
 
 @Composable
 fun ImagePicker(modifier: Modifier) {
