@@ -32,6 +32,13 @@ class UserViewModel(
         BUYER, COMPANY
     }
 
+    init {
+        // Set the user type based on the session data
+        val savedUserType = userSessionManager.getUserType()
+        _userType.value = savedUserType
+        loadSession()  // Automatically load session based on the user type
+    }
+
     fun setUserType(userType: UserType) {
         _userType.value = userType
         loadSession()  // Automatically load session based on the user type
