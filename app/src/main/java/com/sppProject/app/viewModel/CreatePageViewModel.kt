@@ -34,15 +34,14 @@ class CreatePageViewModel(private val buyerFetcher: BuyerFetcher, private val co
                     is CreatePageState.ShowUser -> {
                         buyerFetcher.createBuyer(Buyer(userName.toString())) // Example name
                         _feedbackMessage.value = "User added successfully!"
-                        navActions.navigateToUserHome()
                     }
                     is CreatePageState.ShowRetailer -> {
                         companyFetcher.createCompany(Company(userName.toString())) // Example name
                         _feedbackMessage.value = "Retailer added successfully!"
-                        navActions.navigateToRetailerHome()
                     }
                     CreatePageState.None -> TODO()
                 }
+                navActions.navigateToLogin()
             } catch (e: Exception) {
                 _feedbackMessage.value = e.message ?: "An error occurred while adding user."
             }
