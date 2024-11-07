@@ -26,19 +26,22 @@ fun RetailerHomePage(navActions: UserNavActions, userViewModel: UserViewModel, i
     val coroutineScope = rememberCoroutineScope()
 
     // Company ID to filter items by (hardcoded to 1 for this example)
-    val companyId = 1L
+
+    val loggedInCompany by userViewModel.companyState.collectAsState()
 
     // Fetch items when the Composable is first displayed
-    LaunchedEffect(companyId) {
-        loading = true
-        coroutineScope.launch {
-            try {
-                items = itemFetcher.fetchItemsByCompanyId(companyId)
-            } catch (e: Exception) {
-                // Handle error, e.g., show a message
-                e.printStackTrace()
-            } finally {
-                loading = false
+    LaunchedEffect(loggedInCompany) {
+        loggedInCompany?.let { company ->
+            loading = true
+            coroutineScope.launch {
+                try {
+                    items = itemFetcher.fetchItemsByCompanyId(loggedInCompany!!.id?: -1L)
+                } catch (e: Exception) {
+                    // Handle error, e.g., show a message
+                    e.printStackTrace()
+                } finally {
+                    loading = false
+                }
             }
         }
     }
