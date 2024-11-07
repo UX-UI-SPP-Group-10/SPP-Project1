@@ -9,8 +9,8 @@ interface ItemApiService {
     @GET("items")
     suspend fun getAllItems(): List<Item>
 
-    @GET("items")
-    suspend fun getItemById(id: Long): Item
+    @GET("items/{id}") // Specify the correct URL format here, using {id}
+    suspend fun getItemById(@Path("id") id: Long): Item
 
     @GET("items/company/{compId}")
     suspend fun getItemsByCompany(@Path("compId") compId: Long): List<Item>

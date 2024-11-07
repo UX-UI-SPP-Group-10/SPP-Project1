@@ -4,12 +4,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 import com.sppProject.app.api_integration.fetchers.CompanyFetcher
 import com.sppProject.app.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.data.UserSessionManager
+import com.sppProject.app.data.data_class.Item
 import com.sppProject.app.view.*
 import com.sppProject.app.viewModel.UserViewModel
 
@@ -56,6 +59,14 @@ class UserNavActions(private val navController: NavHostController) {
         }
     }
 
+    fun navigateToViewItem(item: Item) {
+        if (navController.currentDestination?.route != NavigationRoutes.VIEW_ITEM) {
+            val itemId = item.id
+            navController.navigate("${NavigationRoutes.VIEW_ITEM}/$itemId")
+        }
+    }
+
+
     fun navigateBack() {
         val currentDestination = navController.currentDestination?.route
         println("Navigating back from ${navController.currentDestination?.route}")
@@ -84,6 +95,13 @@ fun AppNavGraph(navController: NavHostController, buyerFetcher: BuyerFetcher, co
         composable(NavigationRoutes.RETAILER_HOME) { RetailerHomePage(userNavActions, userViewModel, itemFetcher) }
         composable(NavigationRoutes.CREATE_PAGE) { CreatePage(userNavActions, buyerFetcher, companyFetcher) }
         composable(NavigationRoutes.CREATE_ITEM) { ItemPage(userNavActions, itemFetcher, userSessionManager) }
+        composable(
+            "${NavigationRoutes.VIEW_ITEM}/{itemId}",
+            arguments = listOf(navArgument("itemId") { type = NavType.LongType }) // Define the parameter
+        ) { backStackEntry ->
+            val itemId = backStackEntry.arguments?.getLong("itemId") ?: return@composable
+            ItemViewPage(userNavActions, itemId, itemFetcher)
+        }
     }
 }
 
@@ -97,4 +115,5 @@ object NavigationRoutes {
     const val RETAILER_HOME = "retailer_home"
     const val CREATE_PAGE = "create"
     const val CREATE_ITEM = "create_item"
+    const val VIEW_ITEM = "view_item"
 }

@@ -1,5 +1,6 @@
 package com.sppProject.app.view
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -22,7 +23,7 @@ import kotlinx.coroutines.launch
 fun UserHomePage(
     navActions: UserNavActions,
     userViewModel: UserViewModel,
-    itemFetcher: ItemFetcher // Pass ItemFetcher as a dependency
+    itemFetcher: ItemFetcher
 ) {
     // Mutable state to hold the list of items
     var items by remember { mutableStateOf<List<Item>>(emptyList()) }
@@ -55,7 +56,7 @@ fun UserHomePage(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(items) { item ->
-                ItemCard(item = item)
+                ItemCard(item = item, onClick = { navActions.navigateToViewItem(item) })
             }
         }
 
@@ -70,11 +71,12 @@ fun UserHomePage(
 }
 
 @Composable
-fun ItemCard(item: Item) {
+private fun ItemCard(item: Item, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(8.dp)
+            .clickable(onClick = onClick),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
