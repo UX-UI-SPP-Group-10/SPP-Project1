@@ -85,7 +85,7 @@ fun ItemPage(userNavActions: UserNavActions, itemFetcher: ItemFetcher, userSessi
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        ImagePicker(modifier = Modifier.height(300.dp))
+        //ImagePicker(modifier = Modifier.height(300.dp))
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -137,7 +137,6 @@ fun ItemPage(userNavActions: UserNavActions, itemFetcher: ItemFetcher, userSessi
             .padding(16.dp)
     ) {
 
-/*
         CustomButton(
             onClick = {
                 isItemPosted = true
@@ -153,7 +152,6 @@ fun ItemPage(userNavActions: UserNavActions, itemFetcher: ItemFetcher, userSessi
             PostItem(userSessionManager, itemFetcher, tempItem, coroutineScope)
             userNavActions.navigateToRetailerHome()
         }
-*/
 
         BackButton(
             onClick = {userNavActions.navigateBack()},
