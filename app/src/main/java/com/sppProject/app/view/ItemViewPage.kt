@@ -102,5 +102,11 @@ fun ItemDetails(item: Item) {
             text = "Stock: ${item.stock}",
             style = MaterialTheme.typography.bodyMedium
         )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(
+            text = "Description: ${item.description}",
+            style = MaterialTheme.typography.bodyMedium
+        )
+
     }
 }
