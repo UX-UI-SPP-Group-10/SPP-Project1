@@ -1,9 +1,16 @@
 package com.sppProject.app.view
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -26,19 +33,22 @@ fun RetailerHomePage(navActions: UserNavActions, userViewModel: UserViewModel, i
     val coroutineScope = rememberCoroutineScope()
 
     // Company ID to filter items by (hardcoded to 1 for this example)
-    val companyId = 1L
+
+    val loggedInCompany by userViewModel.companyState.collectAsState()
 
     // Fetch items when the Composable is first displayed
-    LaunchedEffect(companyId) {
-        loading = true
-        coroutineScope.launch {
-            try {
-                items = itemFetcher.fetchItemsByCompanyId(companyId)
-            } catch (e: Exception) {
-                // Handle error, e.g., show a message
-                e.printStackTrace()
-            } finally {
-                loading = false
+    LaunchedEffect(loggedInCompany) {
+        loggedInCompany?.let { company ->
+            loading = true
+            coroutineScope.launch {
+                try {
+                    items = itemFetcher.fetchItemsByCompanyId(loggedInCompany!!.id?: -1L)
+                } catch (e: Exception) {
+                    // Handle error, e.g., show a message
+                    e.printStackTrace()
+                } finally {
+                    loading = false
+                }
             }
         }
     }
@@ -51,12 +61,22 @@ fun RetailerHomePage(navActions: UserNavActions, userViewModel: UserViewModel, i
     ) {
         Text("Welcome to the Retailer Home Page")
 
+        Spacer(modifier = Modifier.height(16.dp))
+
         if (loading) {
             Text("Loading items...")
         } else {
-            // Display the list of items
-            items.forEach { item ->
-                Text("Item: ${item.name}, Price: ${item.price}, Stock: ${item.stock}")
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f),  // Gives grid weight to fill remaining space
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(items) { item ->
+                    ItemCard(item = item)
+                }
             }
         }
     }

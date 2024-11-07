@@ -106,7 +106,7 @@ fun ItemPage(userNavActions: UserNavActions, itemFetcher: ItemFetcher, userSessi
         Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
-            value = price.toString(),
+            value = price,
             onValueChange = { input ->
                 // Allow only digits and one decimal point
                 if (input.matches(Regex("^[0-9]*\\.?[0-9]*"))) {
@@ -137,7 +137,7 @@ fun ItemPage(userNavActions: UserNavActions, itemFetcher: ItemFetcher, userSessi
             .padding(16.dp)
     ) {
 
-
+/*
         CustomButton(
             onClick = {
                 isItemPosted = true
@@ -153,7 +153,7 @@ fun ItemPage(userNavActions: UserNavActions, itemFetcher: ItemFetcher, userSessi
             PostItem(userSessionManager, itemFetcher, tempItem, coroutineScope)
             userNavActions.navigateToRetailerHome()
         }
-
+*/
 
         BackButton(
             onClick = {userNavActions.navigateBack()},
