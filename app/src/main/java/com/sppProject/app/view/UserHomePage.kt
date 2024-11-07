@@ -29,6 +29,9 @@ fun UserHomePage(
     var items by remember { mutableStateOf<List<Item>>(emptyList()) }
     val coroutineScope = rememberCoroutineScope()
 
+    val buyerState by userViewModel.buyerState.collectAsState()
+    val loggedInUsername = buyerState?.name ?: "Unknown"
+
     // Fetch items when the composable is first displayed
     LaunchedEffect(Unit) {
         coroutineScope.launch {
@@ -42,7 +45,7 @@ fun UserHomePage(
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text("Welcome to the User Home Page")
+        Text("Welcome, $loggedInUsername!")
 
         Spacer(modifier = Modifier.height(16.dp))
 
