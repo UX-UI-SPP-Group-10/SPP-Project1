@@ -1,4 +1,4 @@
-package com.example.sppProject.cucumberTest
+package com.sppProject.app
 
 import io.cucumber.android.runner.CucumberAndroidJUnitRunner
 
