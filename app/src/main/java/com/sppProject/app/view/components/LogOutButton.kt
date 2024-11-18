@@ -18,13 +18,13 @@ fun LogoutButton(onClick: () -> Unit, modifier: Modifier = Modifier){
         onClick = onClick,
         modifier = modifier
             .width(45.dp) // Set button width
-            .height(38.dp), // Set button height
+            .height(45.dp), // Set button height
         contentPadding = PaddingValues(0.dp) // Remove default padding
     ) {
         Icon(
             painter = painterResource(id = R.drawable.logout),
             contentDescription = "Logout",
-            modifier = Modifier.size(60.dp) // Set icon size as desired
+            modifier = Modifier.size(80.dp) // Set icon size as desired
         )
     }
 }

@@ -43,8 +43,7 @@ fun UserHomePage(
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text("Welcome to the User Home Page")
@@ -55,7 +54,7 @@ fun UserHomePage(
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             modifier = Modifier
-                .fillMaxWidth()
+                .fillMaxWidth().padding(16.dp)
                 .weight(1f),  // Gives grid weight to fill remaining space
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -75,15 +74,17 @@ fun UserHomePage(
 
 @Composable
 fun BottomNavigation(userNavActions: UserNavActions) {
-    BottomAppBar(
+    BottomAppBar(Modifier.fillMaxWidth(),
         content = {
+            Spacer(Modifier.width(16.dp))
+
             BuyPageButton(onClick = {})
 
-            Spacer(Modifier.width(12.dp))
+            Spacer(Modifier.width(120.dp))
 
             ReciptButton(onClick = {}) //TODO
 
-            Spacer(Modifier.width(12.dp))
+            Spacer(Modifier.width(120.dp))
 
             LogoutButton(onClick = { userNavActions.navigateToLogin() })
 
