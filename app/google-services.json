@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "235067943829",
+    "project_id": "spp-project-77ba4",
+    "storage_bucket": "spp-project-77ba4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:235067943829:android:089d8f293e3758bd6e249c",
+        "android_client_info": {
+          "package_name": "com.sppProject.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDp60QafxuhrNg-pF3KbV03c54nwW4NP4Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
