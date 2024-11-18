@@ -35,7 +35,8 @@ fun LoginPage(
     userViewModel: UserViewModel,
     navActions: UserNavActions
 ) {
-    var name by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
     val buyerState by userViewModel.buyerState.collectAsState()
     val companyState by userViewModel.companyState.collectAsState()
     val userType by userViewModel.userType.collectAsState()
@@ -64,9 +65,11 @@ fun LoginPage(
             ) {
                 LoginContent(
                     userType = userType ?: UserViewModel.UserType.BUYER, // Default to BUYER
-                    name = name,
-                    onNameChange = { name = it }, // Update name state here
-                    onLoginClick = { userViewModel.login(name) },
+                    email = email,
+                    password = password,
+                    onEmailChange = { email = it },
+                    onPasswordChange = { password = it },
+                    onLoginClick = { userViewModel.login(email, password) },
                     onCreateProfileClick = { navActions.navigateToCreatePage() },
                     onUserTypeSelect = { userViewModel.setUserType(it) }
                 )
@@ -78,8 +81,10 @@ fun LoginPage(
 @Composable
 private fun LoginContent(
     userType: UserViewModel.UserType,
-    name: String,
-    onNameChange: (String) -> Unit,
+    email: String,
+    password: String,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
     onLoginClick: () -> Unit,
     onCreateProfileClick: () -> Unit,
     onUserTypeSelect: (UserViewModel.UserType) -> Unit
@@ -89,7 +94,11 @@ private fun LoginContent(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        UsernameInputField(name = name, onNameChange = onNameChange)
+        EmailInputField(email = email, onEmailChange = onEmailChange)
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        PasswordInputField(password = password, onPasswordChange = onPasswordChange)
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -129,10 +138,19 @@ private fun UserTypeSelector(
 }
 
 @Composable
-private fun UsernameInputField(name: String, onNameChange: (String) -> Unit) {
+private fun EmailInputField(email: String, onEmailChange: (String) -> Unit) {
     TextField(
-        value = name,
-        onValueChange = onNameChange, // This should update the name state in LoginPage
-        label = { Text("Enter Username") }
+        value = email,
+        onValueChange = onEmailChange,
+        label = { Text("Enter Email") }
+    )
+}
+
+@Composable
+private fun PasswordInputField(password: String, onPasswordChange: (String) -> Unit) {
+    TextField(
+        value = password,
+        onValueChange = onPasswordChange,
+        label = { Text("Enter Password") }
     )
 }

@@ -8,6 +8,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 import com.sppProject.app.api_integration.fetchers.CompanyFetcher
 import com.sppProject.app.api_integration.fetchers.ItemFetcher
@@ -15,6 +17,7 @@ import com.sppProject.app.data.UserSessionManager
 import com.sppProject.app.data.data_class.Item
 import com.sppProject.app.view.*
 import com.sppProject.app.viewModel.UserViewModel
+
 
 
 // Call functions from this class to navigate to different screens!
@@ -80,13 +83,25 @@ class UserNavActions(private val navController: NavHostController) {
 
 
 @Composable
-fun AppNavGraph(navController: NavHostController, buyerFetcher: BuyerFetcher, companyFetcher: CompanyFetcher, itemFetcher: ItemFetcher) {
+fun AppNavGraph(navController: NavHostController,
+                buyerFetcher: BuyerFetcher,
+                companyFetcher: CompanyFetcher,
+                itemFetcher: ItemFetcher,
+                firebaseAuth: FirebaseAuth
+) {
     // Create an instance of UserNavActions
     val userNavActions = UserNavActions(navController)
 
     val context = LocalContext.current
     val userSessionManager = UserSessionManager(context)
-    val userViewModel = remember { UserViewModel(userNavActions, buyerFetcher, companyFetcher, UserSessionManager(context)) }
+    val userViewModel = remember { UserViewModel(
+        userNavActions,
+        buyerFetcher,
+        companyFetcher,
+        UserSessionManager(context),
+        firebaseAuth
+        )
+    }
 
     NavHost(navController, startDestination = NavigationRoutes.LOGIN_PAGE) {
         composable(NavigationRoutes.START_PAGE) { StartPage(userNavActions, userViewModel) }

@@ -9,9 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -37,8 +35,8 @@ import com.sppProject.app.viewModel.CreatePageViewModel
 
 
 sealed class CreatePageState(val content: @Composable (CreatePageViewModel) -> Unit) {
-    class ShowRetailer : CreatePageState({ viewModel -> RetailerInfo(viewModel) })
-    class ShowUser : CreatePageState({ viewModel -> UserInfo(viewModel) })
+    class ShowRetailer : CreatePageState({ viewModel -> CompanyInfo(viewModel) })
+    class ShowUser : CreatePageState({ viewModel -> BuyerInfo(viewModel) })
     object None : CreatePageState({
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text("Select an option above to get started.")
@@ -147,25 +145,30 @@ private fun TopAppBarSetup(navActions: UserNavActions) {
 
 
 @Composable
-fun RetailerInfo(viewModel: CreatePageViewModel) {
+fun CompanyInfo(viewModel: CreatePageViewModel) {
+    var mail by remember { mutableStateOf("") }
     var company by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     Column(modifier = Modifier.padding(top = 16.dp)) {
+        InputField("Enter Email", mail) { mail = it }
         InputField("Enter Company", company) { company = it }
         InputField("Enter Location", location) { location = it }
         InputField("Enter Password", password) { password = it }
     }
     viewModel.userName = company
+
 }
 
 @Composable
-fun UserInfo(viewModel: CreatePageViewModel) {
+fun BuyerInfo(viewModel: CreatePageViewModel) {
+    var mail by remember { mutableStateOf("") }
     var name by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
     Column(modifier = Modifier.padding(top = 16.dp)) {
+        InputField("Enter Email", mail) { mail = it }
         InputField("Enter Username", name) { name = it }
         InputField("Enter Password", password) { password = it }
     }
