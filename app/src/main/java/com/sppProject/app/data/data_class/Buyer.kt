@@ -10,8 +10,8 @@ import com.google.gson.annotations.SerializedName
  * @param name The name of the buyer.
  */
 data class Buyer(
-    @SerializedName("buyId") val id: Long?,
-    @SerializedName("buyName") val name: String
+    @SerializedName("buyerId") val id: Long?,
+    @SerializedName("buyerName") val name: String
 ) {
     constructor(name: String) : this(id = null, name = name)
 }
