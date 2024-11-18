@@ -104,7 +104,7 @@ fun BottomNavigationRetailer(navActions: UserNavActions) {
         content = {
             Spacer(Modifier.width(16.dp))
 
-            BuyPageButton(onClick = {})
+            LogoutButton(onClick = { navActions.navigateToLogin() })
 
             Spacer(Modifier.width(120.dp))
 
@@ -112,7 +112,7 @@ fun BottomNavigationRetailer(navActions: UserNavActions) {
 
             Spacer(Modifier.width(120.dp))
 
-            LogoutButton(onClick = { navActions.navigateToLogin() })
+            BuyPageButton(onClick = {})
 
         },
         containerColor = MaterialTheme.colorScheme.primary

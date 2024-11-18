@@ -76,15 +76,15 @@ fun BottomNavigation(userNavActions: UserNavActions) {
         content = {
             Spacer(Modifier.width(16.dp))
 
+            LogoutButton(onClick = { userNavActions.navigateToLogin() })
+
+            Spacer(Modifier.width(120.dp))
+
             BuyPageButton(onClick = {})
 
             Spacer(Modifier.width(120.dp))
 
             ReciptButton(onClick = {}) //TODO
-
-            Spacer(Modifier.width(120.dp))
-
-            LogoutButton(onClick = { userNavActions.navigateToLogin() })
 
         },
         containerColor = MaterialTheme.colorScheme.primary
