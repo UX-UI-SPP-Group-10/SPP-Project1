@@ -34,4 +34,8 @@ class BuyerFetcher(
     suspend fun createBuyer(newBuyer: Buyer): Buyer {
         return apiFetcher.handleApiCallSingle { buyerApiService.createBuyer(newBuyer) }
     }
+
+    suspend fun getBuyerById(id: Long): Buyer {
+        return apiFetcher.handleApiCallSingle { buyerApiService.getBuyerById(id) }
+    }
 }
