@@ -1,6 +1,6 @@
 package com.sppProject.app.api_integration.fetchers
 import com.sppProject.app.api_integration.ApiFetcher
-import com.sppProject.app.api_integration.data_class.Item
+import com.sppProject.app.data.data_class.Item
 import com.sppProject.app.api_integration.api_service.ItemApiService
 
 
@@ -20,5 +20,12 @@ class ItemFetcher (
     suspend fun getItemById(id: Long): Item {
         return apiFetcher.handleApiCallSingle { itemApiFetcher.getItemById(id) }
     }
+
+    suspend fun fetchItemsByCompanyId(compId: Long): List<Item> {
+        return apiFetcher.handleApiCallList { itemApiFetcher.getItemsByCompany(compId) }
+
+    }
+
+
 
 }

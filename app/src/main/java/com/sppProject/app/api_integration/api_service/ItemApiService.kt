@@ -1,5 +1,5 @@
 package com.sppProject.app.api_integration.api_service
-import com.sppProject.app.api_integration.data_class.Item
+import com.sppProject.app.data.data_class.Item
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -9,12 +9,16 @@ interface ItemApiService {
     @GET("items")
     suspend fun getAllItems(): List<Item>
 
-    @GET("items")
-    suspend fun getItemById(id: Long): Item
+    @GET("items/{id}") // Specify the correct URL format here, using {id}
+    suspend fun getItemById(@Path("id") id: Long): Item
+
+    @GET("items/company/{compId}")
+    suspend fun getItemsByCompany(@Path("compId") compId: Long): List<Item>
 
     @POST("items/company/{compId}")
     suspend fun addItem(
         @Path("compId") compId: Long,
         @Body item: Item
     ): Item
+
 }

@@ -8,7 +8,8 @@ import retrofit2.converter.gson.GsonConverterFactory
  * It sets up Retrofit with a base URL and a JSON converter.
  */
 object RetrofitClient {
-    private const val BASE_URL = "http://10.0.2.2:8080/api/"
+    private const val BASE_URL = "http://10.0.2.2:8080/api/"    // ip address for emulator
+    //private const val BASE_URL = "http://127.0.0.1:8080/api/" // ip address for physical device
 
     private val retrofit: Retrofit = Retrofit.Builder()
         .baseUrl(BASE_URL)
