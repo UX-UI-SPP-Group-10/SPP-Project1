@@ -7,7 +7,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
@@ -27,6 +30,9 @@ import com.sppProject.app.UserNavActions
 import com.sppProject.app.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.data.data_class.Item
 import com.sppProject.app.view.components.BackButton
+import com.sppProject.app.view.components.BuyPageButton
+import com.sppProject.app.view.components.LogoutButton
+import com.sppProject.app.view.components.ReciptButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
