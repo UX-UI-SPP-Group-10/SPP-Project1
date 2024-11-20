@@ -9,14 +9,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sppProject.app.UserNavActions
+import com.sppProject.app.viewModel.UserViewModel
 
 @Composable
-fun BottomNavigationBar(userNavActions: UserNavActions) {
+fun BottomNavigationBar(viewModel: UserViewModel, navActions: UserNavActions) {
     BottomAppBar(Modifier.fillMaxWidth(),
         content = {
             Spacer(Modifier.width(16.dp))
 
-            LogoutButton(onClick = { userNavActions.navigateToLogin() })
+            LogoutButton(onClick = { viewModel.logout() })
 
             Spacer(Modifier.width(120.dp))
 

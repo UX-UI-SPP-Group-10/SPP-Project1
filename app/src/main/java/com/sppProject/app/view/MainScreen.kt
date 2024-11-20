@@ -38,7 +38,7 @@ fun MainScreen(
 
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(nestedNavActions) // Pass the correct NavController
+            BottomNavigationBar(userViewModel, nestedNavActions) // Pass the correct NavController
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
