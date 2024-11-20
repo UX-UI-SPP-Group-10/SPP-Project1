@@ -31,38 +31,42 @@ fun MainScreen(
     companyFetcher: CompanyFetcher,
     startDestination: String
 ) {
-    val nestedNavController = rememberNavController() // Create a new NavController for nested navigation
+    val nestedNavController = rememberNavController()
+
+    // Update the NavController in UserNavActions for nested navigation
+    val nestedNavActions = UserNavActions(nestedNavController)
 
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(userNavActions) // Persistent bottom navigation bar
+            BottomNavigationBar(nestedNavActions) // Pass the correct NavController
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             NavHost(
-                navController = nestedNavController, // Use nestedNavController for nested navigation
-                startDestination = startDestination // Use the parameter startDestination
+                navController = nestedNavController,
+                startDestination = startDestination
             ) {
                 composable(NavigationRoutes.USER_HOME) {
-                    UserHomePage(userNavActions, userViewModel, itemFetcher)
+                    UserHomePage(nestedNavActions, userViewModel, itemFetcher)
                 }
                 composable(NavigationRoutes.RETAILER_HOME) {
-                    RetailerHomePage(userNavActions, userViewModel, itemFetcher)
+                    RetailerHomePage(nestedNavActions, userViewModel, itemFetcher)
                 }
                 composable(NavigationRoutes.CREATE_PAGE) {
-                    CreateProfilePage(userNavActions, buyerFetcher = buyerFetcher, companyFetcher = companyFetcher)
+                    CreateProfilePage(nestedNavActions, buyerFetcher = buyerFetcher, companyFetcher = companyFetcher)
                 }
                 composable(
                     "${NavigationRoutes.VIEW_ITEM}/{itemId}",
                     arguments = listOf(navArgument("itemId") { type = NavType.LongType })
                 ) { backStackEntry ->
                     val itemId = backStackEntry.arguments?.getLong("itemId") ?: return@composable
-                    ItemViewPage(userNavActions, itemId, itemFetcher)
+                    ItemViewPage(nestedNavActions, itemId, itemFetcher)
                 }
             }
         }
     }
 }
+
 
 
 

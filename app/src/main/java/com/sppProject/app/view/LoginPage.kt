@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,12 +42,15 @@ fun LoginPage(
     val userType by userViewModel.userType.collectAsState()
 
     // Navigate based on the logged-in state
-    if (buyerState != null) {
-        navActions.navigateToUserHome()
-    }
-
-    if (companyState != null) {
-        navActions.navigateToRetailerHome()
+    LaunchedEffect(buyerState, companyState) {
+        when {
+            buyerState != null -> {
+                navActions.navigateToUserHome()
+            }
+            companyState != null -> {
+                navActions.navigateToRetailerHome()
+            }
+        }
     }
 
     Scaffold(
