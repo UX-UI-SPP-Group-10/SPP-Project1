@@ -1,5 +1,6 @@
 package com.sppProject.app.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sppProject.app.UserNavActions
@@ -8,6 +9,7 @@ import com.sppProject.app.api_integration.fetchers.CompanyFetcher
 import com.sppProject.app.data.UserSessionManager
 import com.sppProject.app.data.data_class.Buyer
 import com.sppProject.app.data.data_class.Company
+import com.sppProject.app.view.LoginPage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -69,6 +71,7 @@ class UserViewModel(
             try {
                 val buyers = buyerFetcher.fetchBuyers()
                 val fetchedBuyer = buyers.find { it.name == name }
+                Log.d("UserViewModel", "Fetched buyer: ${fetchedBuyer?.name}")
                 if (fetchedBuyer != null) {
                     userSessionManager.saveBuyerInfo(fetchedBuyer)
                     _buyerState.value = fetchedBuyer
