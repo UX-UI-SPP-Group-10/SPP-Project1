@@ -11,6 +11,7 @@ import androidx.navigation.navArgument
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 import com.sppProject.app.api_integration.fetchers.CompanyFetcher
 import com.sppProject.app.api_integration.fetchers.ItemFetcher
+import com.sppProject.app.api_integration.fetchers.ReceiptFetcher
 import com.sppProject.app.data.UserSessionManager
 import com.sppProject.app.data.data_class.Item
 import com.sppProject.app.view.*
@@ -80,7 +81,7 @@ class UserNavActions(private val navController: NavHostController) {
 
 
 @Composable
-fun AppNavGraph(navController: NavHostController, buyerFetcher: BuyerFetcher, companyFetcher: CompanyFetcher, itemFetcher: ItemFetcher) {
+fun AppNavGraph(navController: NavHostController, buyerFetcher: BuyerFetcher, companyFetcher: CompanyFetcher, itemFetcher: ItemFetcher, receiptFetcher: ReceiptFetcher) {
     // Create an instance of UserNavActions
     val userNavActions = UserNavActions(navController)
 
@@ -100,7 +101,7 @@ fun AppNavGraph(navController: NavHostController, buyerFetcher: BuyerFetcher, co
             arguments = listOf(navArgument("itemId") { type = NavType.LongType }) // Define the parameter
         ) { backStackEntry ->
             val itemId = backStackEntry.arguments?.getLong("itemId") ?: return@composable
-            ItemViewPage(userNavActions, itemId, itemFetcher)
+            ItemViewPage(userNavActions, itemId, itemFetcher, receiptFetcher, userSessionManager)
         }
     }
 }

@@ -5,12 +5,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.BottomAppBarDefaults
+import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
@@ -21,23 +23,35 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.api_integration.fetchers.ItemFetcher
+import com.sppProject.app.api_integration.fetchers.ReceiptFetcher
+import com.sppProject.app.data.UserSessionManager
+import com.sppProject.app.data.data_class.Buyer
+import com.sppProject.app.data.data_class.Company
 import com.sppProject.app.data.data_class.Item
 import com.sppProject.app.view.components.BackButton
 import com.sppProject.app.view.components.BuyPageButton
+import com.sppProject.app.view.components.CustomButton
 import com.sppProject.app.view.components.LogoutButton
 import com.sppProject.app.view.components.ReciptButton
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemViewPage(userNavActions: UserNavActions, itemId: Long, itemFetcher: ItemFetcher) {
+fun ItemViewPage(userNavActions: UserNavActions, itemId: Long, itemFetcher: ItemFetcher, receiptFetcher: ReceiptFetcher, userSessionManager: UserSessionManager) {
     val itemState = remember { mutableStateOf<Item?>(null) }
+    val coroutineScope = rememberCoroutineScope()
+    var isRecivemade by remember { mutableStateOf(false) }
 
     // Fetch the item when the composable is first displayed or itemId changes
     LaunchedEffect(itemId) {
@@ -49,8 +63,32 @@ fun ItemViewPage(userNavActions: UserNavActions, itemId: Long, itemFetcher: Item
         topBar = { ItemTopAppBar(userNavActions) },
         content = { paddingValues ->
             ItemContent(itemState.value, paddingValues)
+        },
+        bottomBar = {
+            Box(
+                modifier = Modifier
+                    .height(100.dp)
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+
+                CustomButton(
+                    onClick = {
+                        isRecivemade = true
+                    },
+                    text = "Reserve Item",
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .width(200.dp)
+                )
+            }
         }
     )
+
+    if (isRecivemade) {
+        PostReceipt(receiptFetcher, itemId, itemFetcher, userSessionManager, coroutineScope)
+        userNavActions.navigateToUserHome()
+    }
 }
 
 
@@ -114,5 +152,23 @@ fun ItemDetails(item: Item) {
             style = MaterialTheme.typography.bodyMedium
         )
 
+    }
+}
+
+@Composable
+fun PostReceipt(
+    receiptFetcher: ReceiptFetcher,
+    itemID: Long,
+    itemFetcher: ItemFetcher,
+    userSessionManager: UserSessionManager,
+    coroutineScope: CoroutineScope
+) {
+    val currentUser: Buyer? = userSessionManager.getLoggedInBuyer()
+    LaunchedEffect(itemID) {
+        // Launch the coroutine only when `tempItem` changes (or you can check some other condition)
+        coroutineScope.launch {
+            receiptFetcher.createReceipt(currentUser?.id ?: 0,itemID)
+            //TODO mak sow that ther is one les item avalebel.
+        }
     }
 }
