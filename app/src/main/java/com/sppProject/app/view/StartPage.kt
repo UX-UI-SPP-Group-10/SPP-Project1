@@ -48,7 +48,7 @@ fun StartPage(navActions: UserNavActions, userViewModel: UserViewModel) {
 
             Button(
                 onClick = {
-                    navActions.navigateToCreatePage()
+                    navActions.navigateToCreateProfile()
                 },
                 modifier = Modifier.width(150.dp)
             ) {

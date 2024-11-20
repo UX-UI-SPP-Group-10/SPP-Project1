@@ -8,6 +8,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navigation
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 import com.sppProject.app.api_integration.fetchers.CompanyFetcher
 import com.sppProject.app.api_integration.fetchers.ItemFetcher
@@ -32,26 +33,22 @@ class UserNavActions(private val navController: NavHostController) {
     }
 
     fun navigateToUserHome() {
-        // Only navigate if not already on the User Home page
-        if (navController.currentDestination?.route != NavigationRoutes.USER_HOME) {
-            navController.navigate(NavigationRoutes.USER_HOME) {
-                // You can clear the back stack if necessary
-                popUpTo(NavigationRoutes.START_PAGE) { inclusive = true }
-            }
+        navController.navigate("${NavigationRoutes.MAIN_SCREEN}?startDestination=${NavigationRoutes.USER_HOME}") {
+            popUpTo(NavigationRoutes.LOGIN_PAGE) { inclusive = true }
         }
     }
 
     fun navigateToRetailerHome() {
-        if (navController.currentDestination?.route != NavigationRoutes.RETAILER_HOME) {
-            navController.navigate(NavigationRoutes.RETAILER_HOME)
+        navController.navigate("${NavigationRoutes.MAIN_SCREEN}?startDestination=${NavigationRoutes.RETAILER_HOME}") {
+            popUpTo(NavigationRoutes.LOGIN_PAGE) { inclusive = true }
         }
     }
 
-    fun navigateToCreatePage() {
-        if (navController.currentDestination?.route != NavigationRoutes.CREATE_PAGE) {
-            navController.navigate(NavigationRoutes.CREATE_PAGE)
-        }
+
+    fun navigateToCreateProfile() {
+        navController.navigate(NavigationRoutes.CREATE_PROFILE_PAGE)
     }
+
 
     fun navigateToCreateItem() {
         if (navController.currentDestination?.route != NavigationRoutes.CREATE_ITEM) {
@@ -68,42 +65,54 @@ class UserNavActions(private val navController: NavHostController) {
 
 
     fun navigateBack() {
-        val currentDestination = navController.currentDestination?.route
-        println("Navigating back from ${navController.currentDestination?.route}")
-        if (currentDestination != null) {
-            navController.popBackStack()
-        }
+        navController.popBackStack()
     }
 
 }
-
 
 
 @Composable
-fun AppNavGraph(navController: NavHostController, buyerFetcher: BuyerFetcher, companyFetcher: CompanyFetcher, itemFetcher: ItemFetcher) {
-    // Create an instance of UserNavActions
-    val userNavActions = UserNavActions(navController)
-
+fun AppNavGraph(
+    navController: NavHostController,
+    buyerFetcher: BuyerFetcher,
+    companyFetcher: CompanyFetcher,
+    itemFetcher: ItemFetcher
+) {
     val context = LocalContext.current
     val userSessionManager = UserSessionManager(context)
-    val userViewModel = remember { UserViewModel(userNavActions, buyerFetcher, companyFetcher, UserSessionManager(context)) }
+    val userNavActions = UserNavActions(navController)
+    val userViewModel = remember { UserViewModel(userNavActions, buyerFetcher, companyFetcher, userSessionManager) }
 
-    NavHost(navController, startDestination = NavigationRoutes.LOGIN_PAGE) {
-        composable(NavigationRoutes.START_PAGE) { StartPage(userNavActions, userViewModel) }
-        composable(NavigationRoutes.LOGIN_PAGE) { LoginPage(userViewModel, userNavActions) }
-        composable(NavigationRoutes.USER_HOME) { UserHomePage(userNavActions, userViewModel, itemFetcher) }
-        composable(NavigationRoutes.RETAILER_HOME) { RetailerHomePage(userNavActions, userViewModel, itemFetcher) }
-        composable(NavigationRoutes.CREATE_PAGE) { CreatePage(userNavActions, buyerFetcher, companyFetcher) }
-        composable(NavigationRoutes.CREATE_ITEM) { ItemPage(userNavActions, itemFetcher, userSessionManager) }
-        composable(
-            "${NavigationRoutes.VIEW_ITEM}/{itemId}",
-            arguments = listOf(navArgument("itemId") { type = NavType.LongType }) // Define the parameter
+    NavHost(navController = navController, startDestination = NavigationRoutes.LOGIN_PAGE) {
+        composable(NavigationRoutes.LOGIN_PAGE) {
+            LoginPage(userViewModel, userNavActions)
+        }
+
+        composable(NavigationRoutes.CREATE_PROFILE_PAGE) {
+            CreateProfilePage(userNavActions, buyerFetcher, companyFetcher)
+        }
+
+        composable("${NavigationRoutes.MAIN_SCREEN}?startDestination={startDestination}",
+            arguments = listOf(navArgument("startDestination") { defaultValue = NavigationRoutes.USER_HOME })
         ) { backStackEntry ->
-            val itemId = backStackEntry.arguments?.getLong("itemId") ?: return@composable
-            ItemViewPage(userNavActions, itemId, itemFetcher)
+            val startDestination = backStackEntry.arguments?.getString("startDestination")
+                ?: NavigationRoutes.USER_HOME
+
+            MainScreen(
+                userNavActions = userNavActions,
+                userViewModel = userViewModel,
+                itemFetcher = itemFetcher,
+                buyerFetcher = buyerFetcher,
+                companyFetcher = companyFetcher,
+                startDestination = startDestination
+            )
         }
     }
 }
+
+
+
+
 
 
 
@@ -111,9 +120,12 @@ fun AppNavGraph(navController: NavHostController, buyerFetcher: BuyerFetcher, co
 object NavigationRoutes {
     const val START_PAGE = "start"
     const val LOGIN_PAGE = "login"
+    const val CREATE_PROFILE_PAGE = "create_profile"
+    const val MAIN_SCREEN = "main_screen"
     const val USER_HOME = "user_home"
     const val RETAILER_HOME = "retailer_home"
     const val CREATE_PAGE = "create"
     const val CREATE_ITEM = "create_item"
     const val VIEW_ITEM = "view_item"
 }
+

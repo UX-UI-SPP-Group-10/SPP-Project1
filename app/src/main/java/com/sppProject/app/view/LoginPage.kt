@@ -24,11 +24,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.sppProject.app.NavigationRoutes
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.view.components.CustomButton
 import com.sppProject.app.view.components.CustomToggleButton
 import com.sppProject.app.viewModel.UserViewModel
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginPage(
@@ -66,14 +66,22 @@ fun LoginPage(
                     userType = userType ?: UserViewModel.UserType.BUYER, // Default to BUYER
                     name = name,
                     onNameChange = { name = it }, // Update name state here
-                    onLoginClick = { userViewModel.login(name) },
-                    onCreateProfileClick = { navActions.navigateToCreatePage() },
+                    onLoginClick = {
+                        userViewModel.login(name)
+                        val destination = if (userType == UserViewModel.UserType.COMPANY) {
+                            navActions.navigateToRetailerHome()
+                        } else {
+                            navActions.navigateToUserHome()
+                        }
+                    },
+                    onCreateProfileClick = { navActions.navigateToCreateProfile() },
                     onUserTypeSelect = { userViewModel.setUserType(it) }
                 )
             }
         }
     )
 }
+
 
 @Composable
 private fun LoginContent(

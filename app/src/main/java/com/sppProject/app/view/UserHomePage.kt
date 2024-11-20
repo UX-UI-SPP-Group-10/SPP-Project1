@@ -66,7 +66,7 @@ fun UserHomePage(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        BottomNavigation(navActions)
+        // BottomNavigation(navActions)
     }
 }
 
