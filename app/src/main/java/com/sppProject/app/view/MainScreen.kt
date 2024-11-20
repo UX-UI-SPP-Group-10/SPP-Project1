@@ -38,7 +38,7 @@ fun MainScreen(
 
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(userViewModel, nestedNavActions) // Pass the correct NavController
+            BottomNavigationBar(navActions = nestedNavActions, userViewModel = userViewModel)
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
@@ -52,7 +52,7 @@ fun MainScreen(
                 composable(NavigationRoutes.RETAILER_HOME) {
                     RetailerHomePage(nestedNavActions, userViewModel, itemFetcher)
                 }
-                composable(NavigationRoutes.CREATE_PAGE) {
+                composable(NavigationRoutes.CREATE_PROFILE_PAGE) {
                     CreateProfilePage(nestedNavActions, buyerFetcher = buyerFetcher, companyFetcher = companyFetcher)
                 }
                 composable(
@@ -62,10 +62,14 @@ fun MainScreen(
                     val itemId = backStackEntry.arguments?.getLong("itemId") ?: return@composable
                     ItemViewPage(nestedNavActions, itemId, itemFetcher)
                 }
+                composable(NavigationRoutes.CREATE_ITEM) {
+                    ItemPage(nestedNavActions, itemFetcher, UserSessionManager(LocalContext.current))
+                }
             }
         }
     }
 }
+
 
 
 

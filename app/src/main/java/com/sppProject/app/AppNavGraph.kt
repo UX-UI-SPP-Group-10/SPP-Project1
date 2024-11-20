@@ -1,5 +1,6 @@
 package com.sppProject.app
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
@@ -51,10 +52,10 @@ class UserNavActions(private val navController: NavHostController) {
 
 
     fun navigateToCreateItem() {
-        if (navController.currentDestination?.route != NavigationRoutes.CREATE_ITEM) {
-            navController.navigate(NavigationRoutes.CREATE_ITEM)
-        }
+        Log.d("UserNavActions", "Navigating to create a new item page")
+        navController.navigate(NavigationRoutes.CREATE_ITEM)
     }
+
 
     fun navigateToViewItem(item: Item) {
         if (navController.currentDestination?.route != NavigationRoutes.VIEW_ITEM) {
@@ -124,7 +125,6 @@ object NavigationRoutes {
     const val MAIN_SCREEN = "main_screen"
     const val USER_HOME = "user_home"
     const val RETAILER_HOME = "retailer_home"
-    const val CREATE_PAGE = "create"
     const val CREATE_ITEM = "create_item"
     const val VIEW_ITEM = "view_item"
 }

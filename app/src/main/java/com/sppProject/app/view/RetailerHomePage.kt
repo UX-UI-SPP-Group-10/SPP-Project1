@@ -1,41 +1,30 @@
 package com.sppProject.app.view
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.sppProject.app.R
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.data.data_class.Item
-import com.sppProject.app.view.components.BuyPageButton
-import com.sppProject.app.view.components.CreatItemButton
+import com.sppProject.app.view.components.CreateItemButton
 import com.sppProject.app.view.components.LogoutButton
-import com.sppProject.app.view.components.ReciptButton
 import com.sppProject.app.viewModel.UserViewModel
 import kotlinx.coroutines.launch
 
@@ -94,7 +83,7 @@ fun RetailerHomePage(navActions: UserNavActions, userViewModel: UserViewModel, i
                 }
             }
         }
-        BottomNavigationRetailer(navActions)
+        // BottomNavigationRetailer(navActions)
     }
 }
 
@@ -108,7 +97,7 @@ fun BottomNavigationRetailer(navActions: UserNavActions) {
 
             Spacer(Modifier.width(120.dp))
 
-            CreatItemButton(onClick = { navActions.navigateToCreateItem() })
+            CreateItemButton(onClick = { navActions.navigateToCreateItem() })
 
 
         },

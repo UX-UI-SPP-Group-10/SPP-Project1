@@ -13,10 +13,10 @@ import androidx.compose.ui.unit.dp
 import com.sppProject.app.R
 
 @Composable
-fun CreatItemButton(onClick: () -> Unit, modifier: Modifier = Modifier){
+fun CreateItemButton(onClick: () -> Unit, modifier: Modifier = Modifier){
     Button(
         onClick = {
-            onClick
+            onClick()
         },
         modifier = modifier
             .width(45.dp) // Set button width
