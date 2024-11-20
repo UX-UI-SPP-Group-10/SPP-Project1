@@ -13,6 +13,7 @@ import androidx.navigation.navigation
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 import com.sppProject.app.api_integration.fetchers.CompanyFetcher
 import com.sppProject.app.api_integration.fetchers.ItemFetcher
+import com.sppProject.app.api_integration.fetchers.ReceiptFetcher
 import com.sppProject.app.data.UserSessionManager
 import com.sppProject.app.data.data_class.Item
 import com.sppProject.app.view.*
@@ -77,7 +78,8 @@ fun AppNavGraph(
     navController: NavHostController,
     buyerFetcher: BuyerFetcher,
     companyFetcher: CompanyFetcher,
-    itemFetcher: ItemFetcher
+    itemFetcher: ItemFetcher,
+    receiptFetcher: ReceiptFetcher
 ) {
     val context = LocalContext.current
     val userSessionManager = UserSessionManager(context)
@@ -105,7 +107,8 @@ fun AppNavGraph(
                 itemFetcher = itemFetcher,
                 buyerFetcher = buyerFetcher,
                 companyFetcher = companyFetcher,
-                startDestination = startDestination
+                receiptFetcher = receiptFetcher,
+                startDestination = startDestination,
             )
         }
     }

@@ -13,6 +13,7 @@ import com.sppProject.app.api_integration.api_service.ReceiptApiService
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 import com.sppProject.app.api_integration.fetchers.CompanyFetcher
 import com.sppProject.app.api_integration.fetchers.ItemFetcher
+import com.sppProject.app.api_integration.fetchers.ReceiptFetcher
 
 
 class MainActivity : ComponentActivity() {
@@ -33,7 +34,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
-            AppNavGraph(navController, buyerFetcher, companyFetcher, itemFetcher) // Load AppNavGraph
+            AppNavGraph(navController, buyerFetcher, companyFetcher, itemFetcher, receiptFetcher) // Load AppNavGraph
         }
     }
 }

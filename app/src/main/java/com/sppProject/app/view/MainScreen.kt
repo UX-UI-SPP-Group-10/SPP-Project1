@@ -18,6 +18,7 @@ import com.sppProject.app.UserNavActions
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 import com.sppProject.app.api_integration.fetchers.CompanyFetcher
 import com.sppProject.app.api_integration.fetchers.ItemFetcher
+import com.sppProject.app.api_integration.fetchers.ReceiptFetcher
 import com.sppProject.app.data.UserSessionManager
 import com.sppProject.app.view.components.BottomNavigationBar
 import com.sppProject.app.viewModel.UserViewModel
@@ -29,6 +30,7 @@ fun MainScreen(
     itemFetcher: ItemFetcher,
     buyerFetcher: BuyerFetcher,
     companyFetcher: CompanyFetcher,
+    receiptFetcher: ReceiptFetcher,
     startDestination: String
 ) {
     val nestedNavController = rememberNavController()
@@ -60,7 +62,7 @@ fun MainScreen(
                     arguments = listOf(navArgument("itemId") { type = NavType.LongType })
                 ) { backStackEntry ->
                     val itemId = backStackEntry.arguments?.getLong("itemId") ?: return@composable
-                    ItemViewPage(nestedNavActions, itemId, itemFetcher)
+                    ItemViewPage(nestedNavActions, itemId, itemFetcher, receiptFetcher, UserSessionManager(LocalContext.current))
                 }
                 composable(NavigationRoutes.CREATE_ITEM) {
                     ItemPage(nestedNavActions, itemFetcher, UserSessionManager(LocalContext.current))
