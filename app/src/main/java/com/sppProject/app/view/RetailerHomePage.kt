@@ -100,9 +100,9 @@ fun RetailerHomePage(navActions: UserNavActions, userViewModel: UserViewModel, i
 
 @Composable
 fun BottomNavigationRetailer(navActions: UserNavActions) {
-    BottomAppBar(Modifier.fillMaxWidth(),
+    BottomAppBar(Modifier.fillMaxWidth().height(40.dp),
         content = {
-            Spacer(Modifier.width(16.dp))
+            Spacer(Modifier.width(100.dp))
 
             LogoutButton(onClick = { navActions.navigateToLogin() })
 
@@ -110,9 +110,6 @@ fun BottomNavigationRetailer(navActions: UserNavActions) {
 
             CreatItemButton(onClick = { navActions.navigateToCreateItem() })
 
-            Spacer(Modifier.width(120.dp))
-
-            BuyPageButton(onClick = {})
 
         },
         containerColor = MaterialTheme.colorScheme.primary
