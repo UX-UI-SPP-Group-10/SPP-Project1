@@ -52,6 +52,7 @@ fun ItemViewPage(userNavActions: UserNavActions, itemId: Long, itemFetcher: Item
     val itemState = remember { mutableStateOf<Item?>(null) }
     val coroutineScope = rememberCoroutineScope()
     var isRecivemade by remember { mutableStateOf(false) }
+    var noMoreItems by remember { mutableStateOf(false) }
 
     // Fetch the item when the composable is first displayed or itemId changes
     LaunchedEffect(itemId) {
@@ -71,7 +72,10 @@ fun ItemViewPage(userNavActions: UserNavActions, itemId: Long, itemFetcher: Item
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-
+                if(noMoreItems){
+                    Text(modifier = Modifier.align(Alignment.TopCenter),
+                        text = "There is no more of this item available")
+                }
                 CustomButton(
                     onClick = {
                         isRecivemade = true
@@ -81,14 +85,22 @@ fun ItemViewPage(userNavActions: UserNavActions, itemId: Long, itemFetcher: Item
                         .align(Alignment.BottomCenter)
                         .width(200.dp)
                 )
+
             }
         }
     )
 
-    if (isRecivemade) {
-        PostReceipt(receiptFetcher, itemId, itemFetcher, userSessionManager, coroutineScope)
-        userNavActions.navigateUserHome()
-        isRecivemade = false
+
+    if (isRecivemade){
+        if ((itemState.value?.stock ?: 0) > 0){
+            PostReceipt(receiptFetcher, itemId, itemFetcher, userSessionManager, coroutineScope)
+            userNavActions.navigateUserHome()
+            isRecivemade = false
+        }
+        else {
+            noMoreItems = true
+            isRecivemade = false
+        }
     }
 }
 
@@ -169,7 +181,6 @@ fun PostReceipt(
         // Launch the coroutine only when `tempItem` changes (or you can check some other condition)
         coroutineScope.launch {
             receiptFetcher.createReceipt(currentUser?.id ?: 0,itemID)
-            //TODO mak sow that ther is one les item avalebel.
         }
     }
 }
