@@ -144,11 +144,11 @@ private fun LoginContent(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        CustomTextField(name = name, labelText = "Username", onNameChange = onNameChange)
+        CustomTextField(value = name, labelText = "Username", onValueChange = onNameChange)
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        PasswordInputField(password = password, onPasswordChange = onPasswordChange)
+        CustomTextField(value = password, labelText = "Password", onValueChange = onPasswordChange, visualTransformation = PasswordVisualTransformation())
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -196,12 +196,3 @@ private fun UsernameInputField(name: String, onNameChange: (String) -> Unit) {
     )
 }
 */
-@Composable
-private fun PasswordInputField(password: String, onPasswordChange: (String) -> Unit) {
-    TextField(
-        value = password,
-        onValueChange = onPasswordChange, // This should update the password state in LoginPage
-        label = { Text("Enter Password") },
-        visualTransformation = PasswordVisualTransformation()
-    )
-}

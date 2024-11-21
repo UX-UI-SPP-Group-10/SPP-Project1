@@ -1,5 +1,6 @@
 package com.sppProject.app.view.components
 
+import android.R.attr.name
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -10,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -18,13 +20,14 @@ fun CustomTextField(
     modifier: Modifier = Modifier,
     borderColor: Color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
     labelText: String = "",
-    name: String,
-    onNameChange: (String) -> Unit,
-    shape: Shape = RoundedCornerShape(12.dp)
+    value: String,
+    onValueChange: (String) -> Unit,
+    shape: Shape = RoundedCornerShape(12.dp),
+    visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
     OutlinedTextField(
-        value = name,
-        onValueChange = onNameChange,
+        value = value,
+        onValueChange = onValueChange,
         label = {
             Text(
                 text = labelText,
