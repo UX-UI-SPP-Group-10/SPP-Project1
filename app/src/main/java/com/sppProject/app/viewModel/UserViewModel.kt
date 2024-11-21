@@ -1,5 +1,6 @@
 package com.sppProject.app.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
@@ -9,6 +10,7 @@ import com.sppProject.app.api_integration.fetchers.CompanyFetcher
 import com.sppProject.app.data.UserSessionManager
 import com.sppProject.app.data.data_class.Buyer
 import com.sppProject.app.data.data_class.Company
+import com.sppProject.app.view.LoginPage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -31,6 +33,13 @@ class UserViewModel(
 
     enum class UserType {
         BUYER, COMPANY
+    }
+
+    init {
+        // Load session as soon as the ViewModel is created
+        viewModelScope.launch {
+            loadSessionOnStartup()
+        }
     }
 
     fun setUserType(userType: UserType) {
@@ -88,6 +97,7 @@ class UserViewModel(
             try {
                 val buyers = buyerFetcher.fetchBuyers()
                 val fetchedBuyer = buyers.find { it.name == name }
+                Log.d("UserViewModel", "Fetched buyer: ${fetchedBuyer?.name}")
                 if (fetchedBuyer != null) {
                     userSessionManager.saveBuyerInfo(fetchedBuyer)
                     _buyerState.value = fetchedBuyer
@@ -111,12 +121,33 @@ class UserViewModel(
                     userSessionManager.saveCompanyInfo(fetchedCompany)
                     _companyState.value = fetchedCompany
                     _buyerState.value = null
+                    Log.d("UserViewModel", "Company login successful: ${fetchedCompany.name}")
                 } else {
                     _companyState.value = null // Company not found
+                    Log.d("UserViewModel", "Company login failed: company not found")
                 }
             } catch (e: Exception) {
                 _companyState.value = null
+                Log.d("UserViewModel", "Company login failed with exception: ${e.message}")
             }
+        }
+    }
+
+
+    private suspend fun loadSessionOnStartup() {
+        val buyer = userSessionManager.getLoggedInBuyer()
+        val company = userSessionManager.getLoggedInCompany()
+
+        if (buyer != null) {
+            _buyerState.value = buyer
+            _userType.value = UserType.BUYER
+            Log.d("UserViewModel", "Loaded buyer session: ${buyer.name}")
+        } else if (company != null) {
+            _companyState.value = company
+            _userType.value = UserType.COMPANY
+            Log.d("UserViewModel", "Loaded company session: ${company.name}")
+        } else {
+            Log.d("UserViewModel", "No user session found")
         }
     }
 

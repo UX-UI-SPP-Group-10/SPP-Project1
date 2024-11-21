@@ -10,9 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -37,6 +35,7 @@ import com.sppProject.app.api_integration.fetchers.CompanyFetcher
 import com.sppProject.app.data.UserSessionManager
 import com.sppProject.app.view.components.BackButton
 import com.sppProject.app.view.components.CustomButton
+import com.sppProject.app.view.components.CustomTextField
 import com.sppProject.app.view.components.CustomToggleButton
 import com.sppProject.app.viewModel.CreatePageViewModel
 
@@ -53,7 +52,7 @@ sealed class CreatePageState(val content: @Composable (CreatePageViewModel) -> U
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, companyFetcher: CompanyFetcher, userSessionManager : UserSessionManager) {
+fun CreateProfilePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, companyFetcher: CompanyFetcher, userSessionManager : UserSessionManager) {
     val auth = FirebaseAuth.getInstance()
     val viewModel: CreatePageViewModel = remember { CreatePageViewModel(userSessionManager,buyerFetcher, companyFetcher) }
 

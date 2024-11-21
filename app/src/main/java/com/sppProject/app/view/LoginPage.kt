@@ -1,21 +1,28 @@
 package com.sppProject.app.view
 
+import android.R.attr.name
+import android.util.Log
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -25,12 +32,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.google.firebase.auth.FirebaseAuth
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.view.components.CustomButton
+import com.sppProject.app.view.components.CustomTextField
 import com.sppProject.app.view.components.CustomToggleButton
 import com.sppProject.app.viewModel.UserViewModel
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginPage(
@@ -45,13 +53,18 @@ fun LoginPage(
     val userType by userViewModel.userType.collectAsState()
     var errorMessage by remember { mutableStateOf<String?>(null) }
 
-    // Navigate based on the logged-in state
-    if (buyerState != null) {
-        navActions.navigateToUserHome()
-    }
-
-    if (companyState != null) {
-        navActions.navigateToRetailerHome()
+    LaunchedEffect(buyerState, companyState) {
+        Log.d("LoginPage", "Checking login states in LaunchedEffect")
+        when {
+            buyerState != null -> {
+                Log.d("LoginPage", "Navigating to User Home for buyer: ${buyerState}")
+                navActions.navigateFromLoginToUserHome()
+            }
+            companyState != null -> {
+                Log.d("LoginPage", "Navigating to Retailer Home for company: ${companyState}")
+                navActions.navigateFromLoginToRetailerHome()
+            }
+        }
     }
 
     Scaffold(
@@ -73,7 +86,7 @@ fun LoginPage(
                     password = password,
                     onNameChange = { name = it }, // Update name state here
                     onPasswordChange = { password = it }, // Update password state here
-                    onCreateProfileClick = { navActions.navigateToCreatePage() },
+                    onCreateProfileClick = { navActions.navigateToCreateProfile() },
                     onUserTypeSelect = { userViewModel.setUserType(it) },
                     onLoginClick = {
                         if (name.isBlank() || password.isBlank()) {
@@ -86,8 +99,8 @@ fun LoginPage(
                                         firebaseUser?.let {
                                             userViewModel.fetchUserProfile()
                                             when (userType) {
-                                                UserViewModel.UserType.BUYER -> navActions.navigateToUserHome()
-                                                UserViewModel.UserType.COMPANY -> navActions.navigateToRetailerHome()
+                                                UserViewModel.UserType.BUYER -> navActions.navigateFromLoginToUserHome()
+                                                UserViewModel.UserType.COMPANY -> navActions.navigateFromLoginToRetailerHome()
                                                 null -> errorMessage = "Unknown user type."
                                             }
                                         }
@@ -98,7 +111,7 @@ fun LoginPage(
                         }
                     }
                 )
-                
+
 
                 // Show error message if any
                 errorMessage?.let { error ->
@@ -131,7 +144,7 @@ private fun LoginContent(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        UsernameInputField(name = name, onNameChange = onNameChange)
+        CustomTextField(name = name, labelText = "Username", onNameChange = onNameChange)
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -173,7 +186,7 @@ private fun UserTypeSelector(
         )
     }
 }
-
+/*
 @Composable
 private fun UsernameInputField(name: String, onNameChange: (String) -> Unit) {
     TextField(
@@ -182,7 +195,7 @@ private fun UsernameInputField(name: String, onNameChange: (String) -> Unit) {
         label = { Text("Enter email") }
     )
 }
-
+*/
 @Composable
 private fun PasswordInputField(password: String, onPasswordChange: (String) -> Unit) {
     TextField(

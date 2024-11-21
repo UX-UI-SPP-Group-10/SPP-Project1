@@ -1,29 +1,30 @@
 package com.sppProject.app.view
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Button
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.data.data_class.Item
+import com.sppProject.app.view.components.CreateItemButton
+import com.sppProject.app.view.components.LogoutButton
 import com.sppProject.app.viewModel.UserViewModel
 import kotlinx.coroutines.launch
 
@@ -57,8 +58,7 @@ fun RetailerHomePage(navActions: UserNavActions, userViewModel: UserViewModel, i
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         loggedInCompany?.let { company ->
@@ -86,6 +86,7 @@ fun RetailerHomePage(navActions: UserNavActions, userViewModel: UserViewModel, i
                 columns = GridCells.Fixed(2),
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(16.dp)
                     .weight(1f),  // Gives grid weight to fill remaining space
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -95,31 +96,26 @@ fun RetailerHomePage(navActions: UserNavActions, userViewModel: UserViewModel, i
                 }
             }
         }
+        // BottomNavigationRetailer(navActions)
     }
+}
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-    ) {
-        Button(
-            onClick = {
-                navActions.navigateToCreateItem()
-            },
-            modifier = Modifier.align(Alignment.BottomEnd)
-        ) {
-            Text("Create Listing")
-        }
+@Composable
+fun BottomNavigationRetailer(navActions: UserNavActions) {
+    BottomAppBar(Modifier.fillMaxWidth().height(40.dp),
+        content = {
+            Spacer(Modifier.width(100.dp))
 
-        Button(
-            onClick = {
-                userViewModel.logout()
-            }, // Use NavController to go back
-            modifier = Modifier.align(Alignment.BottomStart)
-        ) {
-            Text("Log Out")
-        }
-    }
+            LogoutButton(onClick = { navActions.navigateToLogin() })
+
+            Spacer(Modifier.width(120.dp))
+
+            CreateItemButton(onClick = { navActions.navigateToCreateItem() })
+
+
+        },
+        containerColor = MaterialTheme.colorScheme.primary
+    )
 }
 
 @Composable
