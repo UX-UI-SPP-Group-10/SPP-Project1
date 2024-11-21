@@ -65,6 +65,12 @@ class UserNavActions(private val navController: NavHostController) {
         }
     }
 
+    fun navigateToUserReceipts() {
+        navController.navigate("${NavigationRoutes.MAIN_SCREEN}?startDestination=${NavigationRoutes.RECEIPTS}") {
+            popUpTo(NavigationRoutes.LOGIN_PAGE) { inclusive = true }
+        }
+    }
+
 
     fun navigateBack() {
         navController.popBackStack()
@@ -130,5 +136,6 @@ object NavigationRoutes {
     const val RETAILER_HOME = "retailer_home"
     const val CREATE_ITEM = "create_item"
     const val VIEW_ITEM = "view_item"
+    const val RECEIPTS = "receipts"
 }
 

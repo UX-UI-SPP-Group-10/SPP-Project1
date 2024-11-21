@@ -53,7 +53,7 @@ private fun BuyerBottomNavigationBar(
 
 
         ReciptButton(onClick = {
-
+            navActions.navigateToUserReceipts()
         })
     }
 }

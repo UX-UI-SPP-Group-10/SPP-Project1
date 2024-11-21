@@ -67,6 +67,9 @@ fun MainScreen(
                 composable(NavigationRoutes.CREATE_ITEM) {
                     ItemPage(nestedNavActions, itemFetcher, UserSessionManager(LocalContext.current))
                 }
+                composable(NavigationRoutes.RECEIPTS){
+                    Receipts(userNavActions, userViewModel, receiptFetcher)
+                }
             }
         }
     }
