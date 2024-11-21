@@ -3,7 +3,7 @@ package com.sppProject.app.data.data_class
 import com.google.gson.annotations.SerializedName
 
 data class Item(
-    @SerializedName("itemId") val id: Long?,            // Matches itemId from backend
+    @SerializedName("itemId") var id: Long?,            // Matches itemId from backend
     @SerializedName("itemName") val name: String,      // Matches itemName from backend
     @SerializedName("price") val price: Int,           // Matches price from backend
     @SerializedName("description") val description: String?, // Matches description from backend
