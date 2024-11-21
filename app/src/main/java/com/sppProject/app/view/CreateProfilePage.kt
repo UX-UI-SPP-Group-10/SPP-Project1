@@ -30,6 +30,7 @@ import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 import com.sppProject.app.api_integration.fetchers.CompanyFetcher
 import com.sppProject.app.view.components.BackButton
 import com.sppProject.app.view.components.CustomButton
+import com.sppProject.app.view.components.CustomTextField
 import com.sppProject.app.view.components.CustomToggleButton
 import com.sppProject.app.viewModel.CreatePageViewModel
 
@@ -151,9 +152,9 @@ fun RetailerInfo(viewModel: CreatePageViewModel) {
     var password by remember { mutableStateOf("") }
 
     Column(modifier = Modifier.padding(top = 16.dp)) {
-        InputField("Enter Company", company) { company = it }
-        InputField("Enter Location", location) { location = it }
-        InputField("Enter Password", password) { password = it }
+        CustomTextField(name = company, labelText = "Enter Company Name", onNameChange = { company = it })
+        CustomTextField(name = location, labelText = "Enter Location", onNameChange = { location = it })
+        CustomTextField(name = password, labelText = "Enter Password", onNameChange = { password = it })
     }
     viewModel.userName = company
 }
@@ -164,23 +165,8 @@ fun UserInfo(viewModel: CreatePageViewModel) {
     var password by remember { mutableStateOf("") }
 
     Column(modifier = Modifier.padding(top = 16.dp)) {
-        InputField("Enter Username", name) { name = it }
-        InputField("Enter Password", password) { password = it }
+        CustomTextField(name = name, labelText = "Enter Name", onNameChange = { name = it })
+        CustomTextField(name = password, labelText = "Enter Password", onNameChange = { password = it })
     }
     viewModel.userName = name
-}
-
-@Composable
-fun InputField(
-    label: String,
-    value: String,
-    onValueChange: (String) -> Unit
-) {
-    TextField(
-        value = value,
-        onValueChange = onValueChange,
-        label = { Text(label) },
-        modifier = Modifier.fillMaxWidth()
-    )
-    Spacer(modifier = Modifier.height(16.dp))
 }

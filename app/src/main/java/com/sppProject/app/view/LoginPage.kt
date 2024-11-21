@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.view.components.CustomButton
+import com.sppProject.app.view.components.CustomTextField
 import com.sppProject.app.view.components.CustomToggleButton
 import com.sppProject.app.viewModel.UserViewModel
 @OptIn(ExperimentalMaterial3Api::class)
@@ -112,7 +113,7 @@ private fun LoginContent(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        UsernameInputField(name = name, onNameChange = onNameChange)
+        CustomTextField(name = name, labelText = "Username", onNameChange = onNameChange)
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -149,43 +150,4 @@ private fun UserTypeSelector(
             isActive = userType == UserViewModel.UserType.COMPANY
         )
     }
-}
-
-@Composable
-private fun UsernameInputField(
-    modifier: Modifier = Modifier,
-    borderWidth: androidx.compose.ui.unit.Dp = 1.dp,
-    borderColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
-    name: String,
-    onNameChange: (String) -> Unit,
-    shape: androidx.compose.ui.graphics.Shape = RoundedCornerShape(12.dp)){
-    Box(
-        modifier = modifier
-            .border(
-                BorderStroke(borderWidth, borderColor),
-                shape = shape
-            )
-    ) {
-        TextField(
-            value = name,
-            onValueChange = onNameChange,
-            label = {
-                Text(
-                    text = "Username",
-                    fontSize = 14.sp,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-            },
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = MaterialTheme.colorScheme.primary,
-                unfocusedContainerColor = MaterialTheme.colorScheme.primary,
-                focusedIndicatorColor = MaterialTheme.colorScheme.primary,
-                unfocusedIndicatorColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-                cursorColor = MaterialTheme.colorScheme.primary
-            ),
-            shape = shape,
-            singleLine = true,
-        )
-    }
-
 }
