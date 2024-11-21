@@ -22,14 +22,15 @@ private val DarkColorScheme = darkColorScheme(
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = GreenDarkVariant,
-    onPrimary = White,
+    primary = White,             // Background for primary elements like buttons
+    onPrimary = DarkerGreen,     // Text color for components using primary color as background
     secondary = DarkGreen,
+    onSecondary = White,
     tertiary = LightGreenDark,
     background = White,
+    onBackground = LightGrayText,
     surface = White,
-    onBackground = BlackAccent,
-    onSurface = LightGrayText
+    onSurface = BlackAccent
 )
 
 
