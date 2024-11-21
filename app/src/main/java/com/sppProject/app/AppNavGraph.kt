@@ -76,9 +76,7 @@ class UserNavActions(private val navController: NavHostController) {
     }
 
     fun navigateToUserReceipts() {
-        navController.navigate("${NavigationRoutes.MAIN_SCREEN}?startDestination=${NavigationRoutes.RECEIPTS}") {
-            popUpTo(NavigationRoutes.LOGIN_PAGE) { inclusive = true }
-        }
+        navController.navigate(NavigationRoutes.RECEIPTS)
     }
 
 

@@ -96,8 +96,21 @@ private fun ReceiptCard(receipt: Receipt, onClick: () -> Unit) {
                 .padding(16.dp)
                 .fillMaxWidth()
         ) {
-            Text(text = receipt.buyer.name, style = androidx.compose.material3.MaterialTheme.typography.bodyLarge)
-            Text(text = receipt.items.name, style = androidx.compose.material3.MaterialTheme.typography.bodyLarge)
+
+            Text(
+                text = receipt.buyer.name,
+                style = MaterialTheme.typography.bodyLarge
+            )
+
+            val itemName = receipt.items?.name ?: "No Item Available"
+            Text(
+                text = itemName,
+                style = MaterialTheme.typography.bodyLarge
+            )
+
+
+            //Text(text = receipt.buyer.name, style = androidx.compose.material3.MaterialTheme.typography.bodyLarge)
+            //Text(text = receipt.items.name, style = androidx.compose.material3.MaterialTheme.typography.bodyLarge)
 
             //Text(text = "Price: $${item.price}", style = androidx.compose.material3.MaterialTheme.typography.bodyMedium)
             //Text(text = "Stock: ${item.stock}", style = androidx.compose.material3.MaterialTheme.typography.bodySmall)
