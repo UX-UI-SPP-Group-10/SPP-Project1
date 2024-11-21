@@ -25,31 +25,36 @@ class UserNavActions(private val navController: NavHostController) {
 
     fun navigateToLogin() {
         navController.navigate(NavigationRoutes.LOGIN_PAGE) {
-            popUpTo(NavigationRoutes.LOGIN_PAGE) { inclusive = true }
+            popUpTo(0) { inclusive = true }
+            launchSingleTop = true
         }
     }
 
     fun navigateFromLoginToUserHome() {
         navController.navigate("${NavigationRoutes.MAIN_SCREEN}?startDestination=${NavigationRoutes.USER_HOME}") {
-            popUpTo(NavigationRoutes.LOGIN_PAGE) { inclusive = true }
+            popUpTo(0) { inclusive = true } // Clears entire back stack
+            launchSingleTop = true
         }
     }
 
     fun navigateFromLoginToRetailerHome() {
         navController.navigate("${NavigationRoutes.MAIN_SCREEN}?startDestination=${NavigationRoutes.RETAILER_HOME}") {
-            popUpTo(NavigationRoutes.LOGIN_PAGE) { inclusive = true }
+            popUpTo(0) { inclusive = true } // Clears entire back stack
+            launchSingleTop = true
         }
     }
 
     fun navigateToRetailerHome() {
         navController.navigate(NavigationRoutes.RETAILER_HOME) {
-            popUpTo(NavigationRoutes.LOGIN_PAGE) { inclusive = true }
+            popUpTo(0) { inclusive = true } // Clears entire back stack
+            launchSingleTop = true
         }
     }
 
     fun navigateUserHome() {
         navController.navigate(NavigationRoutes.USER_HOME) {
-            popUpTo(NavigationRoutes.LOGIN_PAGE) { inclusive = true }
+            popUpTo(0) { inclusive = true } // Clears entire back stack
+            launchSingleTop = true
         }
     }
 
