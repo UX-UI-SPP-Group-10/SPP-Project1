@@ -13,46 +13,48 @@ import com.sppProject.app.api_integration.fetchers.CompanyFetcher
 import com.sppProject.app.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.api_integration.fetchers.ReceiptFetcher
 import com.sppProject.app.data.UserSessionManager
+import com.sppProject.app.data.data_class.Buyer
 import com.sppProject.app.data.data_class.Item
+import com.sppProject.app.data.data_class.Receipt
 import com.sppProject.app.view.*
 import com.sppProject.app.viewModel.UserViewModel
 
 
 // Call functions from this class to navigate to different screens!
 class UserNavActions(private val navController: NavHostController) {
-    fun navigateToStartPage() {
-        navController.navigate(NavigationRoutes.START_PAGE) {
-            popUpTo(NavigationRoutes.START_PAGE) { inclusive = true }
-        }
-    }
 
     fun navigateToLogin() {
         navController.navigate(NavigationRoutes.LOGIN_PAGE) {
-            popUpTo(NavigationRoutes.START_PAGE) { inclusive = true }
+            popUpTo(0) { inclusive = true }
+            launchSingleTop = true
         }
     }
 
     fun navigateFromLoginToUserHome() {
         navController.navigate("${NavigationRoutes.MAIN_SCREEN}?startDestination=${NavigationRoutes.USER_HOME}") {
-            popUpTo(NavigationRoutes.LOGIN_PAGE) { inclusive = true }
+            popUpTo(0) { inclusive = true } // Clears entire back stack
+            launchSingleTop = true
         }
     }
 
     fun navigateFromLoginToRetailerHome() {
         navController.navigate("${NavigationRoutes.MAIN_SCREEN}?startDestination=${NavigationRoutes.RETAILER_HOME}") {
-            popUpTo(NavigationRoutes.LOGIN_PAGE) { inclusive = true }
+            popUpTo(0) { inclusive = true } // Clears entire back stack
+            launchSingleTop = true
         }
     }
 
     fun navigateToRetailerHome() {
         navController.navigate(NavigationRoutes.RETAILER_HOME) {
-            popUpTo(NavigationRoutes.LOGIN_PAGE) { inclusive = true }
+            popUpTo(0) { inclusive = true } // Clears entire back stack
+            launchSingleTop = true
         }
     }
 
     fun navigateUserHome() {
         navController.navigate(NavigationRoutes.USER_HOME) {
-            popUpTo(NavigationRoutes.LOGIN_PAGE) { inclusive = true }
+            popUpTo(0) { inclusive = true } // Clears entire back stack
+            launchSingleTop = true
         }
     }
 
@@ -69,14 +71,17 @@ class UserNavActions(private val navController: NavHostController) {
 
 
     fun navigateToViewItem(item: Item) {
-        if (navController.currentDestination?.route != NavigationRoutes.VIEW_ITEM) {
-            val itemId = item.id
-            navController.navigate("${NavigationRoutes.VIEW_ITEM}/$itemId")
-        }
+        val itemId = item.id
+        navController.navigate("${NavigationRoutes.VIEW_ITEM}/$itemId")
     }
 
     fun navigateToUserReceipts() {
         navController.navigate(NavigationRoutes.RECEIPTS)
+    }
+
+    fun navigateToViewReceipt(receipt: Receipt) {
+        val receiptId = receipt.id
+        navController.navigate("${NavigationRoutes.VIEW_RECEIPT}/$receiptId")
     }
 
 
@@ -136,7 +141,6 @@ fun AppNavGraph(
 
 // Navigation routes
 object NavigationRoutes {
-    const val START_PAGE = "start"
     const val LOGIN_PAGE = "login"
     const val CREATE_PROFILE_PAGE = "create_profile"
     const val MAIN_SCREEN = "main_screen"
@@ -145,5 +149,6 @@ object NavigationRoutes {
     const val CREATE_ITEM = "create_item"
     const val VIEW_ITEM = "view_item"
     const val RECEIPTS = "receipts"
+    const val VIEW_RECEIPT = "view_receipt"
 }
 
