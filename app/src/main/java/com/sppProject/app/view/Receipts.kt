@@ -28,6 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.api_integration.fetchers.ReceiptFetcher
+import com.sppProject.app.data.UserSessionManager
+import com.sppProject.app.data.data_class.Buyer
 import com.sppProject.app.data.data_class.Receipt
 import com.sppProject.app.viewModel.UserViewModel
 import kotlinx.coroutines.launch
@@ -36,16 +38,18 @@ import kotlinx.coroutines.launch
 fun Receipts(
     navActions: UserNavActions,
     userViewModel: UserViewModel,
-    receiptFetcher: ReceiptFetcher
+    receiptFetcher: ReceiptFetcher,
+    userSessionManager: UserSessionManager
 ) {
     // Mutable state to hold the list of items
     var receiptState by remember { mutableStateOf<List<Receipt>>(emptyList()) }
     val coroutineScope = rememberCoroutineScope()
+    val currentUser: Buyer? = userSessionManager.getLoggedInBuyer()
 
     // Fetch items when the composable is first displayed
     LaunchedEffect(Unit) {
         coroutineScope.launch {
-            receiptState = receiptFetcher.fetchReceipts()
+            receiptState = receiptFetcher.fetchReceiptByBuyerId(currentUser?.id ?: 0)
         }
         for (receipt in receiptState) {
             Log.e("Receipt", "Receipt: $receipt")

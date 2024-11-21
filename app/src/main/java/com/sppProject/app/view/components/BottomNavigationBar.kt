@@ -17,7 +17,7 @@ import com.sppProject.app.viewModel.UserViewModel
 @Composable
 fun BottomNavigationBar(
     navActions: UserNavActions,
-    userViewModel: UserViewModel
+    userViewModel: UserViewModel,
 ) {
     val userType = userViewModel.userType.collectAsState()
     when (userType.value) {

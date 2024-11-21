@@ -83,7 +83,7 @@ fun MainScreen(
                     ItemPage(nestedNavActions, itemFetcher, UserSessionManager(LocalContext.current))
                 }
                 composable(NavigationRoutes.RECEIPTS){
-                    Receipts(nestedNavActions, userViewModel, receiptFetcher)
+                    Receipts(nestedNavActions, userViewModel, receiptFetcher, UserSessionManager(LocalContext.current))
                 }
                 composable(
                     "${NavigationRoutes.VIEW_RECEIPT}/{receiptId}",
