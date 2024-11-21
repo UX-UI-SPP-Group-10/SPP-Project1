@@ -87,7 +87,8 @@ fun ItemViewPage(userNavActions: UserNavActions, itemId: Long, itemFetcher: Item
 
     if (isRecivemade) {
         PostReceipt(receiptFetcher, itemId, itemFetcher, userSessionManager, coroutineScope)
-        userNavActions.navigateToUserHome()
+        userNavActions.navigateUserHome()
+        isRecivemade = false
     }
 }
 

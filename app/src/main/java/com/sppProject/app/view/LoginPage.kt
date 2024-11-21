@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -25,7 +24,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.sppProject.app.NavigationRoutes
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.view.components.CustomButton
 import com.sppProject.app.view.components.CustomToggleButton
@@ -45,10 +43,10 @@ fun LoginPage(
     LaunchedEffect(buyerState, companyState) {
         when {
             buyerState != null -> {
-                navActions.navigateToUserHome()
+                navActions.navigateFromLoginToUserHome()
             }
             companyState != null -> {
-                navActions.navigateToRetailerHome()
+                navActions.navigateFromLoginToRetailerHome()
             }
         }
     }
@@ -73,9 +71,9 @@ fun LoginPage(
                     onLoginClick = {
                         userViewModel.login(name)
                         val destination = if (userType == UserViewModel.UserType.COMPANY) {
-                            navActions.navigateToRetailerHome()
+                            navActions.navigateFromLoginToRetailerHome()
                         } else {
-                            navActions.navigateToUserHome()
+                            navActions.navigateFromLoginToUserHome()
                         }
                     },
                     onCreateProfileClick = { navActions.navigateToCreateProfile() },

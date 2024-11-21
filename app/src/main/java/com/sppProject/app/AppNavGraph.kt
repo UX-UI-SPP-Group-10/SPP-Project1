@@ -5,11 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import androidx.navigation.navigation
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 import com.sppProject.app.api_integration.fetchers.CompanyFetcher
 import com.sppProject.app.api_integration.fetchers.ItemFetcher
@@ -34,14 +32,26 @@ class UserNavActions(private val navController: NavHostController) {
         }
     }
 
-    fun navigateToUserHome() {
+    fun navigateFromLoginToUserHome() {
         navController.navigate("${NavigationRoutes.MAIN_SCREEN}?startDestination=${NavigationRoutes.USER_HOME}") {
             popUpTo(NavigationRoutes.LOGIN_PAGE) { inclusive = true }
         }
     }
 
-    fun navigateToRetailerHome() {
+    fun navigateFromLoginToRetailerHome() {
         navController.navigate("${NavigationRoutes.MAIN_SCREEN}?startDestination=${NavigationRoutes.RETAILER_HOME}") {
+            popUpTo(NavigationRoutes.LOGIN_PAGE) { inclusive = true }
+        }
+    }
+
+    fun navigateToRetailerHome() {
+        navController.navigate(NavigationRoutes.RETAILER_HOME) {
+            popUpTo(NavigationRoutes.LOGIN_PAGE) { inclusive = true }
+        }
+    }
+
+    fun navigateUserHome() {
+        navController.navigate(NavigationRoutes.USER_HOME) {
             popUpTo(NavigationRoutes.LOGIN_PAGE) { inclusive = true }
         }
     }
