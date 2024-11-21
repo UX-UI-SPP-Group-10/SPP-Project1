@@ -25,11 +25,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.auth.FirebaseAuth
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 import com.sppProject.app.api_integration.fetchers.CompanyFetcher
+import com.sppProject.app.data.UserSessionManager
 import com.sppProject.app.view.components.BackButton
 import com.sppProject.app.view.components.CustomButton
 import com.sppProject.app.view.components.CustomToggleButton
@@ -48,8 +52,12 @@ sealed class CreatePageState(val content: @Composable (CreatePageViewModel) -> U
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, companyFetcher: CompanyFetcher) {
-    val viewModel: CreatePageViewModel = remember { CreatePageViewModel(buyerFetcher, companyFetcher) }
+fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, companyFetcher: CompanyFetcher, userSessionManager : UserSessionManager) {
+    val auth = FirebaseAuth.getInstance()
+    val viewModel: CreatePageViewModel = remember { CreatePageViewModel(userSessionManager,buyerFetcher, companyFetcher) }
+
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -89,6 +97,45 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, companyFe
                         isActive = isRetailerActive
                     )
                 }
+                Spacer(modifier = Modifier.height(16.dp))
+
+                TextField(
+                    value = email,
+                    onValueChange = { email = it },
+                    label = { Text("Enter Email") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                TextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text("Enter Password") },
+                    visualTransformation = PasswordVisualTransformation(),
+                    modifier = Modifier.fillMaxWidth()
+                )
+
+                Spacer(modifier = Modifier.height(32.dp))
+
+                CustomButton(
+                    onClick = {
+                        auth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    val firebaseUser = auth.currentUser
+                                    firebaseUser?.let {
+                                        viewModel.userSessionManager.saveFirebaseUserId(it.uid)
+                                        viewModel.sendInfo(navActions) // Sync additional data to Spring DB
+                                    }
+                                } else {
+                                    // Handle errors
+                                    viewModel._feedbackMessage.value = "Account creation failed: ${task.exception?.message}"
+                                }
+                            }
+                    },
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    text = "Create Profile"
+                )
             }
 
             Box(
@@ -99,12 +146,6 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, companyFe
                 contentAlignment = Alignment.Center
             ) {
                 viewModel.createPageState.content(viewModel)
-                CustomButton(
-                    onClick = { viewModel.sendInfo(navActions) },
-                    modifier = Modifier.align(Alignment.BottomEnd),
-                    text = "Create Profile"
-                )
-
             }
         }
     )
@@ -143,46 +184,39 @@ private fun TopAppBarSetup(navActions: UserNavActions) {
     }
 }
 
-
-
-
 @Composable
 fun RetailerInfo(viewModel: CreatePageViewModel) {
     var company by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
 
     Column(modifier = Modifier.padding(top = 16.dp)) {
-        InputField("Enter Company", company) { company = it }
-        InputField("Enter Location", location) { location = it }
-        InputField("Enter Password", password) { password = it }
+        TextField(
+            value = company,
+            onValueChange = { company = it },
+            label = { Text("Enter Company Name") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        TextField(
+            value = location,
+            onValueChange = { location = it },
+            label = { Text("Enter Location") },
+            modifier = Modifier.fillMaxWidth()
+        )
+        viewModel.userName = company
     }
-    viewModel.userName = company
 }
 
 @Composable
 fun UserInfo(viewModel: CreatePageViewModel) {
     var name by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
 
     Column(modifier = Modifier.padding(top = 16.dp)) {
-        InputField("Enter Username", name) { name = it }
-        InputField("Enter Password", password) { password = it }
+        TextField(
+            value = name,
+            onValueChange = { name = it },
+            label = { Text("Enter Name") },
+            modifier = Modifier.fillMaxWidth()
+        )
     }
     viewModel.userName = name
-}
-
-@Composable
-fun InputField(
-    label: String,
-    value: String,
-    onValueChange: (String) -> Unit
-) {
-    TextField(
-        value = value,
-        onValueChange = onValueChange,
-        label = { Text(label) },
-        modifier = Modifier.fillMaxWidth()
-    )
-    Spacer(modifier = Modifier.height(16.dp))
 }

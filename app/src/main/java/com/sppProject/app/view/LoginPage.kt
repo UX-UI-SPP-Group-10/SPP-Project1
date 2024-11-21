@@ -23,7 +23,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.google.firebase.auth.FirebaseAuth
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.view.components.CustomButton
 import com.sppProject.app.view.components.CustomToggleButton
@@ -35,10 +37,13 @@ fun LoginPage(
     userViewModel: UserViewModel,
     navActions: UserNavActions
 ) {
+    val auth = FirebaseAuth.getInstance()
     var name by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
     val buyerState by userViewModel.buyerState.collectAsState()
     val companyState by userViewModel.companyState.collectAsState()
     val userType by userViewModel.userType.collectAsState()
+
 
     // Navigate based on the logged-in state
     if (buyerState != null) {
@@ -65,10 +70,29 @@ fun LoginPage(
                 LoginContent(
                     userType = userType ?: UserViewModel.UserType.BUYER, // Default to BUYER
                     name = name,
+                    password = password,
                     onNameChange = { name = it }, // Update name state here
-                    onLoginClick = { userViewModel.login(name) },
+                    onPasswordChange = { password = it }, // Update password state here
                     onCreateProfileClick = { navActions.navigateToCreatePage() },
-                    onUserTypeSelect = { userViewModel.setUserType(it) }
+                    onUserTypeSelect = { userViewModel.setUserType(it) },
+                    onLoginClick = {
+                        auth.signInWithEmailAndPassword(name, password)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    val firebaseUser = auth.currentUser
+                                    firebaseUser?.let {
+                                        userViewModel.userSessionManager.saveFirebaseUserId(it.uid)
+                                        when (userType) {
+                                            UserViewModel.UserType.BUYER -> navActions.navigateToUserHome()
+                                            UserViewModel.UserType.COMPANY -> navActions.navigateToRetailerHome()
+                                            null -> TODO()
+                                        }
+                                    }
+                                } else{
+                                    userViewModel.setError("Login Failed: ${task.exception?.message}")
+                                }
+                            }
+                    }
                 )
             }
         }
@@ -79,7 +103,9 @@ fun LoginPage(
 private fun LoginContent(
     userType: UserViewModel.UserType,
     name: String,
+    password: String,
     onNameChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
     onLoginClick: () -> Unit,
     onCreateProfileClick: () -> Unit,
     onUserTypeSelect: (UserViewModel.UserType) -> Unit
@@ -134,5 +160,15 @@ private fun UsernameInputField(name: String, onNameChange: (String) -> Unit) {
         value = name,
         onValueChange = onNameChange, // This should update the name state in LoginPage
         label = { Text("Enter Username") }
+    )
+}
+
+@Composable
+private fun PasswordInputField(password: String, onPasswordChange: (String) -> Unit) {
+    TextField(
+        value = password,
+        onValueChange = onPasswordChange, // This should update the password state in LoginPage
+        label = { Text("Enter Password") },
+        visualTransformation = PasswordVisualTransformation()
     )
 }

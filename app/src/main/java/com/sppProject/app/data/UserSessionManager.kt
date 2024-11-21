@@ -8,6 +8,18 @@ class UserSessionManager(private val context: Context) {
 
     private val sharedPreferences = context.getSharedPreferences("UserSession", Context.MODE_PRIVATE)
 
+    // Add a method to save Firebase User ID
+    fun saveFirebaseUserId(userId: String) {
+        val editor = sharedPreferences.edit()
+        editor.putString("firebaseUserId", userId)
+        editor.apply()
+    }
+
+    // Retrieve Firebase User ID
+    fun getFirebaseUserId(): String? {
+        return sharedPreferences.getString("firebaseUserId", null)
+    }
+
     // Save buyer information
     fun saveBuyerInfo(buyer: Buyer) {
         val editor = sharedPreferences.edit()

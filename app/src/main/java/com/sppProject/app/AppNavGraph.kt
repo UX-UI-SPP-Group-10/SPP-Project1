@@ -93,7 +93,7 @@ fun AppNavGraph(navController: NavHostController, buyerFetcher: BuyerFetcher, co
         composable(NavigationRoutes.LOGIN_PAGE) { LoginPage(userViewModel, userNavActions) }
         composable(NavigationRoutes.USER_HOME) { UserHomePage(userNavActions, userViewModel, itemFetcher) }
         composable(NavigationRoutes.RETAILER_HOME) { RetailerHomePage(userNavActions, userViewModel, itemFetcher) }
-        composable(NavigationRoutes.CREATE_PAGE) { CreatePage(userNavActions, buyerFetcher, companyFetcher) }
+        composable(NavigationRoutes.CREATE_PAGE) { CreatePage(userNavActions, buyerFetcher, companyFetcher, userSessionManager) }
         composable(NavigationRoutes.CREATE_ITEM) { ItemPage(userNavActions, itemFetcher, userSessionManager) }
         composable(
             "${NavigationRoutes.VIEW_ITEM}/{itemId}",

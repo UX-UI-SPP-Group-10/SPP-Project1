@@ -16,7 +16,7 @@ class UserViewModel(
     private val navActions: UserNavActions,
     private val buyerFetcher: BuyerFetcher,
     private val companyFetcher: CompanyFetcher,
-    private val userSessionManager: UserSessionManager
+    val userSessionManager: UserSessionManager
 ) : ViewModel() {
 
     private val _buyerState = MutableStateFlow<Buyer?>(null)
@@ -107,5 +107,9 @@ class UserViewModel(
         _buyerState.value = null
         _companyState.value = null
         navActions.navigateToLogin()
+    }
+
+    fun setError(s: String) {
+        TODO()
     }
 }

@@ -6,17 +6,22 @@ import androidx.lifecycle.viewModelScope
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 import com.sppProject.app.api_integration.fetchers.CompanyFetcher
+import com.sppProject.app.data.UserSessionManager
 import com.sppProject.app.data.data_class.Buyer
 import com.sppProject.app.data.data_class.Company
 import com.sppProject.app.view.CreatePageState
 import kotlinx.coroutines.launch
 
-class CreatePageViewModel(private val buyerFetcher: BuyerFetcher, private val companyFetcher: CompanyFetcher) : ViewModel() {
+class CreatePageViewModel(
+    val userSessionManager: UserSessionManager,
+    private val buyerFetcher: BuyerFetcher,
+    private val companyFetcher: CompanyFetcher
+) : ViewModel() {
 
     private val _createPageState = mutableStateOf<CreatePageState>(CreatePageState.ShowUser())
     val createPageState: CreatePageState get() = _createPageState.value // read only
 
-    private val _feedbackMessage = mutableStateOf("")
+    val _feedbackMessage = mutableStateOf("")
     val feedbackMessage: String get() = _feedbackMessage.value // read only
 
     var userName: String? = null
@@ -46,5 +51,8 @@ class CreatePageViewModel(private val buyerFetcher: BuyerFetcher, private val co
                 _feedbackMessage.value = e.message ?: "An error occurred while adding user."
             }
         }
+    }
+    fun saveFirebaseUserId(userId: String) {
+        userSessionManager.saveFirebaseUserId(userId)
     }
 }
