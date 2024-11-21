@@ -14,6 +14,7 @@ import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 import com.sppProject.app.api_integration.fetchers.CompanyFetcher
 import com.sppProject.app.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.api_integration.fetchers.ReceiptFetcher
+import com.sppProject.app.ui.theme.SPPProjectTheme
 
 
 class MainActivity : ComponentActivity() {
@@ -34,7 +35,17 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val navController = rememberNavController()
-            AppNavGraph(navController, buyerFetcher, companyFetcher, itemFetcher, receiptFetcher) // Load AppNavGraph
+
+            // Wrapping the entire app in AppTheme to apply the correct colors
+            SPPProjectTheme {
+                AppNavGraph(
+                    navController = navController,
+                    buyerFetcher = buyerFetcher,
+                    companyFetcher = companyFetcher,
+                    itemFetcher = itemFetcher,
+                    receiptFetcher = receiptFetcher
+                )
+            }
         }
     }
 }
