@@ -47,6 +47,7 @@ private fun BuyerBottomNavigationBar(
         Spacer(Modifier.width(120.dp))
 
         BuyPageButton(onClick = {
+            navActions.navigateUserHome()
         })
 
         Spacer(Modifier.width(120.dp))
