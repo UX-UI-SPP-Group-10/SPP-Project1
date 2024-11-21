@@ -18,7 +18,7 @@ fun CustomToggleButton(onClick: () -> Unit, text: String, isActive: Boolean) {
     Button(
         onClick = onClick, // Call the passed in onClick function
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (isActive) Color(0xFF6200EE) else Color.Gray // Change color based on active state
+            containerColor = if (isActive) MaterialTheme.colorScheme.tertiary else MaterialTheme.colorScheme.onBackground // Change color based on active state
         ),
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = if (isActive) 20.dp else 4.dp, // Adjust elevation based on active state

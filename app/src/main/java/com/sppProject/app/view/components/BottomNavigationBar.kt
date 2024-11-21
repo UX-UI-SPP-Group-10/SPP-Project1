@@ -37,7 +37,7 @@ private fun BuyerBottomNavigationBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp),
-        containerColor = MaterialTheme.colorScheme.primary
+        containerColor = MaterialTheme.colorScheme.surface
     ) {
         Spacer(Modifier.width(16.dp))
 
@@ -68,7 +68,7 @@ private fun RetailerBottomNavigationBar(
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp),
-        containerColor = MaterialTheme.colorScheme.primary
+        containerColor = MaterialTheme.colorScheme.surface
     ) {
         Spacer(Modifier.width(16.dp))
 
@@ -83,3 +83,5 @@ private fun RetailerBottomNavigationBar(
         })
     }
 }
+
+

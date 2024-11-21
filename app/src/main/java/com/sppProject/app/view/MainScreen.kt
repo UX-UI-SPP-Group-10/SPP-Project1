@@ -1,12 +1,19 @@
 package com.sppProject.app.view
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -40,7 +47,15 @@ fun MainScreen(
 
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(navActions = nestedNavActions, userViewModel = userViewModel)
+            Column {
+                // Adding a small line above the BottomNavigationBar
+                Divider(
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f),
+                    thickness = 1.dp,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                BottomNavigationBar(navActions = nestedNavActions, userViewModel = userViewModel)
+            }
         }
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
