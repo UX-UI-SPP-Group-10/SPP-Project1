@@ -1,11 +1,8 @@
 package com.sppProject.app.view
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -14,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -28,6 +24,7 @@ import com.sppProject.app.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.api_integration.fetchers.ReceiptFetcher
 import com.sppProject.app.data.UserSessionManager
 import com.sppProject.app.view.components.BottomNavigationBar
+import com.sppProject.app.viewModel.CreatePageViewModel
 import com.sppProject.app.viewModel.UserViewModel
 
 @Composable
@@ -68,9 +65,6 @@ fun MainScreen(
                 }
                 composable(NavigationRoutes.RETAILER_HOME) {
                     RetailerHomePage(nestedNavActions, userViewModel, itemFetcher)
-                }
-                composable(NavigationRoutes.CREATE_PROFILE_PAGE) {
-                    CreateProfilePage(nestedNavActions, buyerFetcher = buyerFetcher, companyFetcher = companyFetcher)
                 }
                 composable(
                     "${NavigationRoutes.VIEW_ITEM}/{itemId}",

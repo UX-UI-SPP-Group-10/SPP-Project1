@@ -4,8 +4,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.auth.FirebaseAuth
@@ -35,7 +32,6 @@ import com.sppProject.app.api_integration.fetchers.CompanyFetcher
 import com.sppProject.app.data.UserSessionManager
 import com.sppProject.app.view.components.BackButton
 import com.sppProject.app.view.components.CustomButton
-import com.sppProject.app.view.components.CustomTextField
 import com.sppProject.app.view.components.CustomToggleButton
 import com.sppProject.app.viewModel.CreatePageViewModel
 
@@ -52,9 +48,8 @@ sealed class CreatePageState(val content: @Composable (CreatePageViewModel) -> U
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateProfilePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, companyFetcher: CompanyFetcher, userSessionManager : UserSessionManager) {
+fun CreateProfilePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, companyFetcher: CompanyFetcher, createPageViewModel: CreatePageViewModel) {
     val auth = FirebaseAuth.getInstance()
-    val viewModel: CreatePageViewModel = remember { CreatePageViewModel(userSessionManager,buyerFetcher, companyFetcher) }
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -78,20 +73,20 @@ fun CreateProfilePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, co
                     modifier = Modifier.padding(top = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    val isUserActive = viewModel.createPageState is CreatePageState.ShowUser
+                    val isUserActive = createPageViewModel.createPageState is CreatePageState.ShowUser
                     CustomToggleButton(
                         onClick = {
-                            viewModel.setCreatePageState(CreatePageState.ShowUser())
+                            createPageViewModel.setCreatePageState(CreatePageState.ShowUser())
                         },
                         text = "User",
                         isActive = isUserActive
                     )
                     Spacer(modifier = Modifier.width(2.dp))
 
-                    val isRetailerActive = viewModel.createPageState is CreatePageState.ShowRetailer
+                    val isRetailerActive = createPageViewModel.createPageState is CreatePageState.ShowRetailer
                     CustomToggleButton(
                         onClick = {
-                            viewModel.setCreatePageState(CreatePageState.ShowRetailer())
+                            createPageViewModel.setCreatePageState(CreatePageState.ShowRetailer())
                         },
                         text = "Retailer",
                         isActive = isRetailerActive
@@ -120,7 +115,7 @@ fun CreateProfilePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, co
                         .padding(8.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    viewModel.createPageState.content(viewModel)
+                    createPageViewModel.createPageState.content(createPageViewModel)
                 }
 
                 CustomButton(
@@ -130,12 +125,12 @@ fun CreateProfilePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, co
                                 if (task.isSuccessful) {
                                     val firebaseUser = auth.currentUser
                                     firebaseUser?.let {
-                                        viewModel.userSessionManager.saveFirebaseUserId(it.uid)
-                                        viewModel.sendInfo(navActions) // Sync additional data to Spring DB
+                                        createPageViewModel.userSessionManager.saveFirebaseUserId(it.uid)
+                                        createPageViewModel.sendInfo(navActions) // Sync additional data to Spring DB
                                     }
                                 } else {
                                     // Handle errors
-                                    viewModel._feedbackMessage.value = "Account creation failed: ${task.exception?.message}"
+                                    createPageViewModel._feedbackMessage.value = "Account creation failed: ${task.exception?.message}"
                                 }
                             }
                     },
@@ -148,8 +143,8 @@ fun CreateProfilePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, co
         }
     )
 
-    if (viewModel.feedbackMessage.isNotEmpty()) {
-        Text(viewModel.feedbackMessage, modifier = Modifier.padding(16.dp))
+    if (createPageViewModel.feedbackMessage.isNotEmpty()) {
+        Text(createPageViewModel.feedbackMessage, modifier = Modifier.padding(16.dp))
     }
 }
 

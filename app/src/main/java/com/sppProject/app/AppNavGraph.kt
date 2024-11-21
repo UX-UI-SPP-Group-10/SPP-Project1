@@ -13,10 +13,10 @@ import com.sppProject.app.api_integration.fetchers.CompanyFetcher
 import com.sppProject.app.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.api_integration.fetchers.ReceiptFetcher
 import com.sppProject.app.data.UserSessionManager
-import com.sppProject.app.data.data_class.Buyer
 import com.sppProject.app.data.data_class.Item
 import com.sppProject.app.data.data_class.Receipt
 import com.sppProject.app.view.*
+import com.sppProject.app.viewModel.CreatePageViewModel
 import com.sppProject.app.viewModel.UserViewModel
 
 
@@ -104,6 +104,7 @@ fun AppNavGraph(
     val userSessionManager = UserSessionManager(context)
     val userNavActions = UserNavActions(navController)
     val userViewModel = remember { UserViewModel(userNavActions, buyerFetcher, companyFetcher, userSessionManager) }
+    val createPageViewModel = remember { CreatePageViewModel(userSessionManager, buyerFetcher, companyFetcher) }
 
     NavHost(navController = navController, startDestination = NavigationRoutes.LOGIN_PAGE) {
         composable(NavigationRoutes.LOGIN_PAGE) {
@@ -111,7 +112,7 @@ fun AppNavGraph(
         }
 
         composable(NavigationRoutes.CREATE_PROFILE_PAGE) {
-            CreateProfilePage(userNavActions, buyerFetcher, companyFetcher, userSessionManager)
+            CreateProfilePage(userNavActions, buyerFetcher, companyFetcher, createPageViewModel)
         }
 
         composable("${NavigationRoutes.MAIN_SCREEN}?startDestination={startDestination}",
