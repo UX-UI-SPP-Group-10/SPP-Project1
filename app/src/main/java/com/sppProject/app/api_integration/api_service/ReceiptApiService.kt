@@ -13,6 +13,10 @@ interface ReceiptApiService {
     @GET("receipts/{id}")
     suspend fun getReceiptById(@Path("id") id: Long): Receipt
 
+    @GET("receipts/buyer/{buyerId}")
+    suspend fun getReceiptByBuyerId(@Path("buyerId") buyerId: Long): List<Receipt>
+
+
     // Updated to use query parameters instead of a JSON body
     @POST("receipts")
     suspend fun createReceipt(

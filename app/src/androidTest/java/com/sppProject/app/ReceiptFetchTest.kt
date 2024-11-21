@@ -75,6 +75,19 @@ class ReceiptFetcherIntegrationTest {
         assertEquals("The receipt ID should match the requested ID.", testReceiptId, receipt.id)
     }
 
+    @Test
+    fun gettingReceiptByBuyerIdTest() = runBlocking {
+        println("Test: Getting receipt by Buyer ID")
+        // Arrange
+        val testBuyerId = 1L  // Replace with an existing buyer ID or
+
+        // Act
+        val receipts = receiptFetcher.fetchReceiptByBuyerId(testBuyerId)
+
+        // Assert
+        assertFalse("The receipt list should not be empty.", receipts.isEmpty())
+    }
+
     @After
     fun tearDown() {
         // Perform any cleanup if necessary
