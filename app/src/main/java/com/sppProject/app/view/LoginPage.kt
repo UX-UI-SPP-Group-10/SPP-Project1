@@ -1,5 +1,6 @@
 package com.sppProject.app.view
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -39,17 +40,22 @@ fun LoginPage(
     val companyState by userViewModel.companyState.collectAsState()
     val userType by userViewModel.userType.collectAsState()
 
-    // Navigate based on the logged-in state
     LaunchedEffect(buyerState, companyState) {
+        Log.d("LoginPage", "Checking login states in LaunchedEffect")
         when {
             buyerState != null -> {
+                Log.d("LoginPage", "Navigating to User Home for buyer: ${buyerState}")
                 navActions.navigateFromLoginToUserHome()
             }
             companyState != null -> {
+                Log.d("LoginPage", "Navigating to Retailer Home for company: ${companyState}")
                 navActions.navigateFromLoginToRetailerHome()
             }
         }
     }
+
+
+
 
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
