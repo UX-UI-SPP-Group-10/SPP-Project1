@@ -21,15 +21,10 @@ import com.sppProject.app.viewModel.UserViewModel
 
 // Call functions from this class to navigate to different screens!
 class UserNavActions(private val navController: NavHostController) {
-    fun navigateToStartPage() {
-        navController.navigate(NavigationRoutes.START_PAGE) {
-            popUpTo(NavigationRoutes.START_PAGE) { inclusive = true }
-        }
-    }
 
     fun navigateToLogin() {
         navController.navigate(NavigationRoutes.LOGIN_PAGE) {
-            popUpTo(NavigationRoutes.START_PAGE) { inclusive = true }
+            popUpTo(NavigationRoutes.LOGIN_PAGE) { inclusive = true }
         }
     }
 
@@ -70,10 +65,8 @@ class UserNavActions(private val navController: NavHostController) {
 
 
     fun navigateToViewItem(item: Item) {
-        if (navController.currentDestination?.route != NavigationRoutes.VIEW_ITEM) {
-            val itemId = item.id
-            navController.navigate("${NavigationRoutes.VIEW_ITEM}/$itemId")
-        }
+        val itemId = item.id
+        navController.navigate("${NavigationRoutes.VIEW_ITEM}/$itemId")
     }
 
     fun navigateToUserReceipts() {
@@ -81,10 +74,8 @@ class UserNavActions(private val navController: NavHostController) {
     }
 
     fun navigateToViewReceipt(receipt: Receipt) {
-        if (navController.currentDestination?.route != NavigationRoutes.VIEW_RECEIPT) {
-            val receiptId = receipt.id
-            navController.navigate("${NavigationRoutes.VIEW_RECEIPT}/$receiptId")
-        }
+        val receiptId = receipt.id
+        navController.navigate("${NavigationRoutes.VIEW_RECEIPT}/$receiptId")
     }
 
 
@@ -144,7 +135,6 @@ fun AppNavGraph(
 
 // Navigation routes
 object NavigationRoutes {
-    const val START_PAGE = "start"
     const val LOGIN_PAGE = "login"
     const val CREATE_PROFILE_PAGE = "create_profile"
     const val MAIN_SCREEN = "main_screen"
