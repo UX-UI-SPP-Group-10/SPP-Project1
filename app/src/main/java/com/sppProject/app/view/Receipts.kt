@@ -71,7 +71,7 @@ fun Receipts(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(receiptState) { item ->
-                ReceiptCard(item, onClick = {  })
+                ReceiptCard(item, onClick = { navActions.navigateToViewReceipt(item) })
             }
         }
 

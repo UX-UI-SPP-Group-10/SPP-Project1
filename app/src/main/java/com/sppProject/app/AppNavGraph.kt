@@ -14,6 +14,7 @@ import com.sppProject.app.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.api_integration.fetchers.ReceiptFetcher
 import com.sppProject.app.data.UserSessionManager
 import com.sppProject.app.data.data_class.Item
+import com.sppProject.app.data.data_class.Receipt
 import com.sppProject.app.view.*
 import com.sppProject.app.viewModel.UserViewModel
 
@@ -77,6 +78,13 @@ class UserNavActions(private val navController: NavHostController) {
 
     fun navigateToUserReceipts() {
         navController.navigate(NavigationRoutes.RECEIPTS)
+    }
+
+    fun navigateToViewReceipt(receipt: Receipt) {
+        if (navController.currentDestination?.route != NavigationRoutes.VIEW_RECEIPT) {
+            val receiptId = receipt.id
+            navController.navigate("${NavigationRoutes.VIEW_RECEIPT}/$receiptId")
+        }
     }
 
 
@@ -145,5 +153,6 @@ object NavigationRoutes {
     const val CREATE_ITEM = "create_item"
     const val VIEW_ITEM = "view_item"
     const val RECEIPTS = "receipts"
+    const val VIEW_RECEIPT = "view_receipt"
 }
 
