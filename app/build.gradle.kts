@@ -49,6 +49,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.core.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -75,4 +76,11 @@ dependencies {
 
     // Navigation
     implementation("androidx.navigation:navigation-compose:2.5.3")
+
+    // Compose Testing
+    debugImplementation ("androidx.compose.ui:ui-test-manifest:<version>")
+    androidTestImplementation ("androidx.compose.ui:ui-test-junit4:<version>")
+
+// Navigation Compose
+    implementation ("androidx.navigation:navigation-compose:<version>")
 }
