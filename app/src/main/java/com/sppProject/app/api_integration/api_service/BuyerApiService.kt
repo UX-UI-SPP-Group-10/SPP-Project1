@@ -16,6 +16,9 @@ interface BuyerApiService {
     @GET("buyers")
     suspend fun getBuyerById(id: Long): Buyer
 
+    @GET("buyers")
+    suspend fun getBuyerByFirebaseUid(firebaseUid: String): Buyer
+
     @POST("buyers")
     suspend fun createBuyer(@Body newBuyer: Buyer): Buyer
 }

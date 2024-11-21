@@ -2,6 +2,7 @@ package com.sppProject.app.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.auth.FirebaseAuth
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 import com.sppProject.app.api_integration.fetchers.CompanyFetcher
@@ -35,6 +36,24 @@ class UserViewModel(
     fun setUserType(userType: UserType) {
         _userType.value = userType
         loadSession()  // Automatically load session based on the user type
+    }
+
+    fun fetchUserProfile() {
+        viewModelScope.launch {
+            val firebaseUser = FirebaseAuth.getInstance().currentUser
+            if (firebaseUser == null) return@launch
+
+            try {
+                _buyerState.value = buyerFetcher.fetchBuyers().find { it.firebaseUid == firebaseUser.uid }
+                _companyState.value = companyFetcher.fetchCompanies().find { it.firebaseUid == firebaseUser.uid }
+
+                _buyerState.value?.let {userSessionManager.saveBuyerInfo(it)}
+                _companyState.value?.let {userSessionManager.saveCompanyInfo(it)}
+            } catch (e: Exception) {
+                _buyerState.value = null
+                _companyState.value = null
+            }
+        }
     }
 
     // Load session based on the current user type

@@ -28,6 +28,7 @@ fun UserHomePage(
     // Mutable state to hold the list of items
     var items by remember { mutableStateOf<List<Item>>(emptyList()) }
     val coroutineScope = rememberCoroutineScope()
+    val buyerState by userViewModel.buyerState.collectAsState()
 
     // Fetch items when the composable is first displayed
     LaunchedEffect(Unit) {
@@ -36,13 +37,30 @@ fun UserHomePage(
         }
     }
 
+    val userInfo by userViewModel.buyerState.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Debug line for user information
+        buyerState?.let { buyer ->
+            Text(
+                text = "Debug: Logged-in User - ${buyer.name}, ID: ${buyer.id}",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            )
+        } ?: Text(
+            text = "Debug: No user logged in.",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        )
         Text("Welcome to the User Home Page")
+
 
         Spacer(modifier = Modifier.height(16.dp))
 

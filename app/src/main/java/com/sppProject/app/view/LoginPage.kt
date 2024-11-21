@@ -84,7 +84,7 @@ fun LoginPage(
                                     if (task.isSuccessful) {
                                         val firebaseUser = auth.currentUser
                                         firebaseUser?.let {
-                                            userViewModel.userSessionManager.saveFirebaseUserId(it.uid)
+                                            userViewModel.fetchUserProfile()
                                             when (userType) {
                                                 UserViewModel.UserType.BUYER -> navActions.navigateToUserHome()
                                                 UserViewModel.UserType.COMPANY -> navActions.navigateToRetailerHome()

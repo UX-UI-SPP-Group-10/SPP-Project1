@@ -12,6 +12,9 @@ interface CompanyApiService {
     @GET("companies")
     suspend fun getAllCompanies(): List<Company>
 
+    @GET("companies")
+    suspend fun getCompanyByFirebaseUid(firebaseUid: String): Company
+
     @POST("companies")
     suspend fun addCompany(@Body newCompany: Company): Company
 }

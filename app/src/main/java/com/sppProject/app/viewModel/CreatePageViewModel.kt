@@ -11,6 +11,7 @@ import com.sppProject.app.data.data_class.Buyer
 import com.sppProject.app.data.data_class.Company
 import com.sppProject.app.view.CreatePageState
 import kotlinx.coroutines.launch
+import com.google.firebase.auth.FirebaseAuth
 
 class CreatePageViewModel(
     val userSessionManager: UserSessionManager,
@@ -34,15 +35,30 @@ class CreatePageViewModel(
     // Function to send information
     fun sendInfo(navActions: UserNavActions) {
         viewModelScope.launch {
+            val firebaseUser = FirebaseAuth.getInstance().currentUser
+            if (firebaseUser == null) {
+                _feedbackMessage.value = "User not authenticated."
+                return@launch
+            }
+
             try {
                 when (_createPageState.value) {
                     is CreatePageState.ShowUser -> {
-                        buyerFetcher.createBuyer(Buyer(userName.toString())) // Example name
+                        val buyer = Buyer(
+                            name = userName.toString(),
+                            firebaseUid = firebaseUser.uid
+                        )
+                        buyerFetcher.createBuyer(buyer) // Example name
                         _feedbackMessage.value = "User added successfully!"
                     }
                     is CreatePageState.ShowRetailer -> {
-                        companyFetcher.createCompany(Company(userName.toString())) // Example name
-                        _feedbackMessage.value = "Retailer added successfully!"
+                        // Create a new Company and link with Firebase UID
+                        val company = Company(
+                            name = userName.orEmpty(),
+                            firebaseUid = firebaseUser.uid
+                        )
+                        companyFetcher.createCompany(company)
+                        _feedbackMessage.value = "Company profile created!"
                     }
                     CreatePageState.None -> TODO()
                 }

@@ -34,7 +34,6 @@ fun RetailerHomePage(navActions: UserNavActions, userViewModel: UserViewModel, i
     var items by remember { mutableStateOf<List<Item>>(emptyList()) }
     var loading by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
-
     // Company ID to filter items by (hardcoded to 1 for this example)
 
     val loggedInCompany by userViewModel.companyState.collectAsState()
@@ -62,6 +61,20 @@ fun RetailerHomePage(navActions: UserNavActions, userViewModel: UserViewModel, i
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        loggedInCompany?.let { company ->
+            Text(
+                text = "Debug: Logged-in Company - ${company.name}, ID: ${company.id}",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            )
+        } ?: Text(
+            text = "Debug: No company logged in.",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        )
+
         Text("Welcome to the Retailer Home Page")
 
         Spacer(modifier = Modifier.height(16.dp))
