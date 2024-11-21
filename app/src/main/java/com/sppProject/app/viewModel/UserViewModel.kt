@@ -109,7 +109,4 @@ class UserViewModel(
         navActions.navigateToLogin()
     }
 
-    fun setError(s: String) {
-        TODO()
-    }
 }

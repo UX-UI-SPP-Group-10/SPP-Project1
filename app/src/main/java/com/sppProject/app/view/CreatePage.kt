@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -67,7 +68,7 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, companyFe
                 }
             )
         },
-        content = { innerPadding ->
+        content = {  padding ->
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -103,19 +104,25 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, companyFe
                     value = email,
                     onValueChange = { email = it },
                     label = { Text("Enter Email") },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.padding(8.dp)
                 )
-                Spacer(modifier = Modifier.height(16.dp))
 
                 TextField(
                     value = password,
                     onValueChange = { password = it },
                     label = { Text("Enter Password") },
                     visualTransformation = PasswordVisualTransformation(),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.padding(8.dp)
                 )
 
-                Spacer(modifier = Modifier.height(32.dp))
+
+                Box(
+                    modifier = Modifier
+                        .padding(8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    viewModel.createPageState.content(viewModel)
+                }
 
                 CustomButton(
                     onClick = {
@@ -133,20 +140,12 @@ fun CreatePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, companyFe
                                 }
                             }
                     },
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(horizontal = 32.dp),
                     text = "Create Profile"
                 )
             }
 
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(16.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                viewModel.createPageState.content(viewModel)
-            }
+
         }
     )
 
@@ -189,18 +188,18 @@ fun RetailerInfo(viewModel: CreatePageViewModel) {
     var company by remember { mutableStateOf("") }
     var location by remember { mutableStateOf("") }
 
-    Column(modifier = Modifier.padding(top = 16.dp)) {
+    Column(modifier = Modifier) {
         TextField(
             value = company,
             onValueChange = { company = it },
             label = { Text("Enter Company Name") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.padding(start = 8.dp, bottom = 8.dp)
         )
         TextField(
             value = location,
             onValueChange = { location = it },
             label = { Text("Enter Location") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.padding(8.dp)
         )
         viewModel.userName = company
     }
@@ -210,12 +209,12 @@ fun RetailerInfo(viewModel: CreatePageViewModel) {
 fun UserInfo(viewModel: CreatePageViewModel) {
     var name by remember { mutableStateOf("") }
 
-    Column(modifier = Modifier.padding(top = 16.dp)) {
+    Column(modifier = Modifier) {
         TextField(
             value = name,
             onValueChange = { name = it },
             label = { Text("Enter Name") },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.padding(bottom = 8.dp)
         )
     }
     viewModel.userName = name

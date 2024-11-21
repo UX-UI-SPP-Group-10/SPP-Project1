@@ -43,7 +43,7 @@ fun LoginPage(
     val buyerState by userViewModel.buyerState.collectAsState()
     val companyState by userViewModel.companyState.collectAsState()
     val userType by userViewModel.userType.collectAsState()
-
+    var errorMessage by remember { mutableStateOf<String?>(null) }
 
     // Navigate based on the logged-in state
     if (buyerState != null) {
@@ -76,26 +76,42 @@ fun LoginPage(
                     onCreateProfileClick = { navActions.navigateToCreatePage() },
                     onUserTypeSelect = { userViewModel.setUserType(it) },
                     onLoginClick = {
-                        auth.signInWithEmailAndPassword(name, password)
-                            .addOnCompleteListener { task ->
-                                if (task.isSuccessful) {
-                                    val firebaseUser = auth.currentUser
-                                    firebaseUser?.let {
-                                        userViewModel.userSessionManager.saveFirebaseUserId(it.uid)
-                                        when (userType) {
-                                            UserViewModel.UserType.BUYER -> navActions.navigateToUserHome()
-                                            UserViewModel.UserType.COMPANY -> navActions.navigateToRetailerHome()
-                                            null -> TODO()
+                        if (name.isBlank() || password.isBlank()) {
+                            errorMessage = "Email and password must not be empty."
+                        } else {
+                            auth.signInWithEmailAndPassword(name, password)
+                                .addOnCompleteListener { task ->
+                                    if (task.isSuccessful) {
+                                        val firebaseUser = auth.currentUser
+                                        firebaseUser?.let {
+                                            userViewModel.userSessionManager.saveFirebaseUserId(it.uid)
+                                            when (userType) {
+                                                UserViewModel.UserType.BUYER -> navActions.navigateToUserHome()
+                                                UserViewModel.UserType.COMPANY -> navActions.navigateToRetailerHome()
+                                                null -> errorMessage = "Unknown user type."
+                                            }
                                         }
+                                    } else {
+                                        errorMessage = "Login Failed: Email or password is incorrect."
                                     }
-                                } else{
-                                    userViewModel.setError("Login Failed: ${task.exception?.message}")
                                 }
-                            }
+                        }
                     }
                 )
+                
+
+                // Show error message if any
+                errorMessage?.let { error ->
+                    Spacer(modifier = Modifier.height(36.dp)) // Moved down by 20.dp (16.dp + 20.dp)
+                    Text(
+                        text = error,
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
             }
         }
+
     )
 }
 
@@ -116,6 +132,10 @@ private fun LoginContent(
         Spacer(modifier = Modifier.height(32.dp))
 
         UsernameInputField(name = name, onNameChange = onNameChange)
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        PasswordInputField(password = password, onPasswordChange = onPasswordChange)
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -159,7 +179,7 @@ private fun UsernameInputField(name: String, onNameChange: (String) -> Unit) {
     TextField(
         value = name,
         onValueChange = onNameChange, // This should update the name state in LoginPage
-        label = { Text("Enter Username") }
+        label = { Text("Enter email") }
     )
 }
 
