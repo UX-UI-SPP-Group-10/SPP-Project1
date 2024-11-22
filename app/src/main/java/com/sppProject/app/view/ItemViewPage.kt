@@ -42,7 +42,7 @@ import kotlinx.coroutines.launch
 fun ItemViewPage(userNavActions: UserNavActions, itemId: Long, itemFetcher: ItemFetcher, receiptFetcher: ReceiptFetcher, userSessionManager: UserSessionManager) {
     val itemState = remember { mutableStateOf<Item?>(null) }
     val coroutineScope = rememberCoroutineScope()
-    var isRecivemade by remember { mutableStateOf(false) }
+    var isRecieptmade by remember { mutableStateOf(false) }
     var noMoreItems by remember { mutableStateOf(false) }
 
     // Fetch the item when the composable is first displayed or itemId changes
@@ -69,7 +69,7 @@ fun ItemViewPage(userNavActions: UserNavActions, itemId: Long, itemFetcher: Item
                 }
                 CustomButton(
                     onClick = {
-                        isRecivemade = true
+                        isRecieptmade = true
                     },
                     text = "Reserve Item",
                     modifier = Modifier
@@ -82,15 +82,15 @@ fun ItemViewPage(userNavActions: UserNavActions, itemId: Long, itemFetcher: Item
     )
 
 
-    if (isRecivemade){
+    if (isRecieptmade){
         if ((itemState.value?.stock ?: 0) > 0){
             PostReceipt(receiptFetcher, itemId, itemFetcher, userSessionManager, coroutineScope)
             userNavActions.navigateUserHome()
-            isRecivemade = false
+            isRecieptmade = false
         }
         else {
             noMoreItems = true
-            isRecivemade = false
+            isRecieptmade = false
         }
     }
 }
