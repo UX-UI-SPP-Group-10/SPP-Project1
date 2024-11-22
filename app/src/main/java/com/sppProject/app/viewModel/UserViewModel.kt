@@ -47,6 +47,7 @@ class UserViewModel(
         loadSession()  // Automatically load session based on the user type
     }
 
+    // old fetcher method, changed to fetchOrCreateUserProfile
     fun fetchUserProfile() {
         viewModelScope.launch {
             val firebaseUser = FirebaseAuth.getInstance().currentUser
@@ -64,6 +65,58 @@ class UserViewModel(
             }
         }
     }
+
+    fun fetchOrCreateUserProfile() {
+        viewModelScope.launch {
+            val firebaseUser = FirebaseAuth.getInstance().currentUser
+            if (firebaseUser == null) return@launch
+            Log.d("FetchOrCreateUserProfile", "Sending info for user: ${firebaseUser.email} ${firebaseUser.uid}")
+
+            try {
+                // Fetch all buyers and companies
+                val allBuyers = buyerFetcher.fetchBuyers()
+                val allCompanies = companyFetcher.fetchCompanies()
+
+                // Check if the user exists as a Buyer
+                val existingBuyer = allBuyers.find { it.firebaseUid == firebaseUser.uid }
+                if (existingBuyer != null) {
+                    _buyerState.value = existingBuyer
+                    userSessionManager.saveBuyerInfo(existingBuyer)
+                } else {
+                    // If not, create a new Buyer
+                    val newBuyer = Buyer(
+                        name = firebaseUser.displayName ?: "No Buyer Name",
+                        firebaseUid = firebaseUser.uid
+                    )
+                    val createdBuyer = buyerFetcher.createBuyer(newBuyer)
+                    _buyerState.value = createdBuyer
+                    userSessionManager.saveBuyerInfo(createdBuyer)
+                }
+
+                // Check if the user exists as a Company
+                val existingCompany = allCompanies.find { it.firebaseUid == firebaseUser.uid }
+                if (existingCompany != null) {
+                    _companyState.value = existingCompany
+                    userSessionManager.saveCompanyInfo(existingCompany)
+                } else {
+                    // If not, create a new Company
+                    val newCompany = Company(
+                        name = firebaseUser.displayName ?: "No Company Name",
+                        firebaseUid = firebaseUser.uid
+                    )
+                    val createdCompany = companyFetcher.createCompany(newCompany)
+                    _companyState.value = createdCompany
+                    userSessionManager.saveCompanyInfo(createdCompany)
+                }
+
+            } catch (e: Exception) {
+                // Log and handle the exception
+                _buyerState.value = null
+                _companyState.value = null
+            }
+        }
+    }
+
 
     // Load session based on the current user type
     private fun loadSession() {

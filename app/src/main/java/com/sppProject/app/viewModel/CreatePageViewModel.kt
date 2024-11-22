@@ -1,5 +1,6 @@
 package com.sppProject.app.viewModel
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,6 +13,7 @@ import com.sppProject.app.data.data_class.Company
 import com.sppProject.app.view.CreatePageState
 import kotlinx.coroutines.launch
 import com.google.firebase.auth.FirebaseAuth
+import com.sppProject.app.view.LoginPage
 
 class CreatePageViewModel(
     val userSessionManager: UserSessionManager,
