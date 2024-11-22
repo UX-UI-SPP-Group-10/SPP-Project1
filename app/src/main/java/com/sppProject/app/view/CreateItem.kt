@@ -36,8 +36,8 @@ import com.sppProject.app.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.data.UserSessionManager
 import com.sppProject.app.data.data_class.Company
 import com.sppProject.app.data.data_class.Item
-import com.sppProject.app.view.components.BackButton
-import com.sppProject.app.view.components.CustomButton
+import com.sppProject.app.view.components.buttons.BackButton
+import com.sppProject.app.view.components.buttons.CustomButton
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 

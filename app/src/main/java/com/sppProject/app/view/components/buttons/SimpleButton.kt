@@ -1,4 +1,4 @@
-package com.sppProject.app.view.components
+package com.sppProject.app.view.components.buttons
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.padding

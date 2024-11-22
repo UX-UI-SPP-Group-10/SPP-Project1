@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -29,10 +28,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.api_integration.fetchers.BuyerFetcher
 import com.sppProject.app.api_integration.fetchers.CompanyFetcher
-import com.sppProject.app.data.UserSessionManager
-import com.sppProject.app.view.components.BackButton
-import com.sppProject.app.view.components.CustomButton
-import com.sppProject.app.view.components.CustomToggleButton
+import com.sppProject.app.view.components.buttons.BackButton
+import com.sppProject.app.view.components.buttons.CustomButton
+import com.sppProject.app.view.components.CustomTextField
+import com.sppProject.app.view.components.buttons.CustomToggleButton
 import com.sppProject.app.viewModel.CreatePageViewModel
 
 
@@ -94,17 +93,17 @@ fun CreateProfilePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, co
                 }
                 Spacer(modifier = Modifier.height(16.dp))
 
-                TextField(
+                CustomTextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = { Text("Enter Email") },
+                    labelText = "Enter Email",
                     modifier = Modifier.padding(8.dp)
                 )
 
-                TextField(
+                CustomTextField(
                     value = password,
                     onValueChange = { password = it },
-                    label = { Text("Enter Password") },
+                    labelText = "Enter Password",
                     visualTransformation = PasswordVisualTransformation(),
                     modifier = Modifier.padding(8.dp)
                 )
@@ -183,17 +182,17 @@ fun RetailerInfo(viewModel: CreatePageViewModel) {
     var location by remember { mutableStateOf("") }
 
     Column(modifier = Modifier) {
-        TextField(
+        CustomTextField(
             value = company,
             onValueChange = { company = it },
-            label = { Text("Enter Company Name") },
-            modifier = Modifier.padding(start = 8.dp, bottom = 8.dp)
+            labelText = "Enter Company Name",
+            modifier = Modifier.padding(bottom = 8.dp)
         )
-        TextField(
+        CustomTextField(
             value = location,
             onValueChange = { location = it },
-            label = { Text("Enter Location") },
-            modifier = Modifier.padding(8.dp)
+            labelText = "Enter Location",
+            modifier = Modifier.padding(bottom = 8.dp)
         )
         viewModel.userName = company
     }
@@ -204,10 +203,11 @@ fun UserInfo(viewModel: CreatePageViewModel) {
     var name by remember { mutableStateOf("") }
 
     Column(modifier = Modifier) {
-        TextField(
+
+        CustomTextField(
             value = name,
             onValueChange = { name = it },
-            label = { Text("Enter Name") },
+            labelText = "Enter Name",
             modifier = Modifier.padding(bottom = 8.dp)
         )
     }

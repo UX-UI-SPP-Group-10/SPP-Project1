@@ -5,10 +5,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -18,22 +16,15 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sppProject.app.UserNavActions
-import com.sppProject.app.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.api_integration.fetchers.ReceiptFetcher
-import com.sppProject.app.data.UserSessionManager
-import com.sppProject.app.data.data_class.Item
 import com.sppProject.app.data.data_class.Receipt
-import com.sppProject.app.view.components.BackButton
-import com.sppProject.app.view.components.CustomButton
+import com.sppProject.app.view.components.buttons.BackButton
 
 @Composable
 fun ReceiptViewPage(userNavActions: UserNavActions, receiptID: Long, receiptFetcher: ReceiptFetcher) {

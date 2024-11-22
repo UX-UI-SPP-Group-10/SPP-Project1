@@ -17,10 +17,9 @@ import androidx.compose.ui.unit.dp
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.data.data_class.Item
-import com.sppProject.app.view.components.BuyPageButton
-import com.sppProject.app.view.components.CustomButton
-import com.sppProject.app.view.components.LogoutButton
-import com.sppProject.app.view.components.ReciptButton
+import com.sppProject.app.view.components.buttons.BuyPageButton
+import com.sppProject.app.view.components.buttons.LogoutButton
+import com.sppProject.app.view.components.buttons.ReciptButton
 import com.sppProject.app.viewModel.UserViewModel
 import kotlinx.coroutines.launch
 

@@ -1,4 +1,4 @@
-package com.sppProject.app.view.components
+package com.sppProject.app.view.components.buttons
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height

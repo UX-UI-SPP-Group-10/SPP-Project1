@@ -1,4 +1,4 @@
-package com.sppProject.app.view.components
+package com.sppProject.app.view.components.buttons
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.height
@@ -13,20 +13,18 @@ import androidx.compose.ui.unit.dp
 import com.sppProject.app.R
 
 @Composable
-fun CreateItemButton(onClick: () -> Unit, modifier: Modifier = Modifier){
+fun LogoutButton(onClick: () -> Unit, modifier: Modifier = Modifier){
     Button(
-        onClick = {
-            onClick()
-        },
+        onClick = onClick,
         modifier = modifier
             .width(45.dp) // Set button width
             .height(45.dp), // Set button height
         contentPadding = PaddingValues(0.dp) // Remove default padding
     ) {
         Icon(
-            painter = painterResource(id = R.drawable.add),
-            contentDescription = "Create Item",
-            modifier = modifier.size(80.dp) // Set icon size as desired
+            painter = painterResource(id = R.drawable.logout),
+            contentDescription = "Logout",
+            modifier = Modifier.size(80.dp) // Set icon size as desired
         )
     }
 }
