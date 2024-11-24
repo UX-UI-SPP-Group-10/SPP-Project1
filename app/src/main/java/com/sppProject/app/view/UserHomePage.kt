@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.data.data_class.Item
+import com.sppProject.app.view.components.ItemCard
 import com.sppProject.app.view.components.buttons.BuyPageButton
 import com.sppProject.app.view.components.buttons.LogoutButton
 import com.sppProject.app.view.components.buttons.ReciptButton
@@ -108,6 +109,7 @@ fun BottomNavigation(userNavActions: UserNavActions) {
     )
 }
 
+/*
 @Composable
 private fun ItemCard(item: Item, onClick: () -> Unit) {
     Card(
@@ -127,4 +129,4 @@ private fun ItemCard(item: Item, onClick: () -> Unit) {
             Text(text = "Stock: ${item.stock}", style = androidx.compose.material3.MaterialTheme.typography.bodySmall)
         }
     }
-}
+} */

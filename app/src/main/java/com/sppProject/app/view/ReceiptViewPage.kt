@@ -55,7 +55,7 @@ fun ReceiptTopAppBar(userNavActions: UserNavActions) {
         title = { Text("Receipt Details") },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,   // Background color
-            titleContentColor = MaterialTheme.colorScheme.onPrimary // Content (title) color
+            titleContentColor = MaterialTheme.colorScheme.secondary // Content (title) color
         )
     )
 }

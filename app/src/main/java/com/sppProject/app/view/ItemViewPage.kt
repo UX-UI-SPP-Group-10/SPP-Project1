@@ -104,10 +104,6 @@ fun ItemTopAppBar(userNavActions: UserNavActions) {
             BackButton(onClick = { userNavActions.navigateBack() })
         },
         title = { Text("Item Details") },
-        colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primary,   // Background color
-            titleContentColor = MaterialTheme.colorScheme.onPrimary // Content (title) color
-        )
     )
 }
 
