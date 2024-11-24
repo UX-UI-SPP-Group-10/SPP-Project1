@@ -76,10 +76,8 @@ fun UserHomePage(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(items) { item ->
-                if (item.stock > 0) {
-                    ItemCard(item = item, onClick = { navActions.navigateToViewItem(item) })
-                }
+            items(items.filter { it.stock > 0 }) { item ->
+                ItemCard(item = item, onClick = { navActions.navigateToViewItem(item) })
             }
         }
 
