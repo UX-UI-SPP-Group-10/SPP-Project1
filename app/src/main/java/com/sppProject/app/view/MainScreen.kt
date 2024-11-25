@@ -85,6 +85,19 @@ fun MainScreen(
                     val receiptId = backStackEntry.arguments?.getLong("receiptId") ?: return@composable
                     ReceiptViewPage(nestedNavActions, receiptId, receiptFetcher)
                 }
+                composable(
+                    "${NavigationRoutes.EDIT_ITEM}/{itemId}",
+                    arguments = listOf(navArgument("itemId") { type = NavType.LongType })
+                ) { backStackEntry ->
+                    val itemId = backStackEntry.arguments?.getLong("itemId") ?: return@composable
+                    EditItemPage(
+                        itemId = itemId,
+                        userNavActions = nestedNavActions,
+                        itemFetcher = itemFetcher
+                    )
+                }
+
+
             }
         }
     }

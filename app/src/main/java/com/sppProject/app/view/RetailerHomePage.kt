@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.model.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.model.data.data_class.Item
+import com.sppProject.app.view.components.ItemCard
 import com.sppProject.app.view.components.buttons.CreateItemButton
 import com.sppProject.app.view.components.buttons.LogoutButton
 import com.sppProject.app.viewModel.UserViewModel
@@ -92,30 +93,13 @@ fun RetailerHomePage(navActions: UserNavActions, userViewModel: UserViewModel, i
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(items) { item ->
-                    ItemCard(item = item)
+                    ItemCard(
+                        item = item,
+                        onClick = { navActions.navigateToViewItem(item) } // Replace with company-specific navigation if needed
+                    )
                 }
             }
         }
         // BottomNavigationRetailer(navActions)
-    }
-}
-
-@Composable
-private fun ItemCard(item: Item) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-        ) {
-            Text(text = item.name, style = androidx.compose.material3.MaterialTheme.typography.bodyLarge)
-            Text(text = "Price: $${item.price}", style = androidx.compose.material3.MaterialTheme.typography.bodyMedium)
-            Text(text = "Stock: ${item.stock}", style = androidx.compose.material3.MaterialTheme.typography.bodySmall)
-        }
     }
 }

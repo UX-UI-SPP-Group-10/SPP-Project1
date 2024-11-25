@@ -84,10 +84,24 @@ class UserNavActions(private val navController: NavHostController) {
         navController.navigate("${NavigationRoutes.VIEW_RECEIPT}/$receiptId")
     }
 
+    fun navigateToEditItem(itemId: Long) {
+        navController.navigate("${NavigationRoutes.EDIT_ITEM}/$itemId")
+    }
+
 
     fun navigateBack() {
-        navController.popBackStack()
+        Log.d("NavigationDebug", "Attempting to navigate back")
+        Log.d("NavigationDebug", "Current back stack: ${navController.backQueue.map { it.destination.route }}")
+
+        if (!navController.popBackStack()) {
+            Log.d("NavigationDebug", "popBackStack failed, falling back to navigateUp")
+            navController.navigateUp()
+        } else {
+            Log.d("NavigationDebug", "popBackStack successful")
+        }
     }
+
+
 
 }
 
@@ -147,5 +161,6 @@ object NavigationRoutes {
     const val VIEW_ITEM = "view_item"
     const val RECEIPTS = "receipts"
     const val VIEW_RECEIPT = "view_receipt"
+    const val EDIT_ITEM = "edit_item"
 }
 

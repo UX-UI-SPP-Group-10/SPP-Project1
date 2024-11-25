@@ -40,16 +40,22 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemViewPage(userNavActions: UserNavActions, itemId: Long, itemFetcher: ItemFetcher, receiptFetcher: ReceiptFetcher, userViewModel: UserViewModel) {
+fun ItemViewPage(
+    userNavActions: UserNavActions,
+    itemId: Long,
+    itemFetcher: ItemFetcher,
+    receiptFetcher: ReceiptFetcher,
+    userViewModel: UserViewModel
+) {
     val itemState = remember { mutableStateOf<Item?>(null) }
     val coroutineScope = rememberCoroutineScope()
-    var isRecieptmade by remember { mutableStateOf(false) }
+    var isReceiptMade by remember { mutableStateOf(false) }
     var noMoreItems by remember { mutableStateOf(false) }
     val userType by userViewModel.userType.collectAsState()
 
     // Fetch the item when the composable is first displayed or itemId changes
     LaunchedEffect(itemId) {
-        val item = itemFetcher.getItemById(itemId) // Fetch item by ID
+        val item = itemFetcher.getItemById(itemId)
         itemState.value = item
     }
 
@@ -65,37 +71,49 @@ fun ItemViewPage(userNavActions: UserNavActions, itemId: Long, itemFetcher: Item
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                if(noMoreItems){
-                    Text(modifier = Modifier.align(Alignment.TopCenter),
-                        text = "There is no more of this item available")
+                if (userType == UserViewModel.UserType.BUYER) {
+                    if (noMoreItems) {
+                        Text(
+                            modifier = Modifier.align(Alignment.TopCenter),
+                            text = "There is no more of this item available"
+                        )
+                    }
+                    CustomButton(
+                        onClick = {
+                            isReceiptMade = true
+                        },
+                        text = "Reserve Item",
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .width(200.dp)
+                    )
+                } else if (userType == UserViewModel.UserType.COMPANY) {
+                    CustomBu    tton(
+                        onClick = {
+                            userNavActions.navigateToEditItem(itemId)
+                        },
+                        text = "Edit Item",
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .width(200.dp)
+                    )
                 }
-                CustomButton(
-                    onClick = {
-                        isRecieptmade = true
-                    },
-                    text = "Reserve Item",
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .width(200.dp)
-                )
-
             }
         }
     )
 
-
-    if (isRecieptmade){
-        if ((itemState.value?.stock ?: 0) > 0){
+    if (isReceiptMade) {
+        if ((itemState.value?.stock ?: 0) > 0) {
             PostReceipt(receiptFetcher, itemId, itemFetcher, userViewModel, coroutineScope)
             userNavActions.navigateUserHome()
-            isRecieptmade = false
-        }
-        else {
+            isReceiptMade = false
+        } else {
             noMoreItems = true
-            isRecieptmade = false
+            isReceiptMade = false
         }
     }
 }
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
