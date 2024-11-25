@@ -43,8 +43,10 @@ class UserViewModel(
 
     fun setUserType(userType: UserType) {
         _userType.value = userType
+        Log.d("UserViewModel", "User type set to: ${userType.name}")
         loadSession()  // Automatically load session based on the user type
     }
+
 
     // old fetcher method, changed to fetchOrCreateUserProfile
     fun fetchUserProfile() {
@@ -53,14 +55,37 @@ class UserViewModel(
             if (firebaseUser == null) return@launch
 
             try {
-                _buyerState.value = buyerFetcher.fetchBuyers().find { it.firebaseUid == firebaseUser.uid }
-                _companyState.value = companyFetcher.fetchCompanies().find { it.firebaseUid == firebaseUser.uid }
+                // Fetch user as buyer or company
+                val buyer = buyerFetcher.fetchBuyers().find { it.firebaseUid == firebaseUser.uid }
+                val company = companyFetcher.fetchCompanies().find { it.firebaseUid == firebaseUser.uid }
 
-                _buyerState.value?.let {userSessionManager.saveBuyerInfo(it)}
-                _companyState.value?.let {userSessionManager.saveCompanyInfo(it)}
+                // Update buyer state
+                if (buyer != null) {
+                    _buyerState.value = buyer
+                    userSessionManager.saveBuyerInfo(buyer)
+                    _userType.value = UserType.BUYER
+                }
+
+                // Update company state
+                if (company != null) {
+                    _companyState.value = company
+                    userSessionManager.saveCompanyInfo(company)
+                    _userType.value = UserType.COMPANY
+                }
+
+                // If neither profile is found, clear the states
+                if (buyer == null && company == null) {
+                    _buyerState.value = null
+                    _companyState.value = null
+                    _userType.value = null
+                    Log.e("fetchUserProfile", "No user profile found")
+                }
             } catch (e: Exception) {
+                // Log error and reset states
+                Log.e("fetchUserProfile", "Error fetching user profile: ${e.message}")
                 _buyerState.value = null
                 _companyState.value = null
+                _userType.value = null
             }
         }
     }

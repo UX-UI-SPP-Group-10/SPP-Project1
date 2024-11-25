@@ -101,24 +101,6 @@ fun RetailerHomePage(navActions: UserNavActions, userViewModel: UserViewModel, i
 }
 
 @Composable
-fun BottomNavigationRetailer(navActions: UserNavActions) {
-    BottomAppBar(Modifier.fillMaxWidth().height(40.dp),
-        content = {
-            Spacer(Modifier.width(100.dp))
-
-            LogoutButton(onClick = { navActions.navigateToLogin() })
-
-            Spacer(Modifier.width(120.dp))
-
-            CreateItemButton(onClick = { navActions.navigateToCreateItem() })
-
-
-        },
-        containerColor = MaterialTheme.colorScheme.primary
-    )
-}
-
-@Composable
 private fun ItemCard(item: Item) {
     Card(
         modifier = Modifier

@@ -70,7 +70,7 @@ fun MainScreen(
                     arguments = listOf(navArgument("itemId") { type = NavType.LongType })
                 ) { backStackEntry ->
                     val itemId = backStackEntry.arguments?.getLong("itemId") ?: return@composable
-                    ItemViewPage(nestedNavActions, itemId, itemFetcher, receiptFetcher, UserSessionManager(LocalContext.current))
+                    ItemViewPage(nestedNavActions, itemId, itemFetcher, receiptFetcher, userViewModel)
                 }
                 composable(NavigationRoutes.CREATE_ITEM) {
                     ItemPage(nestedNavActions, itemFetcher, UserSessionManager(LocalContext.current))

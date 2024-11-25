@@ -89,9 +89,11 @@ fun LoginPage(
                                     if (task.isSuccessful) {
                                         val firebaseUser = auth.currentUser
                                         firebaseUser?.let {
-                                            userViewModel.fetchOrCreateUserProfile()
+                                            userViewModel.fetchUserProfile()
                                             when (userType) {
-                                                UserViewModel.UserType.BUYER -> navActions.navigateFromLoginToUserHome()
+                                                UserViewModel.UserType.BUYER -> {
+                                                    navActions.navigateFromLoginToUserHome()
+                                                }
                                                 UserViewModel.UserType.COMPANY -> navActions.navigateFromLoginToRetailerHome()
                                                 null -> errorMessage = "Unknown user type."
                                             }
@@ -132,10 +134,10 @@ private fun LoginContent(
     onUserTypeSelect: (UserViewModel.UserType) -> Unit
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        UserTypeSelector(userType = userType, onUserTypeSelect = onUserTypeSelect)
+        /*UserTypeSelector(userType = userType, onUserTypeSelect = onUserTypeSelect)
 
         Spacer(modifier = Modifier.height(32.dp))
-
+        */
         CustomTextField(value = name, labelText = "Username", onValueChange = onNameChange)
 
         Spacer(modifier = Modifier.height(16.dp))

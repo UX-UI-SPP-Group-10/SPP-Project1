@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -33,16 +34,18 @@ import com.sppProject.app.model.data.data_class.Buyer
 import com.sppProject.app.model.data.data_class.Item
 import com.sppProject.app.view.components.buttons.BackButton
 import com.sppProject.app.view.components.buttons.CustomButton
+import com.sppProject.app.viewModel.UserViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemViewPage(userNavActions: UserNavActions, itemId: Long, itemFetcher: ItemFetcher, receiptFetcher: ReceiptFetcher, userSessionManager: UserSessionManager) {
+fun ItemViewPage(userNavActions: UserNavActions, itemId: Long, itemFetcher: ItemFetcher, receiptFetcher: ReceiptFetcher, userViewModel: UserViewModel) {
     val itemState = remember { mutableStateOf<Item?>(null) }
     val coroutineScope = rememberCoroutineScope()
     var isRecieptmade by remember { mutableStateOf(false) }
     var noMoreItems by remember { mutableStateOf(false) }
+    val userType by userViewModel.userType.collectAsState()
 
     // Fetch the item when the composable is first displayed or itemId changes
     LaunchedEffect(itemId) {
@@ -83,7 +86,7 @@ fun ItemViewPage(userNavActions: UserNavActions, itemId: Long, itemFetcher: Item
 
     if (isRecieptmade){
         if ((itemState.value?.stock ?: 0) > 0){
-            PostReceipt(receiptFetcher, itemId, itemFetcher, userSessionManager, coroutineScope)
+            PostReceipt(receiptFetcher, itemId, itemFetcher, userViewModel, coroutineScope)
             userNavActions.navigateUserHome()
             isRecieptmade = false
         }
@@ -159,10 +162,10 @@ fun PostReceipt(
     receiptFetcher: ReceiptFetcher,
     itemID: Long,
     itemFetcher: ItemFetcher,
-    userSessionManager: UserSessionManager,
+    userViewModel: UserViewModel,
     coroutineScope: CoroutineScope
 ) {
-    val currentUser: Buyer? = userSessionManager.getLoggedInBuyer()
+    val currentUser: Buyer? by userViewModel.buyerState.collectAsState()
     LaunchedEffect(itemID) {
         // Launch the coroutine only when `tempItem` changes (or you can check some other condition)
         coroutineScope.launch {
