@@ -40,10 +40,11 @@ fun CustomTextField(
             unfocusedBorderColor = borderColor, // Border color when unfocused
             focusedContainerColor = Color.Transparent, // Container color when focused
             unfocusedContainerColor = Color.Transparent, // Container color when unfocused
-            cursorColor = MaterialTheme.colorScheme.primary // Cursor color
+            cursorColor = Color.Black
         ),
         shape = shape,
         singleLine = true,
+        visualTransformation = visualTransformation,
         modifier = modifier
             .padding(4.dp) // Padding to give some space around the text field
     )
