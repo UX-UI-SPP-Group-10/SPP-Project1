@@ -21,8 +21,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sppProject.app.UserNavActions
-import com.sppProject.app.api_integration.fetchers.ItemFetcher
-import com.sppProject.app.data.data_class.Item
+import com.sppProject.app.model.api_integration.fetchers.ItemFetcher
+import com.sppProject.app.model.data.data_class.Item
 import com.sppProject.app.view.components.buttons.CreateItemButton
 import com.sppProject.app.view.components.buttons.LogoutButton
 import com.sppProject.app.viewModel.UserViewModel

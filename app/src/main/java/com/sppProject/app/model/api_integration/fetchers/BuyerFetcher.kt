@@ -1,8 +1,8 @@
-package com.sppProject.app.api_integration.fetchers
+package com.sppProject.app.model.api_integration.fetchers
 
-import com.sppProject.app.api_integration.api_service.BuyerApiService
-import com.sppProject.app.data.data_class.Buyer
-import com.sppProject.app.api_integration.ApiFetcher
+import com.sppProject.app.model.api_integration.ApiFetcher
+import com.sppProject.app.model.api_integration.api_service.BuyerApiService
+import com.sppProject.app.model.data.data_class.Buyer
 
 
 /**

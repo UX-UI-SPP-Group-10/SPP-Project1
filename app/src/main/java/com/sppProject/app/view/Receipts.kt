@@ -27,10 +27,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sppProject.app.UserNavActions
-import com.sppProject.app.api_integration.fetchers.ReceiptFetcher
-import com.sppProject.app.data.UserSessionManager
-import com.sppProject.app.data.data_class.Buyer
-import com.sppProject.app.data.data_class.Receipt
+import com.sppProject.app.model.api_integration.fetchers.ReceiptFetcher
+import com.sppProject.app.model.data.UserSessionManager
+import com.sppProject.app.model.data.data_class.Buyer
+import com.sppProject.app.model.data.data_class.Receipt
 import com.sppProject.app.viewModel.UserViewModel
 import kotlinx.coroutines.launch
 

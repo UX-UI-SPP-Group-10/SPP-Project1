@@ -1,4 +1,4 @@
-package com.sppProject.app.ui.theme
+package com.sppProject.app.view.theme
 
 import androidx.compose.ui.graphics.Color
 

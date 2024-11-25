@@ -1,11 +1,10 @@
 package com.sppProject.app
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.sppProject.app.api_integration.RetrofitClient
-import com.sppProject.app.api_integration.api_service.ItemApiService
-import com.sppProject.app.data.data_class.Company
-import com.sppProject.app.data.data_class.Item
-import com.sppProject.app.api_integration.fetchers.ItemFetcher
+import com.sppProject.app.model.api_integration.RetrofitClient
+import com.sppProject.app.model.api_integration.api_service.ItemApiService
+import com.sppProject.app.model.data.data_class.Item
+import com.sppProject.app.model.api_integration.fetchers.ItemFetcher
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.*

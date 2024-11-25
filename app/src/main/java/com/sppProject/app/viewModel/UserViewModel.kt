@@ -5,12 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.sppProject.app.UserNavActions
-import com.sppProject.app.api_integration.fetchers.BuyerFetcher
-import com.sppProject.app.api_integration.fetchers.CompanyFetcher
-import com.sppProject.app.data.UserSessionManager
-import com.sppProject.app.data.data_class.Buyer
-import com.sppProject.app.data.data_class.Company
-import com.sppProject.app.view.LoginPage
+import com.sppProject.app.model.api_integration.fetchers.BuyerFetcher
+import com.sppProject.app.model.api_integration.fetchers.CompanyFetcher
+import com.sppProject.app.model.data.UserSessionManager
+import com.sppProject.app.model.data.data_class.Buyer
+import com.sppProject.app.model.data.data_class.Company
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

@@ -18,13 +18,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.sppProject.app.NavigationRoutes
 import com.sppProject.app.UserNavActions
-import com.sppProject.app.api_integration.fetchers.BuyerFetcher
-import com.sppProject.app.api_integration.fetchers.CompanyFetcher
-import com.sppProject.app.api_integration.fetchers.ItemFetcher
-import com.sppProject.app.api_integration.fetchers.ReceiptFetcher
-import com.sppProject.app.data.UserSessionManager
+import com.sppProject.app.model.api_integration.fetchers.BuyerFetcher
+import com.sppProject.app.model.api_integration.fetchers.CompanyFetcher
+import com.sppProject.app.model.api_integration.fetchers.ItemFetcher
+import com.sppProject.app.model.api_integration.fetchers.ReceiptFetcher
+import com.sppProject.app.model.data.UserSessionManager
 import com.sppProject.app.view.components.BottomNavigationBar
-import com.sppProject.app.viewModel.CreatePageViewModel
 import com.sppProject.app.viewModel.UserViewModel
 
 @Composable

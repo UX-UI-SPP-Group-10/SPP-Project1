@@ -1,4 +1,4 @@
-package com.sppProject.app.api_integration
+package com.sppProject.app.model.api_integration
 
 /**
  * A generic class to manage API calls for different types of data.

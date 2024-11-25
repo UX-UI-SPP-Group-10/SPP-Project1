@@ -1,9 +1,9 @@
-package com.sppProject.app.data
+package com.sppProject.app.model.data
 
 import android.content.Context
 import android.util.Log
-import com.sppProject.app.data.data_class.Buyer
-import com.sppProject.app.data.data_class.Company
+import com.sppProject.app.model.data.data_class.Buyer
+import com.sppProject.app.model.data.data_class.Company
 
 class UserSessionManager(private val context: Context) {
 
