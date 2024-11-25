@@ -42,4 +42,15 @@ class ReceiptFetcher(
     suspend fun fetchReceiptById(id: Long): Receipt {
         return apiFetcher.handleApiCallSingle { receiptApiService.getReceiptById(id) }
     }
+
+    suspend fun fetchReceiptsByCompanyId(companyId: Long): List<Receipt> {
+        val response = receiptApiService.getReceiptsByCompanyId(companyId)
+        if (response.isNotEmpty()) {
+            println("Receipts fetched: $response")
+            return response
+        } else {
+            println("No receipts found.")
+        }
+        return emptyList()
+    }
 }

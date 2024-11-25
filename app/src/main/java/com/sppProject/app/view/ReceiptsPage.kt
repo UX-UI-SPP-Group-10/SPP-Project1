@@ -1,7 +1,6 @@
 package com.sppProject.app.view
 
 import android.util.Log
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,12 +11,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -77,6 +75,57 @@ fun Receipts(
         ) {
             items(receiptState) { item ->
                 ReceiptCard(item, onClick = { navActions.navigateToViewReceipt(item) })
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
+@Composable
+fun CompanyReceipts(
+    navActions: UserNavActions,
+    userViewModel: UserViewModel,
+    receiptFetcher: ReceiptFetcher,
+) {
+    var receiptState by remember { mutableStateOf<List<Receipt>>(emptyList()) }
+    val coroutineScope = rememberCoroutineScope()
+    val loggedInCompany = userViewModel.companyState.collectAsState().value
+
+    // Fetch receipts for the company when the composable is displayed
+    LaunchedEffect(Unit) {
+        coroutineScope.launch {
+            receiptState = receiptFetcher.fetchReceiptsByCompanyId(loggedInCompany?.id ?: 0)
+        }
+        for (receipt in receiptState) {
+            Log.d("CompanyReceipt", "Receipt: $receipt")
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "Receipts for ${loggedInCompany?.name ?: "Company Name Missing"}",
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier.padding(16.dp)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .weight(1f),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(receiptState) { receipt ->
+                ReceiptCard(receipt, onClick = { navActions.navigateToViewReceipt(receipt) })
             }
         }
 

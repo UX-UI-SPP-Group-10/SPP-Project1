@@ -88,6 +88,9 @@ class UserNavActions(private val navController: NavHostController) {
         navController.navigate("${NavigationRoutes.EDIT_ITEM}/$itemId")
     }
 
+    fun navigateToCompanyReceipts() {
+        navController.navigate(NavigationRoutes.COMPANY_RECEIPTS)
+    }
 
     fun navigateBack() {
         Log.d("NavigationDebug", "Attempting to navigate back")
@@ -162,5 +165,6 @@ object NavigationRoutes {
     const val RECEIPTS = "receipts"
     const val VIEW_RECEIPT = "view_receipt"
     const val EDIT_ITEM = "edit_item"
+    const val COMPANY_RECEIPTS = "company_receipts"
 }
 

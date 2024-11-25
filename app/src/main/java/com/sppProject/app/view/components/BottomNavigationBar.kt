@@ -106,7 +106,7 @@ private fun RetailerBottomNavigationBar(
 
 
         ReciptButton(onClick = {
-            navActions.navigateToUserReceipts()
+            navActions.navigateToCompanyReceipts()
         })
     }
 }

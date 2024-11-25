@@ -65,6 +65,9 @@ fun MainScreen(
                 composable(NavigationRoutes.RETAILER_HOME) {
                     RetailerHomePage(nestedNavActions, userViewModel, itemFetcher)
                 }
+                composable(NavigationRoutes.COMPANY_RECEIPTS) {
+                    CompanyReceipts(nestedNavActions, userViewModel, receiptFetcher)
+                }
                 composable(
                     "${NavigationRoutes.VIEW_ITEM}/{itemId}",
                     arguments = listOf(navArgument("itemId") { type = NavType.LongType })
