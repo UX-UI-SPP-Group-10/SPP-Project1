@@ -89,16 +89,30 @@ fun LoginPage(
                                     if (task.isSuccessful) {
                                         val firebaseUser = auth.currentUser
                                         firebaseUser?.let {
-                                            userViewModel.fetchUserProfile()
-                                            when (userType) {
-                                                UserViewModel.UserType.BUYER -> {
-                                                    navActions.navigateFromLoginToUserHome()
+                                            userViewModel.fetchUserProfile(
+                                                onSuccess = { userType ->
+                                                    when (userType) {
+                                                        UserViewModel.UserType.BUYER -> {
+                                                            navActions.navigateFromLoginToUserHome()
+                                                        }
+
+                                                        UserViewModel.UserType.COMPANY -> {
+                                                            navActions.navigateFromLoginToRetailerHome()
+                                                        }
+
+                                                        null -> {
+                                                            errorMessage = "Unknown user type."
+                                                            auth.signOut()
+                                                        }
+                                                    }
+                                                },
+                                                onFailure = {
+                                                    errorMessage = "Login Failed: user not found "
+                                                    auth.signOut()
                                                 }
-                                                UserViewModel.UserType.COMPANY -> navActions.navigateFromLoginToRetailerHome()
-                                                null -> errorMessage = "Unknown user type."
-                                            }
+                                            )
                                         }
-                                    } else {
+                                    }else {
                                         errorMessage = "Login Failed: Email or password is incorrect."
                                     }
                                 }

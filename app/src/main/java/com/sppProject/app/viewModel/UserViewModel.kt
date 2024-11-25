@@ -49,10 +49,16 @@ class UserViewModel(
 
 
     // old fetcher method, changed to fetchOrCreateUserProfile
-    fun fetchUserProfile() {
+    fun fetchUserProfile(
+        onSuccess: (UserType?) -> Unit,
+        onFailure: () -> Unit
+    ) {
         viewModelScope.launch {
             val firebaseUser = FirebaseAuth.getInstance().currentUser
-            if (firebaseUser == null) return@launch
+            if (firebaseUser == null) {
+                onFailure()
+                return@launch
+            }
 
             try {
                 // Fetch user as buyer or company
@@ -78,6 +84,7 @@ class UserViewModel(
                     _buyerState.value = null
                     _companyState.value = null
                     _userType.value = null
+                    onFailure()
                     Log.e("fetchUserProfile", "No user profile found")
                 }
             } catch (e: Exception) {
@@ -86,6 +93,8 @@ class UserViewModel(
                 _buyerState.value = null
                 _companyState.value = null
                 _userType.value = null
+                onFailure()
+
             }
         }
     }
@@ -235,5 +244,6 @@ class UserViewModel(
         _companyState.value = null
         navActions.navigateToLogin()
     }
+
 
 }
