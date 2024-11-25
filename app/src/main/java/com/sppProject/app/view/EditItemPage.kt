@@ -97,15 +97,15 @@ fun EditItemPage(
                 CustomButton(
                     onClick = {
                         coroutineScope.launch {
-//                            itemFetcher.updateItem(
-//                                Item(
-//                                    id = itemId,
-//                                    name = itemName.value,
-//                                    price = itemPrice.value,
-//                                    stock = itemStock.value,
-//                                    description = itemDescription.value
-//                                )
-//                            )
+                            itemFetcher.updateItem(
+                                itemId,
+                                Item(
+                                    name = itemName.value,
+                                    price = itemPrice.value,
+                                    stock = itemStock.value,
+                                    description = itemDescription.value
+                                )
+                            )
                             userNavActions.navigateBack()
                         }
                     },

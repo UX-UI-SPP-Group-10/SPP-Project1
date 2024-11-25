@@ -88,7 +88,7 @@ fun ItemViewPage(
                             .width(200.dp)
                     )
                 } else if (userType == UserViewModel.UserType.COMPANY) {
-                    CustomBu    tton(
+                    CustomButton(
                         onClick = {
                             userNavActions.navigateToEditItem(itemId)
                         },

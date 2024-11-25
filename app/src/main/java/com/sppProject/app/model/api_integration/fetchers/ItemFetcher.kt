@@ -26,6 +26,9 @@ class ItemFetcher (
 
     }
 
-
-
+    suspend fun updateItem(itemId: Long, updatedItem: Item): Item {
+        return apiFetcher.handleApiCallSingle {
+            itemApiFetcher.updateItem(itemId, updatedItem)
+        }
+    }
 }
