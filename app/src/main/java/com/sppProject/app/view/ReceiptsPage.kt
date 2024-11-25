@@ -73,8 +73,12 @@ fun Receipts(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(receiptState) { item ->
-                ReceiptCard(item, onClick = { navActions.navigateToViewReceipt(item) })
+            items(receiptState) { receipt ->
+                ReceiptCard(
+                    receipt = receipt,
+                    isRetailer = false, // Buyers should see company names
+                    onClick = { navActions.navigateToViewReceipt(receipt) }
+                )
             }
         }
 
@@ -125,7 +129,11 @@ fun CompanyReceipts(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(receiptState) { receipt ->
-                ReceiptCard(receipt, onClick = { navActions.navigateToViewReceipt(receipt) })
+                ReceiptCard(
+                    receipt = receipt,
+                    isRetailer = true, // Retailers should see buyer names
+                    onClick = { navActions.navigateToViewReceipt(receipt) }
+                )
             }
         }
 

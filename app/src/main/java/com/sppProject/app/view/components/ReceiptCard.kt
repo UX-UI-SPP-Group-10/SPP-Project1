@@ -18,7 +18,11 @@ import androidx.compose.ui.unit.dp
 import com.sppProject.app.model.data.data_class.Receipt
 
 @Composable
-fun ReceiptCard(receipt: Receipt, onClick: () -> Unit) {
+fun ReceiptCard(
+    receipt: Receipt,
+    isRetailer: Boolean,
+    onClick: () -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -37,8 +41,14 @@ fun ReceiptCard(receipt: Receipt, onClick: () -> Unit) {
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
+            // Display either the company's name or the buyer's name based on isRetailer
+            val displayName = if (isRetailer) {
+                receipt.buyer?.name ?: "Unknown Buyer"
+            } else {
+                receipt.item.company?.name ?: "Unknown Company"
+            }
             Text(
-                text = "${receipt.item.company?.name}",
+                text = displayName,
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onBackground
             )
@@ -63,3 +73,4 @@ fun ReceiptCard(receipt: Receipt, onClick: () -> Unit) {
         }
     }
 }
+
