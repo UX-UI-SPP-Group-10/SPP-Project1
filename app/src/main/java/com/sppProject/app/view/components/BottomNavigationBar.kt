@@ -97,9 +97,8 @@ private fun RetailerBottomNavigationBar(
 
         Spacer(Modifier.width(120.dp))
 
-        CreateItemButton(onClick = {
-            Log.d("RetailerBottomNavigationBar", "Create Item button clicked")
-            navActions.navigateToCreateItem()
+        BuyPageButton(onClick = {
+            navActions.navigateToRetailerHome()
         })
 
         Spacer(Modifier.width(120.dp))

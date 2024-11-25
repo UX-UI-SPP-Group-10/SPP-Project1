@@ -1,5 +1,6 @@
 package com.sppProject.app.view
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -25,6 +26,7 @@ import com.sppProject.app.model.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.model.data.data_class.Item
 import com.sppProject.app.view.components.ItemCard
 import com.sppProject.app.view.components.buttons.CreateItemButton
+import com.sppProject.app.view.components.buttons.CustomButton
 import com.sppProject.app.view.components.buttons.LogoutButton
 import com.sppProject.app.viewModel.UserViewModel
 import kotlinx.coroutines.launch
@@ -100,6 +102,10 @@ fun RetailerHomePage(navActions: UserNavActions, userViewModel: UserViewModel, i
                 }
             }
         }
-        // BottomNavigationRetailer(navActions)
+        CustomButton(
+            onClick = { navActions.navigateToCreateItem() },
+            text = "Create Item",
+            modifier = Modifier.padding(16.dp)
+        )
     }
 }
