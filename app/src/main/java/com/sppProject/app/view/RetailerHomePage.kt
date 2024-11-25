@@ -64,19 +64,6 @@ fun RetailerHomePage(navActions: UserNavActions, userViewModel: UserViewModel, i
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        loggedInCompany?.let { company ->
-            Text(
-                text = "Debug: Logged-in Company - ${company.name}, ID: ${company.id}",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            )
-        } ?: Text(
-            text = "Debug: No company logged in.",
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-        )
 
         Text("Welcome to the Retailer Home Page")
 

@@ -46,20 +46,6 @@ fun UserHomePage(
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Debug line for user information
-        buyerState?.let { buyer ->
-            Text(
-                text = "Debug: Logged-in User - ${buyer.name}, ID: ${buyer.id}",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-            )
-        } ?: Text(
-            text = "Debug: No user logged in.",
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-        )
         Text("Welcome to the User Home Page")
 
 
@@ -84,46 +70,3 @@ fun UserHomePage(
         // BottomNavigation(navActions)
     }
 }
-
-@Composable
-fun BottomNavigation(userNavActions: UserNavActions) {
-    BottomAppBar(Modifier.fillMaxWidth(),
-        content = {
-            Spacer(Modifier.width(16.dp))
-
-            LogoutButton(onClick = { userNavActions.navigateToLogin() })
-
-            Spacer(Modifier.width(120.dp))
-
-            BuyPageButton(onClick = {})
-
-            Spacer(Modifier.width(120.dp))
-
-            ReciptButton(onClick = {}) //TODO
-
-        },
-        containerColor = MaterialTheme.colorScheme.primary
-    )
-}
-
-/*
-@Composable
-private fun ItemCard(item: Item, onClick: () -> Unit) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clickable(onClick = onClick),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-        ) {
-            Text(text = item.name, style = androidx.compose.material3.MaterialTheme.typography.bodyLarge)
-            Text(text = "Price: $${item.price}", style = androidx.compose.material3.MaterialTheme.typography.bodyMedium)
-            Text(text = "Stock: ${item.stock}", style = androidx.compose.material3.MaterialTheme.typography.bodySmall)
-        }
-    }
-} */
