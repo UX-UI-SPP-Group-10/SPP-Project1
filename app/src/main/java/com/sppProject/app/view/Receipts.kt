@@ -31,6 +31,7 @@ import com.sppProject.app.model.api_integration.fetchers.ReceiptFetcher
 import com.sppProject.app.model.data.UserSessionManager
 import com.sppProject.app.model.data.data_class.Buyer
 import com.sppProject.app.model.data.data_class.Receipt
+import com.sppProject.app.view.components.ReceiptCard
 import com.sppProject.app.viewModel.UserViewModel
 import kotlinx.coroutines.launch
 
@@ -80,41 +81,5 @@ fun Receipts(
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-    }
-}
-
-@Composable
-private fun ReceiptCard(receipt: Receipt, onClick: () -> Unit) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .clickable(onClick = onClick),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-        ) {
-
-            Text(
-                text = receipt.buyer.name,
-                style = MaterialTheme.typography.bodyLarge
-            )
-
-            val itemName = receipt.item.name
-            Text(
-                text = itemName,
-                style = MaterialTheme.typography.bodyLarge
-            )
-
-
-            //Text(text = receipt.buyer.name, style = androidx.compose.material3.MaterialTheme.typography.bodyLarge)
-            //Text(text = receipt.items.name, style = androidx.compose.material3.MaterialTheme.typography.bodyLarge)
-
-            //Text(text = "Price: $${item.price}", style = androidx.compose.material3.MaterialTheme.typography.bodyMedium)
-            //Text(text = "Stock: ${item.stock}", style = androidx.compose.material3.MaterialTheme.typography.bodySmall)
-        }
     }
 }

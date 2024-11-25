@@ -101,6 +101,13 @@ private fun RetailerBottomNavigationBar(
             Log.d("RetailerBottomNavigationBar", "Create Item button clicked")
             navActions.navigateToCreateItem()
         })
+
+        Spacer(Modifier.width(120.dp))
+
+
+        ReciptButton(onClick = {
+            navActions.navigateToUserReceipts()
+        })
     }
 }
 
