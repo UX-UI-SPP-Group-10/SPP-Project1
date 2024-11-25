@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import com.sppProject.app.UserNavActions
 import com.sppProject.app.model.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.model.data.data_class.Item
+import com.sppProject.app.view.components.CustomTextField
 import com.sppProject.app.view.components.buttons.BackButton
 import com.sppProject.app.view.components.buttons.CustomButton
 import kotlinx.coroutines.launch
@@ -66,31 +67,31 @@ fun EditItemPage(
                     .padding(paddingValues)
                     .padding(16.dp)
             ) {
-                TextField(
+                CustomTextField(
                     value = itemName.value,
                     onValueChange = { itemName.value = it },
-                    label = { Text("Item Name") },
+                    labelText = "Item Name",
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                TextField(
+                CustomTextField(
                     value = itemPrice.value.toString(),
                     onValueChange = { itemPrice.value = it.toIntOrNull() ?: itemPrice.value },
-                    label = { Text("Price") },
+                    labelText = "Price",
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                TextField(
+                CustomTextField(
                     value = itemStock.value.toString(),
                     onValueChange = { itemStock.value = it.toIntOrNull() ?: itemStock.value },
-                    label = { Text("Stock") },
+                    labelText = "Stock",
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                TextField(
+                CustomTextField(
                     value = itemDescription.value,
                     onValueChange = { itemDescription.value = it },
-                    label = { Text("Description") },
+                    labelText = "Description",
                     modifier = Modifier.fillMaxWidth()
                 )
                 Spacer(modifier = Modifier.height(16.dp))
