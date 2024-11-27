@@ -11,11 +11,6 @@ import androidx.lifecycle.LifecycleRegistry
 import androidx.navigation.NavHostController
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.sppProject.app.api_integration.RetrofitClient
-import com.sppProject.app.api_integration.api_service.*
-import com.sppProject.app.api_integration.fetchers.*
-import com.sppProject.app.data.UserSessionManager
-import com.sppProject.app.data.data_class.Item
 import com.sppProject.app.view.UserHomePage
 import com.sppProject.app.viewModel.UserViewModel
 import kotlinx.coroutines.runBlocking
@@ -25,7 +20,17 @@ import org.junit.runner.RunWith
 import org.junit.Assert.*
 import androidx.navigation.compose.rememberNavController
 import com.sppProject.app.UserNavActions
+import com.sppProject.app.model.api_integration.RetrofitClient
+import com.sppProject.app.model.api_integration.api_service.BuyerApiService
+import com.sppProject.app.model.api_integration.api_service.CompanyApiService
+import com.sppProject.app.model.api_integration.api_service.ItemApiService
+import com.sppProject.app.model.api_integration.fetchers.BuyerFetcher
+import com.sppProject.app.model.api_integration.fetchers.CompanyFetcher
+import com.sppProject.app.model.api_integration.fetchers.ItemFetcher
+import com.sppProject.app.model.data.UserSessionManager
+import com.sppProject.app.model.data.data_class.Item
 
+// Database needs to be running for emulator to run, otherwise the emulator will be seen as offline
 @RunWith(AndroidJUnit4::class)
 class UserViewTest {
 
@@ -44,6 +49,10 @@ class UserViewTest {
             newItem.id = (items.size + 1).toLong()
             items.add(newItem)
             return newItem
+        }
+
+        override suspend fun updateItem(id: Long, updatedItem: Item): Item {
+            TODO("Not yet implemented")
         }
 
         override suspend fun getItemById(id: Long): Item =
