@@ -1,8 +1,9 @@
-package com.sppProject.app.api_integration.api_service
-import com.sppProject.app.data.data_class.Item
+package com.sppProject.app.model.api_integration.api_service
+import com.sppProject.app.model.data.data_class.Item
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface ItemApiService {
@@ -21,4 +22,9 @@ interface ItemApiService {
         @Body item: Item
     ): Item
 
+    @PUT("items/{id}")
+    suspend fun updateItem(
+        @Path("id") id: Long,
+        @Body updatedItem: Item
+    ): Item
 }

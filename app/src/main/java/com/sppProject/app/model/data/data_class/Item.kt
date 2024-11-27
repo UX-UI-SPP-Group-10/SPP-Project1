@@ -1,4 +1,4 @@
-package com.sppProject.app.data.data_class
+package com.sppProject.app.model.data.data_class
 
 import com.google.gson.annotations.SerializedName
 

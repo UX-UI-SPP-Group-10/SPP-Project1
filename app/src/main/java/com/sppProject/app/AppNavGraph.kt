@@ -8,13 +8,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.sppProject.app.api_integration.fetchers.BuyerFetcher
-import com.sppProject.app.api_integration.fetchers.CompanyFetcher
-import com.sppProject.app.api_integration.fetchers.ItemFetcher
-import com.sppProject.app.api_integration.fetchers.ReceiptFetcher
-import com.sppProject.app.data.UserSessionManager
-import com.sppProject.app.data.data_class.Item
-import com.sppProject.app.data.data_class.Receipt
+import com.sppProject.app.model.api_integration.fetchers.BuyerFetcher
+import com.sppProject.app.model.api_integration.fetchers.CompanyFetcher
+import com.sppProject.app.model.api_integration.fetchers.ItemFetcher
+import com.sppProject.app.model.api_integration.fetchers.ReceiptFetcher
+import com.sppProject.app.model.data.UserSessionManager
+import com.sppProject.app.model.data.data_class.Item
+import com.sppProject.app.model.data.data_class.Receipt
 import com.sppProject.app.view.*
 import com.sppProject.app.viewModel.CreatePageViewModel
 import com.sppProject.app.viewModel.UserViewModel
@@ -84,10 +84,27 @@ class UserNavActions(private val navController: NavHostController) {
         navController.navigate("${NavigationRoutes.VIEW_RECEIPT}/$receiptId")
     }
 
+    fun navigateToEditItem(itemId: Long) {
+        navController.navigate("${NavigationRoutes.EDIT_ITEM}/$itemId")
+    }
+
+    fun navigateToCompanyReceipts() {
+        navController.navigate(NavigationRoutes.COMPANY_RECEIPTS)
+    }
 
     fun navigateBack() {
-        navController.popBackStack()
+        Log.d("NavigationDebug", "Attempting to navigate back")
+        Log.d("NavigationDebug", "Current back stack: ${navController.backQueue.map { it.destination.route }}")
+
+        if (!navController.popBackStack()) {
+            Log.d("NavigationDebug", "popBackStack failed, falling back to navigateUp")
+            navController.navigateUp()
+        } else {
+            Log.d("NavigationDebug", "popBackStack successful")
+        }
     }
+
+
 
 }
 
@@ -147,5 +164,7 @@ object NavigationRoutes {
     const val VIEW_ITEM = "view_item"
     const val RECEIPTS = "receipts"
     const val VIEW_RECEIPT = "view_receipt"
+    const val EDIT_ITEM = "edit_item"
+    const val COMPANY_RECEIPTS = "company_receipts"
 }
 

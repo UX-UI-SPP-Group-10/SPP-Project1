@@ -1,6 +1,5 @@
-package com.sppProject.app.ui.theme
+package com.sppProject.app.view.theme
 
-import android.R.color.white
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

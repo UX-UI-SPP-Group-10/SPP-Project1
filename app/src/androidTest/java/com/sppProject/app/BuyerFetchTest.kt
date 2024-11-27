@@ -1,10 +1,10 @@
 package com.sppProject.app
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.sppProject.app.api_integration.RetrofitClient
-import com.sppProject.app.api_integration.api_service.BuyerApiService
-import com.sppProject.app.data.data_class.Buyer
-import com.sppProject.app.api_integration.fetchers.BuyerFetcher
+import com.sppProject.app.model.api_integration.RetrofitClient
+import com.sppProject.app.model.api_integration.api_service.BuyerApiService
+import com.sppProject.app.model.data.data_class.Buyer
+import com.sppProject.app.model.api_integration.fetchers.BuyerFetcher
 import kotlinx.coroutines.runBlocking
 import org.junit.After
 import org.junit.Assert.*

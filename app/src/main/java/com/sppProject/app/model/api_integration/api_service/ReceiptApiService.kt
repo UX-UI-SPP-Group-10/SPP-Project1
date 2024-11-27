@@ -1,6 +1,6 @@
-package com.sppProject.app.api_integration.api_service
+package com.sppProject.app.model.api_integration.api_service
 
-import com.sppProject.app.data.data_class.Receipt
+import com.sppProject.app.model.data.data_class.Receipt
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -15,6 +15,9 @@ interface ReceiptApiService {
 
     @GET("receipts/buyer/{buyerId}")
     suspend fun getReceiptByBuyerId(@Path("buyerId") buyerId: Long): List<Receipt>
+
+    @GET("receipts/company/{companyId}")
+    suspend fun getReceiptsByCompanyId(@Path("companyId") companyId: Long): List<Receipt>
 
 
     // Updated to use query parameters instead of a JSON body

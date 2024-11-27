@@ -1,4 +1,4 @@
-package com.sppProject.app.api_integration
+package com.sppProject.app.model.api_integration
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

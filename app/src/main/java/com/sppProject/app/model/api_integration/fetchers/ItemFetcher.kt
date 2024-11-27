@@ -1,7 +1,7 @@
-package com.sppProject.app.api_integration.fetchers
-import com.sppProject.app.api_integration.ApiFetcher
-import com.sppProject.app.data.data_class.Item
-import com.sppProject.app.api_integration.api_service.ItemApiService
+package com.sppProject.app.model.api_integration.fetchers
+import com.sppProject.app.model.api_integration.ApiFetcher
+import com.sppProject.app.model.api_integration.api_service.ItemApiService
+import com.sppProject.app.model.data.data_class.Item
 
 
 class ItemFetcher (
@@ -26,6 +26,9 @@ class ItemFetcher (
 
     }
 
-
-
+    suspend fun updateItem(itemId: Long, updatedItem: Item): Item {
+        return apiFetcher.handleApiCallSingle {
+            itemApiFetcher.updateItem(itemId, updatedItem)
+        }
+    }
 }

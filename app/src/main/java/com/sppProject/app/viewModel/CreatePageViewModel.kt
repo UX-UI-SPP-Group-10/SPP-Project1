@@ -1,19 +1,17 @@
 package com.sppProject.app.viewModel
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sppProject.app.UserNavActions
-import com.sppProject.app.api_integration.fetchers.BuyerFetcher
-import com.sppProject.app.api_integration.fetchers.CompanyFetcher
-import com.sppProject.app.data.UserSessionManager
-import com.sppProject.app.data.data_class.Buyer
-import com.sppProject.app.data.data_class.Company
+import com.sppProject.app.model.api_integration.fetchers.BuyerFetcher
+import com.sppProject.app.model.api_integration.fetchers.CompanyFetcher
+import com.sppProject.app.model.data.UserSessionManager
+import com.sppProject.app.model.data.data_class.Buyer
+import com.sppProject.app.model.data.data_class.Company
 import com.sppProject.app.view.CreatePageState
 import kotlinx.coroutines.launch
 import com.google.firebase.auth.FirebaseAuth
-import com.sppProject.app.view.LoginPage
 
 class CreatePageViewModel(
     val userSessionManager: UserSessionManager,

@@ -1,8 +1,8 @@
-package com.sppProject.app.api_integration.fetchers
+package com.sppProject.app.model.api_integration.fetchers
 
-import com.sppProject.app.api_integration.ApiFetcher
-import com.sppProject.app.api_integration.api_service.ReceiptApiService
-import com.sppProject.app.data.data_class.Receipt
+import com.sppProject.app.model.api_integration.ApiFetcher
+import com.sppProject.app.model.api_integration.api_service.ReceiptApiService
+import com.sppProject.app.model.data.data_class.Receipt
 
 class ReceiptFetcher(
     private val receiptApiService: ReceiptApiService
@@ -41,5 +41,16 @@ class ReceiptFetcher(
 
     suspend fun fetchReceiptById(id: Long): Receipt {
         return apiFetcher.handleApiCallSingle { receiptApiService.getReceiptById(id) }
+    }
+
+    suspend fun fetchReceiptsByCompanyId(companyId: Long): List<Receipt> {
+        val response = receiptApiService.getReceiptsByCompanyId(companyId)
+        if (response.isNotEmpty()) {
+            println("Receipts fetched: $response")
+            return response
+        } else {
+            println("No receipts found.")
+        }
+        return emptyList()
     }
 }

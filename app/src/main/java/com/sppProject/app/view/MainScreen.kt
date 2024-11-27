@@ -18,13 +18,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.sppProject.app.NavigationRoutes
 import com.sppProject.app.UserNavActions
-import com.sppProject.app.api_integration.fetchers.BuyerFetcher
-import com.sppProject.app.api_integration.fetchers.CompanyFetcher
-import com.sppProject.app.api_integration.fetchers.ItemFetcher
-import com.sppProject.app.api_integration.fetchers.ReceiptFetcher
-import com.sppProject.app.data.UserSessionManager
+import com.sppProject.app.model.api_integration.fetchers.BuyerFetcher
+import com.sppProject.app.model.api_integration.fetchers.CompanyFetcher
+import com.sppProject.app.model.api_integration.fetchers.ItemFetcher
+import com.sppProject.app.model.api_integration.fetchers.ReceiptFetcher
+import com.sppProject.app.model.data.UserSessionManager
 import com.sppProject.app.view.components.BottomNavigationBar
-import com.sppProject.app.viewModel.CreatePageViewModel
 import com.sppProject.app.viewModel.UserViewModel
 
 @Composable
@@ -66,12 +65,15 @@ fun MainScreen(
                 composable(NavigationRoutes.RETAILER_HOME) {
                     RetailerHomePage(nestedNavActions, userViewModel, itemFetcher)
                 }
+                composable(NavigationRoutes.COMPANY_RECEIPTS) {
+                    CompanyReceipts(nestedNavActions, userViewModel, receiptFetcher)
+                }
                 composable(
                     "${NavigationRoutes.VIEW_ITEM}/{itemId}",
                     arguments = listOf(navArgument("itemId") { type = NavType.LongType })
                 ) { backStackEntry ->
                     val itemId = backStackEntry.arguments?.getLong("itemId") ?: return@composable
-                    ItemViewPage(nestedNavActions, itemId, itemFetcher, receiptFetcher, UserSessionManager(LocalContext.current))
+                    ItemViewPage(nestedNavActions, itemId, itemFetcher, receiptFetcher, userViewModel)
                 }
                 composable(NavigationRoutes.CREATE_ITEM) {
                     ItemPage(nestedNavActions, itemFetcher, UserSessionManager(LocalContext.current))
@@ -86,6 +88,19 @@ fun MainScreen(
                     val receiptId = backStackEntry.arguments?.getLong("receiptId") ?: return@composable
                     ReceiptViewPage(nestedNavActions, receiptId, receiptFetcher)
                 }
+                composable(
+                    "${NavigationRoutes.EDIT_ITEM}/{itemId}",
+                    arguments = listOf(navArgument("itemId") { type = NavType.LongType })
+                ) { backStackEntry ->
+                    val itemId = backStackEntry.arguments?.getLong("itemId") ?: return@composable
+                    EditItemPage(
+                        itemId = itemId,
+                        userNavActions = nestedNavActions,
+                        itemFetcher = itemFetcher
+                    )
+                }
+
+
             }
         }
     }

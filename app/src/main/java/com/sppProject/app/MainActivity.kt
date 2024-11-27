@@ -3,20 +3,19 @@ package com.sppProject.app
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.runtime.remember
 import androidx.navigation.compose.rememberNavController
 import com.google.firebase.FirebaseApp
-import com.sppProject.app.api_integration.RetrofitClient
-import com.sppProject.app.api_integration.api_service.BuyerApiService
-import com.sppProject.app.api_integration.api_service.CompanyApiService
-import com.sppProject.app.api_integration.api_service.ItemApiService
-import com.sppProject.app.api_integration.api_service.ReceiptApiService
-import com.sppProject.app.api_integration.fetchers.BuyerFetcher
-import com.sppProject.app.api_integration.fetchers.CompanyFetcher
-import com.sppProject.app.api_integration.fetchers.ItemFetcher
-import com.sppProject.app.data.UserSessionManager
-import com.sppProject.app.api_integration.fetchers.ReceiptFetcher
-import com.sppProject.app.ui.theme.SPPProjectTheme
+import com.sppProject.app.model.api_integration.RetrofitClient
+import com.sppProject.app.model.api_integration.api_service.BuyerApiService
+import com.sppProject.app.model.api_integration.api_service.CompanyApiService
+import com.sppProject.app.model.api_integration.api_service.ItemApiService
+import com.sppProject.app.model.api_integration.api_service.ReceiptApiService
+import com.sppProject.app.model.api_integration.fetchers.BuyerFetcher
+import com.sppProject.app.model.api_integration.fetchers.CompanyFetcher
+import com.sppProject.app.model.api_integration.fetchers.ItemFetcher
+import com.sppProject.app.model.data.UserSessionManager
+import com.sppProject.app.model.api_integration.fetchers.ReceiptFetcher
+import com.sppProject.app.view.theme.SPPProjectTheme
 
 
 class MainActivity : ComponentActivity() {

@@ -26,8 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.firebase.auth.FirebaseAuth
 import com.sppProject.app.UserNavActions
-import com.sppProject.app.api_integration.fetchers.BuyerFetcher
-import com.sppProject.app.api_integration.fetchers.CompanyFetcher
+import com.sppProject.app.model.api_integration.fetchers.BuyerFetcher
+import com.sppProject.app.model.api_integration.fetchers.CompanyFetcher
 import com.sppProject.app.view.components.buttons.BackButton
 import com.sppProject.app.view.components.buttons.CustomButton
 import com.sppProject.app.view.components.CustomTextField

@@ -15,9 +15,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,27 +27,35 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.sppProject.app.UserNavActions
-import com.sppProject.app.api_integration.fetchers.ItemFetcher
-import com.sppProject.app.api_integration.fetchers.ReceiptFetcher
-import com.sppProject.app.data.UserSessionManager
-import com.sppProject.app.data.data_class.Buyer
-import com.sppProject.app.data.data_class.Item
+import com.sppProject.app.model.api_integration.fetchers.ItemFetcher
+import com.sppProject.app.model.api_integration.fetchers.ReceiptFetcher
+import com.sppProject.app.model.data.UserSessionManager
+import com.sppProject.app.model.data.data_class.Buyer
+import com.sppProject.app.model.data.data_class.Item
 import com.sppProject.app.view.components.buttons.BackButton
 import com.sppProject.app.view.components.buttons.CustomButton
+import com.sppProject.app.viewModel.UserViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemViewPage(userNavActions: UserNavActions, itemId: Long, itemFetcher: ItemFetcher, receiptFetcher: ReceiptFetcher, userSessionManager: UserSessionManager) {
+fun ItemViewPage(
+    userNavActions: UserNavActions,
+    itemId: Long,
+    itemFetcher: ItemFetcher,
+    receiptFetcher: ReceiptFetcher,
+    userViewModel: UserViewModel
+) {
     val itemState = remember { mutableStateOf<Item?>(null) }
     val coroutineScope = rememberCoroutineScope()
-    var isRecieptmade by remember { mutableStateOf(false) }
+    var isReceiptMade by remember { mutableStateOf(false) }
     var noMoreItems by remember { mutableStateOf(false) }
+    val userType by userViewModel.userType.collectAsState()
 
     // Fetch the item when the composable is first displayed or itemId changes
     LaunchedEffect(itemId) {
-        val item = itemFetcher.getItemById(itemId) // Fetch item by ID
+        val item = itemFetcher.getItemById(itemId)
         itemState.value = item
     }
 
@@ -63,37 +71,49 @@ fun ItemViewPage(userNavActions: UserNavActions, itemId: Long, itemFetcher: Item
                     .fillMaxWidth()
                     .padding(16.dp)
             ) {
-                if(noMoreItems){
-                    Text(modifier = Modifier.align(Alignment.TopCenter),
-                        text = "There is no more of this item available")
+                if (userType == UserViewModel.UserType.BUYER) {
+                    if (noMoreItems) {
+                        Text(
+                            modifier = Modifier.align(Alignment.TopCenter),
+                            text = "There is no more of this item available"
+                        )
+                    }
+                    CustomButton(
+                        onClick = {
+                            isReceiptMade = true
+                        },
+                        text = "Reserve Item",
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .width(200.dp)
+                    )
+                } else if (userType == UserViewModel.UserType.COMPANY) {
+                    CustomButton(
+                        onClick = {
+                            userNavActions.navigateToEditItem(itemId)
+                        },
+                        text = "Edit Item",
+                        modifier = Modifier
+                            .align(Alignment.BottomCenter)
+                            .width(200.dp)
+                    )
                 }
-                CustomButton(
-                    onClick = {
-                        isRecieptmade = true
-                    },
-                    text = "Reserve Item",
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .width(200.dp)
-                )
-
             }
         }
     )
 
-
-    if (isRecieptmade){
-        if ((itemState.value?.stock ?: 0) > 0){
-            PostReceipt(receiptFetcher, itemId, itemFetcher, userSessionManager, coroutineScope)
+    if (isReceiptMade) {
+        if ((itemState.value?.stock ?: 0) > 0) {
+            PostReceipt(receiptFetcher, itemId, itemFetcher, userViewModel, coroutineScope)
             userNavActions.navigateUserHome()
-            isRecieptmade = false
-        }
-        else {
+            isReceiptMade = false
+        } else {
             noMoreItems = true
-            isRecieptmade = false
+            isReceiptMade = false
         }
     }
 }
+
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -160,10 +180,10 @@ fun PostReceipt(
     receiptFetcher: ReceiptFetcher,
     itemID: Long,
     itemFetcher: ItemFetcher,
-    userSessionManager: UserSessionManager,
+    userViewModel: UserViewModel,
     coroutineScope: CoroutineScope
 ) {
-    val currentUser: Buyer? = userSessionManager.getLoggedInBuyer()
+    val currentUser: Buyer? by userViewModel.buyerState.collectAsState()
     LaunchedEffect(itemID) {
         // Launch the coroutine only when `tempItem` changes (or you can check some other condition)
         coroutineScope.launch {
