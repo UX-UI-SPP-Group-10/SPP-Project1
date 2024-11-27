@@ -30,7 +30,7 @@ import com.sppProject.app.model.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.model.data.UserSessionManager
 import com.sppProject.app.model.data.data_class.Item
 
-// Database needs to run, otherwise emulator is seen as offline
+// Database needs to be running for emulator to run, otherwise the emulator will be seen as offline
 @RunWith(AndroidJUnit4::class)
 class UserViewTest {
 
