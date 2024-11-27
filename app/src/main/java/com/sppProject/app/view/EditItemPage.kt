@@ -13,6 +13,8 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -24,27 +26,26 @@ import com.sppProject.app.model.data.data_class.Item
 import com.sppProject.app.view.components.CustomTextField
 import com.sppProject.app.view.components.buttons.BackButton
 import com.sppProject.app.view.components.buttons.CustomButton
+import com.sppProject.app.viewModel.ItemViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditItemPage(
     itemId: Long,
-    userNavActions: UserNavActions,
-    itemFetcher: ItemFetcher
+    itemViewModel: ItemViewModel
 ) {
-    val itemState = remember { mutableStateOf<Item?>(null) }
     val coroutineScope = rememberCoroutineScope()
     val itemName = remember { mutableStateOf("") }
     val itemPrice = remember { mutableStateOf(0) }
     val itemStock = remember { mutableStateOf(0) }
     val itemDescription = remember { mutableStateOf("") }
+    val item by itemViewModel.itemState.collectAsState()
 
     // Fetch the item details when the composable is displayed
     LaunchedEffect(itemId) {
         coroutineScope.launch {
-            val item = itemFetcher.getItemById(itemId)
-            itemState.value = item
+            itemViewModel.fetchItem(itemId)
             itemName.value = item?.name ?: ""
             itemPrice.value = item?.price ?: 0
             itemStock.value = item?.stock ?: 0
@@ -56,7 +57,7 @@ fun EditItemPage(
         topBar = {
             TopAppBar(
             navigationIcon = {
-                BackButton(onClick = { userNavActions.navigateBack() })
+                BackButton(onClick = { itemViewModel.userNavActions.navigateBack() })
             },
             title = { Text("Edit Item") }
         )},
@@ -97,18 +98,11 @@ fun EditItemPage(
                 Spacer(modifier = Modifier.height(16.dp))
                 CustomButton(
                     onClick = {
-                        coroutineScope.launch {
-                            itemFetcher.updateItem(
-                                itemId,
-                                Item(
-                                    name = itemName.value,
-                                    price = itemPrice.value,
-                                    stock = itemStock.value,
-                                    description = itemDescription.value
-                                )
-                            )
-                            userNavActions.navigateBack()
-                        }
+                        itemViewModel.onTitleChange(itemName.value)
+                        itemViewModel.onNumberOfItemChange(itemStock.value.toString())
+                        itemViewModel.onDescriptionChange(itemDescription.value)
+                        itemViewModel.onPriceChange(itemPrice.value.toString())
+                        itemViewModel.updateItem(itemId)
                     },
                     text = "Save Changes",
                     modifier = Modifier.fillMaxWidth()
