@@ -152,7 +152,7 @@ private fun LoginContent(
 
         Spacer(modifier = Modifier.height(32.dp))
         */
-        CustomTextField(value = name, labelText = "Username", onValueChange = onNameChange)
+        CustomTextField(value = name, labelText = "Email", onValueChange = onNameChange)
 
         Spacer(modifier = Modifier.height(16.dp))
 
