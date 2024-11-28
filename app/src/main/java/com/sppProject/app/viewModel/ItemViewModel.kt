@@ -1,5 +1,6 @@
 package com.sppProject.app.viewModel
 
+import android.util.Log
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.rememberCoroutineScope
@@ -59,14 +60,20 @@ class ItemViewModel(
     fun fetchItemsByCompanyID(companyID: Long) {
         viewModelScope.launch {
             try {
+                Log.d("ItemViewModel", "Fetching items for companyID: $companyID")
                 val items = itemFetcher.fetchItemsByCompanyId(companyID)
-                _itemList.value = items
+                Log.d("ItemViewModel", "Items fetched: ${items.size}, Items: $items")
+
+                _itemList.value = items // Update the state
+                Log.d("ItemViewModel", "Item list updated with ${items.size} items")
             } catch (e: Exception) {
-                // Handle error, e.g., show a message
-                e.printStackTrace()
+                Log.e("ItemViewModel", "Error fetching items for companyID: $companyID", e)
             }
         }
     }
+
+
+
 
     // Fetch the item by ID
     fun fetchItem(itemId: Long) {
@@ -141,6 +148,30 @@ class ItemViewModel(
         }
         userNavActions.navigateUserHome()
     }
+
+    suspend fun fetchItemsByCompanyIDSync(companyID: Long): List<Item> {
+        return try {
+            val items = itemFetcher.fetchItemsByCompanyId(companyID)
+            Log.d("ItemViewModel", "Fetched items: ${items.size}")
+            items
+        } catch (e: Exception) {
+            Log.e("ItemViewModel", "Error fetching items for companyID: $companyID", e)
+            emptyList()
+        }
+    }
+
+    suspend fun fetchItemsSync(): List<Item> {
+        return try {
+            val items = itemFetcher.fetchItems()
+            Log.d("ItemViewModel", "Fetched items: ${items.size}")
+            items
+        } catch (e: Exception) {
+            Log.e("ItemViewModel", "Error fetching items", e)
+            emptyList()
+        }
+    }
+
+
 
     fun resetReceiptState() {
         _isReceiptMade.value = false

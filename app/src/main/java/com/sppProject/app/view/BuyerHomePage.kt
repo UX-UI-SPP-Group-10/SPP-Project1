@@ -26,16 +26,21 @@ import kotlinx.coroutines.launch
 fun UserHomePage(
     itemViewModel: ItemViewModel
 ) {
-    // Mutable state to hold the list of items
-    val coroutineScope = rememberCoroutineScope()
-    val userType by itemViewModel.userViewModel.userType.collectAsState()
-    itemViewModel.userType = userType!!
-    val items by itemViewModel.itemList.collectAsState()
+    // Local state for items and loading
+    var items by remember { mutableStateOf<List<Item>>(emptyList()) }
+    var loading by remember { mutableStateOf(true) }
 
     // Fetch items when the composable is first displayed
     LaunchedEffect(Unit) {
-        coroutineScope.launch {
-            itemViewModel.fetchItems()
+        loading = true
+        try {
+            val fetchedItems = itemViewModel.fetchItemsSync() // Synchronous fetch
+            items = fetchedItems.filter { it.stock > 0 } // Filter out items with zero stock
+        } catch (e: Exception) {
+            // Handle error, e.g., log or show a message
+            e.printStackTrace()
+        } finally {
+            loading = false
         }
     }
 
@@ -46,25 +51,30 @@ fun UserHomePage(
     ) {
         Text("Welcome to the User Home Page")
 
-
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Display grid of items
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            modifier = Modifier
-                .fillMaxWidth().padding(16.dp)
-                .weight(1f),  // Gives grid weight to fill remaining space
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            items(items.filter { it.stock > 0 }) { item ->
-                ItemCard(item = item, onClick = { itemViewModel.userNavActions.navigateToViewItem(item) })
+        // Show loading indicator or item grid
+        if (loading) {
+            Text("Loading items...")
+        } else {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .weight(1f),  // Gives grid weight to fill remaining space
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(items) { item ->
+                    ItemCard(
+                        item = item,
+                        onClick = { itemViewModel.userNavActions.navigateToViewItem(item) }
+                    )
+                }
             }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-
-        // BottomNavigation(navActions)
     }
 }

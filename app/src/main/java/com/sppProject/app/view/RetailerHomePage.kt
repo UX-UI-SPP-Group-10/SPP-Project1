@@ -34,29 +34,21 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun RetailerHomePage(itemViewModel: ItemViewModel) {
-    // State to hold items and loading status
-    val userType by itemViewModel.userViewModel.userType.collectAsState()
-    itemViewModel.userType = userType!!
-    val items by itemViewModel.itemList.collectAsState()
+    // Local state for items and loading
+    var items by remember { mutableStateOf<List<Item>>(emptyList()) }
     var loading by remember { mutableStateOf(true) }
-    val coroutineScope = rememberCoroutineScope()
-    // Company ID to filter items by (hardcoded to 1 for this example)
-
     val loggedInCompany by itemViewModel.userViewModel.companyState.collectAsState()
 
-    // Fetch items when the Composable is first displayed
     LaunchedEffect(loggedInCompany) {
-        loggedInCompany?.let { company ->
+        loggedInCompany?.id?.let { companyId ->
             loading = true
-            coroutineScope.launch {
-                try {
-                    itemViewModel.fetchItemsByCompanyID(loggedInCompany!!.id?: -1L)
-                } catch (e: Exception) {
-                    // Handle error, e.g., show a message
-                    e.printStackTrace()
-                } finally {
-                    loading = false
-                }
+            try {
+                val fetchedItems = itemViewModel.fetchItemsByCompanyIDSync(companyId) // Synchronous fetch
+                items = fetchedItems
+            } catch (e: Exception) {
+                Log.e("RetailerHomePage", "Error fetching items", e)
+            } finally {
+                loading = false
             }
         }
     }
@@ -66,7 +58,6 @@ fun RetailerHomePage(itemViewModel: ItemViewModel) {
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
         Text("Welcome to the Retailer Home Page")
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -79,18 +70,21 @@ fun RetailerHomePage(itemViewModel: ItemViewModel) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
-                    .weight(1f),  // Gives grid weight to fill remaining space
+                    .weight(1f),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 items(items) { item ->
                     ItemCard(
                         item = item,
-                        onClick = { itemViewModel.userNavActions.navigateToViewItem(item) } // Replace with company-specific navigation if needed
+                        onClick = { itemViewModel.userNavActions.navigateToViewItem(item) }
                     )
                 }
             }
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         CustomButton(
             onClick = { itemViewModel.userNavActions.navigateToCreateItem() },
             text = "Create Item",
@@ -98,3 +92,6 @@ fun RetailerHomePage(itemViewModel: ItemViewModel) {
         )
     }
 }
+
+
+
