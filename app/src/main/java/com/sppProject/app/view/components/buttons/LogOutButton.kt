@@ -8,6 +8,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.sppProject.app.R
@@ -24,7 +25,9 @@ fun LogoutButton(onClick: () -> Unit, modifier: Modifier = Modifier){
         Icon(
             painter = painterResource(id = R.drawable.logout),
             contentDescription = "Logout",
-            modifier = Modifier.size(80.dp) // Set icon size as desired
+            modifier = Modifier
+                .size(80.dp)
+                .scale(-1f)
         )
     }
 }

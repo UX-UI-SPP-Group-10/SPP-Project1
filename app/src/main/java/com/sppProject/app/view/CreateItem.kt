@@ -1,5 +1,6 @@
 package com.sppProject.app.view
 
+import android.R.attr.description
 import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -16,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,29 +36,19 @@ import com.sppProject.app.model.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.model.data.UserSessionManager
 import com.sppProject.app.model.data.data_class.Company
 import com.sppProject.app.model.data.data_class.Item
+import com.sppProject.app.view.components.CustomTextField
 import com.sppProject.app.view.components.buttons.BackButton
 import com.sppProject.app.view.components.buttons.CustomButton
+import com.sppProject.app.viewModel.ItemViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun ItemPage(userNavActions: UserNavActions, itemFetcher: ItemFetcher, userSessionManager: UserSessionManager) {
+fun ItemPage(itemViewModel: ItemViewModel) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var numberOfItem by remember { mutableStateOf("0") }
     var price by remember { mutableStateOf("0.0") }
-    val coroutineScope = rememberCoroutineScope()
-    var isItemPosted by remember { mutableStateOf(false) }
-
-    val tempItem = remember(title, description, numberOfItem, price) {
-        // Parse stock and price values, default to zero if invalid or empty
-        Item(
-            name = title,
-            description = description,
-            stock = numberOfItem.toIntOrNull() ?: 0,
-            price = price.toDoubleOrNull()?.toInt() ?: 0
-        )
-    }
 
     Column(
         modifier = Modifier
@@ -68,13 +58,11 @@ fun ItemPage(userNavActions: UserNavActions, itemFetcher: ItemFetcher, userSessi
     ) {
         Spacer(modifier = Modifier.height(64.dp))
 
-        OutlinedTextField(
+        CustomTextField(
             value = title,
             onValueChange = { title = it },
-            label = { Text("Title") },
+            labelText = "Title",
             modifier = Modifier
-                .height(64.dp)
-                .fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -83,7 +71,7 @@ fun ItemPage(userNavActions: UserNavActions, itemFetcher: ItemFetcher, userSessi
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedTextField(
+        CustomTextField(
             value = numberOfItem,
             onValueChange = { input ->
                 // Allow only digits
@@ -91,15 +79,13 @@ fun ItemPage(userNavActions: UserNavActions, itemFetcher: ItemFetcher, userSessi
                     numberOfItem = input
                 }
             },
-            label = { Text("Number of items") },
+            labelText = "Number of items",
             modifier = Modifier
-                .height(64.dp)
-                .width(120.dp)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedTextField(
+        CustomTextField(
             value = price,
             onValueChange = { input ->
                 // Allow only digits and one decimal point
@@ -107,21 +93,15 @@ fun ItemPage(userNavActions: UserNavActions, itemFetcher: ItemFetcher, userSessi
                     price = input
                 }
             },
-            label = { Text("Item price") },
-            modifier = Modifier
-                .height(64.dp)
-                .width(120.dp)
+            labelText = "Item price",
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedTextField(
+        CustomTextField(
             value = description,
             onValueChange = { description = it },
-            label = { Text("Item description") },
-            modifier = Modifier
-                .height(300.dp)
-                .fillMaxWidth()
+            labelText = "Item description",
         )
     }
 
@@ -133,7 +113,11 @@ fun ItemPage(userNavActions: UserNavActions, itemFetcher: ItemFetcher, userSessi
 
         CustomButton(
             onClick = {
-                isItemPosted = true
+                itemViewModel.onTitleChange(title)
+                itemViewModel.onNumberOfItemChange(numberOfItem)
+                itemViewModel.onDescriptionChange(description)
+                itemViewModel.onPriceChange(price)
+                itemViewModel.postItem()
             },
             text = "Post Item",
             modifier = Modifier
@@ -141,36 +125,12 @@ fun ItemPage(userNavActions: UserNavActions, itemFetcher: ItemFetcher, userSessi
                 .width(200.dp)
         )
 
-        // When the button is clicked, post the item
-        if (isItemPosted) {
-            PostItem(userSessionManager, itemFetcher, tempItem, coroutineScope)
-            userNavActions.navigateToRetailerHome()
-            isItemPosted = false
-        }
-
         BackButton(
-            onClick = {userNavActions.navigateBack()},
+            onClick = {itemViewModel.userNavActions.navigateBack()},
             modifier = Modifier.align(Alignment.TopStart)
         )
     }
 }
-
-@Composable
-fun PostItem(
-    userSessionManager: UserSessionManager,
-    itemFetcher: ItemFetcher,
-    tempItem: Item,
-    coroutineScope: CoroutineScope
-) {
-    val currentCompany: Company? = userSessionManager.getLoggedInCompany()
-    LaunchedEffect(tempItem) {
-        // Launch the coroutine only when `tempItem` changes (or you can check some other condition)
-        coroutineScope.launch {
-            itemFetcher.createItem(currentCompany?.id ?: 0, tempItem)
-        }
-    }
-}
-
 
 @Composable
 fun ImagePicker(modifier: Modifier) {

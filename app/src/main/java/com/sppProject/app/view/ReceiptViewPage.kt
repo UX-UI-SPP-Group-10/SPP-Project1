@@ -16,6 +16,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -25,21 +27,22 @@ import com.sppProject.app.UserNavActions
 import com.sppProject.app.model.api_integration.fetchers.ReceiptFetcher
 import com.sppProject.app.model.data.data_class.Receipt
 import com.sppProject.app.view.components.buttons.BackButton
+import com.sppProject.app.viewModel.ReceiptViewModel
 
 @Composable
-fun ReceiptViewPage(userNavActions: UserNavActions, receiptID: Long, receiptFetcher: ReceiptFetcher) {
-    val receiptState = remember { mutableStateOf<Receipt?>(null) }
+fun ReceiptViewPage(receiptID: Long, receiptViewModel: ReceiptViewModel) {
+
+    val receipt by receiptViewModel.receiptState.collectAsState()
 
     // Fetch the item when the composable is first displayed or itemId changes
     LaunchedEffect(receiptID) {
-        val receipt = receiptFetcher.fetchReceiptById(receiptID) // Fetch item by ID
-        receiptState.value = receipt
+        receiptViewModel.fetchReceipt(receiptID)
     }
 
     Scaffold(
-        topBar = { ReceiptTopAppBar(userNavActions) },
+        topBar = { ReceiptTopAppBar(receiptViewModel.userNavActions) },
         content = { paddingValues ->
-            ReceiptContent(receiptState.value, paddingValues)
+            ReceiptContent(receipt, paddingValues)
         }
     )
 }

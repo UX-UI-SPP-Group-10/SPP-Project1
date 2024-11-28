@@ -24,11 +24,14 @@ import com.sppProject.app.model.api_integration.RetrofitClient
 import com.sppProject.app.model.api_integration.api_service.BuyerApiService
 import com.sppProject.app.model.api_integration.api_service.CompanyApiService
 import com.sppProject.app.model.api_integration.api_service.ItemApiService
+import com.sppProject.app.model.api_integration.api_service.ReceiptApiService
 import com.sppProject.app.model.api_integration.fetchers.BuyerFetcher
 import com.sppProject.app.model.api_integration.fetchers.CompanyFetcher
 import com.sppProject.app.model.api_integration.fetchers.ItemFetcher
+import com.sppProject.app.model.api_integration.fetchers.ReceiptFetcher
 import com.sppProject.app.model.data.UserSessionManager
 import com.sppProject.app.model.data.data_class.Item
+import com.sppProject.app.viewModel.ItemViewModel
 
 // Database needs to be running for emulator to run, otherwise the emulator will be seen as offline
 @RunWith(AndroidJUnit4::class)
@@ -91,10 +94,16 @@ class UserViewTest {
                     userSessionManager = userSessionManager
                 )
 
-                UserHomePage(
-                    navActions = userNavActions,
+                val itemViewModel = ItemViewModel(
+                    itemFetcher = itemFetcher,
+                    receiptFetcher =  ReceiptFetcher(RetrofitClient.createApiService(ReceiptApiService::class.java)),
                     userViewModel = userViewModel,
-                    itemFetcher = itemFetcher
+                    userNavActions = userNavActions
+                )
+
+
+                UserHomePage(
+                    itemViewModel = itemViewModel
                 )
             }
 

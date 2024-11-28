@@ -8,6 +8,7 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -24,6 +25,8 @@ import com.sppProject.app.model.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.model.api_integration.fetchers.ReceiptFetcher
 import com.sppProject.app.model.data.UserSessionManager
 import com.sppProject.app.view.components.BottomNavigationBar
+import com.sppProject.app.viewModel.ItemViewModel
+import com.sppProject.app.viewModel.ReceiptViewModel
 import com.sppProject.app.viewModel.UserViewModel
 
 @Composable
@@ -31,8 +34,6 @@ fun MainScreen(
     userNavActions: UserNavActions,
     userViewModel: UserViewModel,
     itemFetcher: ItemFetcher,
-    buyerFetcher: BuyerFetcher,
-    companyFetcher: CompanyFetcher,
     receiptFetcher: ReceiptFetcher,
     startDestination: String
 ) {
@@ -40,6 +41,8 @@ fun MainScreen(
 
     // Update the NavController in UserNavActions for nested navigation
     val nestedNavActions = UserNavActions(nestedNavController)
+    val itemViewModel = ItemViewModel(itemFetcher, receiptFetcher, userViewModel, nestedNavActions)
+    val receiptViewModel = ReceiptViewModel(nestedNavActions, receiptFetcher)
 
     Scaffold(
         bottomBar = {
@@ -60,10 +63,10 @@ fun MainScreen(
                 startDestination = startDestination
             ) {
                 composable(NavigationRoutes.USER_HOME) {
-                    UserHomePage(nestedNavActions, userViewModel, itemFetcher)
+                    UserHomePage(itemViewModel)
                 }
                 composable(NavigationRoutes.RETAILER_HOME) {
-                    RetailerHomePage(nestedNavActions, userViewModel, itemFetcher)
+                    RetailerHomePage(itemViewModel)
                 }
                 composable(NavigationRoutes.COMPANY_RECEIPTS) {
                     CompanyReceipts(nestedNavActions, userViewModel, receiptFetcher)
@@ -73,10 +76,10 @@ fun MainScreen(
                     arguments = listOf(navArgument("itemId") { type = NavType.LongType })
                 ) { backStackEntry ->
                     val itemId = backStackEntry.arguments?.getLong("itemId") ?: return@composable
-                    ItemViewPage(nestedNavActions, itemId, itemFetcher, receiptFetcher, userViewModel)
+                    ItemViewPage(itemId, itemViewModel)
                 }
                 composable(NavigationRoutes.CREATE_ITEM) {
-                    ItemPage(nestedNavActions, itemFetcher, UserSessionManager(LocalContext.current))
+                    ItemPage(itemViewModel)
                 }
                 composable(NavigationRoutes.RECEIPTS){
                     Receipts(nestedNavActions, userViewModel, receiptFetcher, UserSessionManager(LocalContext.current))
@@ -86,7 +89,7 @@ fun MainScreen(
                     arguments = listOf(navArgument("receiptId") { type = NavType.LongType })
                 ) { backStackEntry ->
                     val receiptId = backStackEntry.arguments?.getLong("receiptId") ?: return@composable
-                    ReceiptViewPage(nestedNavActions, receiptId, receiptFetcher)
+                    ReceiptViewPage(receiptId, receiptViewModel)
                 }
                 composable(
                     "${NavigationRoutes.EDIT_ITEM}/{itemId}",
@@ -95,8 +98,7 @@ fun MainScreen(
                     val itemId = backStackEntry.arguments?.getLong("itemId") ?: return@composable
                     EditItemPage(
                         itemId = itemId,
-                        userNavActions = nestedNavActions,
-                        itemFetcher = itemFetcher
+                        itemViewModel
                     )
                 }
 

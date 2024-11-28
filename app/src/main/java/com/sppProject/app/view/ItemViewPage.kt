@@ -34,6 +34,7 @@ import com.sppProject.app.model.data.data_class.Buyer
 import com.sppProject.app.model.data.data_class.Item
 import com.sppProject.app.view.components.buttons.BackButton
 import com.sppProject.app.view.components.buttons.CustomButton
+import com.sppProject.app.viewModel.ItemViewModel
 import com.sppProject.app.viewModel.UserViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -41,80 +42,27 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ItemViewPage(
-    userNavActions: UserNavActions,
     itemId: Long,
-    itemFetcher: ItemFetcher,
-    receiptFetcher: ReceiptFetcher,
-    userViewModel: UserViewModel
+    itemViewModel: ItemViewModel
 ) {
-    val itemState = remember { mutableStateOf<Item?>(null) }
-    val coroutineScope = rememberCoroutineScope()
-    var isReceiptMade by remember { mutableStateOf(false) }
-    var noMoreItems by remember { mutableStateOf(false) }
-    val userType by userViewModel.userType.collectAsState()
+    val userType by itemViewModel.userViewModel.userType.collectAsState()
+    itemViewModel.userType = userType!!
+    val item by itemViewModel.itemState.collectAsState()
 
-    // Fetch the item when the composable is first displayed or itemId changes
     LaunchedEffect(itemId) {
-        val item = itemFetcher.getItemById(itemId)
-        itemState.value = item
+        itemViewModel.fetchItem(itemId)
     }
 
     Scaffold(
-        topBar = { ItemTopAppBar(userNavActions) },
+        topBar = { ItemTopAppBar(itemViewModel.userNavActions) },
         content = { paddingValues ->
-            ItemContent(itemState.value, paddingValues)
+            ItemContent(item, paddingValues)
         },
         bottomBar = {
-            Box(
-                modifier = Modifier
-                    .height(100.dp)
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                if (userType == UserViewModel.UserType.BUYER) {
-                    if (noMoreItems) {
-                        Text(
-                            modifier = Modifier.align(Alignment.TopCenter),
-                            text = "There is no more of this item available"
-                        )
-                    }
-                    CustomButton(
-                        onClick = {
-                            isReceiptMade = true
-                        },
-                        text = "Reserve Item",
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .width(200.dp)
-                    )
-                } else if (userType == UserViewModel.UserType.COMPANY) {
-                    CustomButton(
-                        onClick = {
-                            userNavActions.navigateToEditItem(itemId)
-                        },
-                        text = "Edit Item",
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .width(200.dp)
-                    )
-                }
-            }
+            BottomBarContent(itemId, itemViewModel)
         }
     )
-
-    if (isReceiptMade) {
-        if ((itemState.value?.stock ?: 0) > 0) {
-            PostReceipt(receiptFetcher, itemId, itemFetcher, userViewModel, coroutineScope)
-            userNavActions.navigateUserHome()
-            isReceiptMade = false
-        } else {
-            noMoreItems = true
-            isReceiptMade = false
-        }
-    }
 }
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -153,7 +101,12 @@ fun ItemDetails(item: Item) {
         horizontalAlignment = Alignment.Start
     ) {
         Text(
-            text = "Item: ${item.name}",
+            text = "${item.company?.name}",
+            style = MaterialTheme.typography.titleLarge
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = item.name,
             style = MaterialTheme.typography.titleLarge
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -176,18 +129,25 @@ fun ItemDetails(item: Item) {
 }
 
 @Composable
-fun PostReceipt(
-    receiptFetcher: ReceiptFetcher,
-    itemID: Long,
-    itemFetcher: ItemFetcher,
-    userViewModel: UserViewModel,
-    coroutineScope: CoroutineScope
-) {
-    val currentUser: Buyer? by userViewModel.buyerState.collectAsState()
-    LaunchedEffect(itemID) {
-        // Launch the coroutine only when `tempItem` changes (or you can check some other condition)
-        coroutineScope.launch {
-            receiptFetcher.createReceipt(currentUser?.id ?: 0,itemID)
+fun BottomBarContent(itemId: Long, itemViewModel: ItemViewModel) {
+    Box(
+        modifier = Modifier
+            .height(100.dp)
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        if (itemViewModel.userType == UserViewModel.UserType.BUYER) {
+            CustomButton(
+                onClick = { itemViewModel.reserveItem(itemId) },
+                text = "Reserve Item",
+                modifier = Modifier.align(Alignment.BottomCenter).width(200.dp)
+            )
+        } else if (itemViewModel.userType == UserViewModel.UserType.COMPANY) {
+            CustomButton(
+                onClick = { itemViewModel.userNavActions.navigateToEditItem(itemId) },
+                text = "Edit Item",
+                modifier = Modifier.align(Alignment.BottomCenter).width(200.dp)
+            )
         }
     }
 }

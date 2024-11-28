@@ -142,8 +142,6 @@ fun AppNavGraph(
                 userNavActions = userNavActions,
                 userViewModel = userViewModel,
                 itemFetcher = itemFetcher,
-                buyerFetcher = buyerFetcher,
-                companyFetcher = companyFetcher,
                 receiptFetcher = receiptFetcher,
                 startDestination = startDestination,
             )
