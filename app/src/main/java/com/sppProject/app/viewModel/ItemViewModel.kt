@@ -23,6 +23,9 @@ class ItemViewModel(
     public val userNavActions: UserNavActions
 ) : ViewModel() {
 
+    private val _itemList = MutableStateFlow<List<Item>>(emptyList())
+    val itemList: StateFlow<List<Item>> get() = _itemList
+
     private var _itemState = MutableStateFlow<Item?>(null)
     var itemState: StateFlow<Item?> = _itemState
 
@@ -45,6 +48,25 @@ class ItemViewModel(
 
     private val _price = MutableStateFlow("0.0")
     val price: StateFlow<String> = _price
+
+    fun fetchItems() {
+        viewModelScope.launch {
+            val items = itemFetcher.fetchItems()
+            _itemList.value = items
+        }
+    }
+
+    fun fetchItemsByCompanyID(companyID: Long) {
+        viewModelScope.launch {
+            try {
+                val items = itemFetcher.fetchItemsByCompanyId(companyID)
+                _itemList.value = items
+            } catch (e: Exception) {
+                // Handle error, e.g., show a message
+                e.printStackTrace()
+            }
+        }
+    }
 
     // Fetch the item by ID
     fun fetchItem(itemId: Long) {

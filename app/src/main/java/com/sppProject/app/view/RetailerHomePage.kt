@@ -28,19 +28,21 @@ import com.sppProject.app.view.components.ItemCard
 import com.sppProject.app.view.components.buttons.CreateItemButton
 import com.sppProject.app.view.components.buttons.CustomButton
 import com.sppProject.app.view.components.buttons.LogoutButton
+import com.sppProject.app.viewModel.ItemViewModel
 import com.sppProject.app.viewModel.UserViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun RetailerHomePage(navActions: UserNavActions, userViewModel: UserViewModel, itemFetcher: ItemFetcher
-) {
+fun RetailerHomePage(itemViewModel: ItemViewModel) {
     // State to hold items and loading status
-    var items by remember { mutableStateOf<List<Item>>(emptyList()) }
+    val userType by itemViewModel.userViewModel.userType.collectAsState()
+    itemViewModel.userType = userType!!
+    val items by itemViewModel.itemList.collectAsState()
     var loading by remember { mutableStateOf(true) }
     val coroutineScope = rememberCoroutineScope()
     // Company ID to filter items by (hardcoded to 1 for this example)
 
-    val loggedInCompany by userViewModel.companyState.collectAsState()
+    val loggedInCompany by itemViewModel.userViewModel.companyState.collectAsState()
 
     // Fetch items when the Composable is first displayed
     LaunchedEffect(loggedInCompany) {
@@ -48,7 +50,7 @@ fun RetailerHomePage(navActions: UserNavActions, userViewModel: UserViewModel, i
             loading = true
             coroutineScope.launch {
                 try {
-                    items = itemFetcher.fetchItemsByCompanyId(loggedInCompany!!.id?: -1L)
+                    itemViewModel.fetchItemsByCompanyID(loggedInCompany!!.id?: -1L)
                 } catch (e: Exception) {
                     // Handle error, e.g., show a message
                     e.printStackTrace()
@@ -84,13 +86,13 @@ fun RetailerHomePage(navActions: UserNavActions, userViewModel: UserViewModel, i
                 items(items) { item ->
                     ItemCard(
                         item = item,
-                        onClick = { navActions.navigateToViewItem(item) } // Replace with company-specific navigation if needed
+                        onClick = { itemViewModel.userNavActions.navigateToViewItem(item) } // Replace with company-specific navigation if needed
                     )
                 }
             }
         }
         CustomButton(
-            onClick = { navActions.navigateToCreateItem() },
+            onClick = { itemViewModel.userNavActions.navigateToCreateItem() },
             text = "Create Item",
             modifier = Modifier.padding(16.dp)
         )

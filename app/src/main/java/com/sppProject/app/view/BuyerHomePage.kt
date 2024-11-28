@@ -18,28 +18,26 @@ import com.sppProject.app.view.components.ItemCard
 import com.sppProject.app.view.components.buttons.BuyPageButton
 import com.sppProject.app.view.components.buttons.LogoutButton
 import com.sppProject.app.view.components.buttons.ReciptButton
+import com.sppProject.app.viewModel.ItemViewModel
 import com.sppProject.app.viewModel.UserViewModel
 import kotlinx.coroutines.launch
 
 @Composable
 fun UserHomePage(
-    navActions: UserNavActions,
-    userViewModel: UserViewModel,
-    itemFetcher: ItemFetcher
+    itemViewModel: ItemViewModel
 ) {
     // Mutable state to hold the list of items
-    var items by remember { mutableStateOf<List<Item>>(emptyList()) }
     val coroutineScope = rememberCoroutineScope()
-    val buyerState by userViewModel.buyerState.collectAsState()
+    val userType by itemViewModel.userViewModel.userType.collectAsState()
+    itemViewModel.userType = userType!!
+    val items by itemViewModel.itemList.collectAsState()
 
     // Fetch items when the composable is first displayed
     LaunchedEffect(Unit) {
         coroutineScope.launch {
-            items = itemFetcher.fetchItems() // Fetch items from the API
+            itemViewModel.fetchItems()
         }
     }
-
-    val userInfo by userViewModel.buyerState.collectAsState()
 
     Column(
         modifier = Modifier
@@ -61,7 +59,7 @@ fun UserHomePage(
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(items.filter { it.stock > 0 }) { item ->
-                ItemCard(item = item, onClick = { navActions.navigateToViewItem(item) })
+                ItemCard(item = item, onClick = { itemViewModel.userNavActions.navigateToViewItem(item) })
             }
         }
 

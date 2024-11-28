@@ -26,6 +26,7 @@ import com.sppProject.app.model.api_integration.fetchers.ReceiptFetcher
 import com.sppProject.app.model.data.UserSessionManager
 import com.sppProject.app.view.components.BottomNavigationBar
 import com.sppProject.app.viewModel.ItemViewModel
+import com.sppProject.app.viewModel.ReceiptViewModel
 import com.sppProject.app.viewModel.UserViewModel
 
 @Composable
@@ -33,8 +34,6 @@ fun MainScreen(
     userNavActions: UserNavActions,
     userViewModel: UserViewModel,
     itemFetcher: ItemFetcher,
-    buyerFetcher: BuyerFetcher,
-    companyFetcher: CompanyFetcher,
     receiptFetcher: ReceiptFetcher,
     startDestination: String
 ) {
@@ -43,6 +42,7 @@ fun MainScreen(
     // Update the NavController in UserNavActions for nested navigation
     val nestedNavActions = UserNavActions(nestedNavController)
     val itemViewModel = ItemViewModel(itemFetcher, receiptFetcher, userViewModel, nestedNavActions)
+    val receiptViewModel = ReceiptViewModel(userNavActions, receiptFetcher)
 
     Scaffold(
         bottomBar = {
@@ -63,10 +63,10 @@ fun MainScreen(
                 startDestination = startDestination
             ) {
                 composable(NavigationRoutes.USER_HOME) {
-                    UserHomePage(nestedNavActions, userViewModel, itemFetcher)
+                    UserHomePage(itemViewModel)
                 }
                 composable(NavigationRoutes.RETAILER_HOME) {
-                    RetailerHomePage(nestedNavActions, userViewModel, itemFetcher)
+                    RetailerHomePage(itemViewModel)
                 }
                 composable(NavigationRoutes.COMPANY_RECEIPTS) {
                     CompanyReceipts(nestedNavActions, userViewModel, receiptFetcher)
@@ -89,7 +89,7 @@ fun MainScreen(
                     arguments = listOf(navArgument("receiptId") { type = NavType.LongType })
                 ) { backStackEntry ->
                     val receiptId = backStackEntry.arguments?.getLong("receiptId") ?: return@composable
-                    ReceiptViewPage(nestedNavActions, receiptId, receiptFetcher)
+                    ReceiptViewPage(receiptId, receiptViewModel)
                 }
                 composable(
                     "${NavigationRoutes.EDIT_ITEM}/{itemId}",
