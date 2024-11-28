@@ -42,7 +42,7 @@ fun MainScreen(
     // Update the NavController in UserNavActions for nested navigation
     val nestedNavActions = UserNavActions(nestedNavController)
     val itemViewModel = ItemViewModel(itemFetcher, receiptFetcher, userViewModel, nestedNavActions)
-    val receiptViewModel = ReceiptViewModel(userNavActions, receiptFetcher)
+    val receiptViewModel = ReceiptViewModel(nestedNavActions, receiptFetcher)
 
     Scaffold(
         bottomBar = {
