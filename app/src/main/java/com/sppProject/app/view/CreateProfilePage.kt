@@ -77,7 +77,7 @@ fun CreateProfilePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, co
                         onClick = {
                             createPageViewModel.setCreatePageState(CreatePageState.ShowUser())
                         },
-                        text = "User",
+                        text = "Buyer",
                         isActive = isUserActive
                     )
                     Spacer(modifier = Modifier.width(2.dp))
@@ -87,7 +87,7 @@ fun CreateProfilePage(navActions: UserNavActions, buyerFetcher: BuyerFetcher, co
                         onClick = {
                             createPageViewModel.setCreatePageState(CreatePageState.ShowRetailer())
                         },
-                        text = "Retailer",
+                        text = "Company",
                         isActive = isRetailerActive
                     )
                 }
