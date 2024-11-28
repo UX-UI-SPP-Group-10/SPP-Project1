@@ -1,5 +1,6 @@
 package com.sppProject.app.view
 
+import android.R.attr.description
 import android.graphics.BitmapFactory
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -16,7 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,6 +36,7 @@ import com.sppProject.app.model.api_integration.fetchers.ItemFetcher
 import com.sppProject.app.model.data.UserSessionManager
 import com.sppProject.app.model.data.data_class.Company
 import com.sppProject.app.model.data.data_class.Item
+import com.sppProject.app.view.components.CustomTextField
 import com.sppProject.app.view.components.buttons.BackButton
 import com.sppProject.app.view.components.buttons.CustomButton
 import com.sppProject.app.viewModel.ItemViewModel
@@ -57,13 +58,11 @@ fun ItemPage(itemViewModel: ItemViewModel) {
     ) {
         Spacer(modifier = Modifier.height(64.dp))
 
-        OutlinedTextField(
+        CustomTextField(
             value = title,
             onValueChange = { title = it },
-            label = { Text("Title") },
+            labelText = "Title",
             modifier = Modifier
-                .height(64.dp)
-                .fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -72,7 +71,7 @@ fun ItemPage(itemViewModel: ItemViewModel) {
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedTextField(
+        CustomTextField(
             value = numberOfItem,
             onValueChange = { input ->
                 // Allow only digits
@@ -80,15 +79,13 @@ fun ItemPage(itemViewModel: ItemViewModel) {
                     numberOfItem = input
                 }
             },
-            label = { Text("Number of items") },
+            labelText = "Number of items",
             modifier = Modifier
-                .height(64.dp)
-                .width(120.dp)
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedTextField(
+        CustomTextField(
             value = price,
             onValueChange = { input ->
                 // Allow only digits and one decimal point
@@ -96,21 +93,15 @@ fun ItemPage(itemViewModel: ItemViewModel) {
                     price = input
                 }
             },
-            label = { Text("Item price") },
-            modifier = Modifier
-                .height(64.dp)
-                .width(120.dp)
+            labelText = "Item price",
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedTextField(
+        CustomTextField(
             value = description,
             onValueChange = { description = it },
-            label = { Text("Item description") },
-            modifier = Modifier
-                .height(300.dp)
-                .fillMaxWidth()
+            labelText = "Item description",
         )
     }
 
