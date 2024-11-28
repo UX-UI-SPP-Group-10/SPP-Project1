@@ -76,7 +76,7 @@ fun ItemCard(item: Item, onClick: () -> Unit) {
 
             // Display description
             Text(
-                text = item.description ?: "No description available.",
+                text = item.company?.name ?: "Unknown Company",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onBackground
             )

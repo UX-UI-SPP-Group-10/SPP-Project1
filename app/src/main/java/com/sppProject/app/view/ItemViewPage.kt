@@ -101,7 +101,12 @@ fun ItemDetails(item: Item) {
         horizontalAlignment = Alignment.Start
     ) {
         Text(
-            text = "Item: ${item.name}",
+            text = "${item.company?.name}",
+            style = MaterialTheme.typography.titleLarge
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = item.name,
             style = MaterialTheme.typography.titleLarge
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -146,21 +151,3 @@ fun BottomBarContent(itemId: Long, itemViewModel: ItemViewModel) {
         }
     }
 }
-
-/*
-@Composable
-fun PostReceipt(
-    receiptFetcher: ReceiptFetcher,
-    itemID: Long,
-    itemFetcher: ItemFetcher,
-    userViewModel: UserViewModel,
-    coroutineScope: CoroutineScope
-) {
-    val currentUser: Buyer? by userViewModel.buyerState.collectAsState()
-    LaunchedEffect(itemID) {
-        // Launch the coroutine only when `tempItem` changes (or you can check some other condition)
-        coroutineScope.launch {
-            receiptFetcher.createReceipt(currentUser?.id ?: 0,itemID)
-        }
-    }
-}*/
